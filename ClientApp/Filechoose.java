@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -27,8 +30,6 @@ public class Filechoose {
 	@FXML
 	private ComboBox glist;
 	
-	@FXML
-	private Button closebt;
 
 	@FXML
 	public void choose() {
@@ -77,6 +78,10 @@ public class Filechoose {
 	@FXML
 	public void logout() throws IOException{
 		UpAndDownLoad.closeConnection();
+		Parent root = FXMLLoader.load(getClass().getResource("loginpage.fxml"));
+		Scene scene = new Scene(root);
+		GUICtl.getStage().setScene(scene);
+		GUICtl.getStage().show();
 		//close window here and back to the main window
 	}
 }

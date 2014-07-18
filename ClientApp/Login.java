@@ -46,12 +46,10 @@ public class Login {
 			System.out.println("the user name and pwd are : " + name + " "
 					+ passw);
 			if (UpAndDownLoad.signIn(name, passw)) {
-				Parent root = FXMLLoader.load(getClass().getResource(
-						"upload.fxml"));
+				Parent root = FXMLLoader.load(getClass().getResource("upload.fxml"));
 				Scene scene = new Scene(root);
-				Stage MainStage = new Stage();
-				MainStage.setScene(scene);
-				MainStage.show();
+				GUICtl.getStage().setScene(scene);
+				GUICtl.getStage().show();
 			} else {
 				msg.setText("username and password not found");
 			}

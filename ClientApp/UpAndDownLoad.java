@@ -1,11 +1,8 @@
 package UserControl;
 
-import com.microsoft.windowsazure.services.blob.*;
 import com.microsoft.windowsazure.services.blob.client.*;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -13,17 +10,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.DigestInputStream;
-import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import java.nio.file.*;
+
+import static java.nio.file.StandardWatchEventKinds.*;
 public class UpAndDownLoad {
 
 	private static Socket client;
@@ -82,7 +79,6 @@ public class UpAndDownLoad {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		//String [] p = FilePath.split("\\");
 		String filename = getFilename(FilePath);
 		System.out.println("filename is " + filename);
 		String addresses = streamReader.readUTF();
@@ -182,7 +178,30 @@ public class UpAndDownLoad {
 			e.printStackTrace();
 		}
 	}
-
+	public static void watchFile(Path dir) throws IOException{
+		WatchService watcher = FileSystems.getDefault().newWatchService();
+		dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+		while (true) {
+			try {
+				WatchKey key = watcher.take();
+				for (WatchEvent<?> event : key.pollEvents()) {
+					WatchEvent.Kind kind = event.kind();
+					if(kind == OVERFLOW){
+						continue;
+					}
+					WatchEvent<Path> e = (WatchEvent<Path>)event;
+					Path fileName = e.context();
+					System.out.println("Event "+kind.name()+ " happened, which filename is " + fileName);
+				}
+				if(!key.reset()){
+					break;
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	public static boolean signIn(String uname, String upass) throws IOException{
 		//linkToServer("cics525group6.cloudapp.net", 12345);
 		String msg = "auth," + uname + ","+upass;
@@ -206,16 +225,9 @@ public class UpAndDownLoad {
 		streamWriter.writeUTF("Q");
 		client.close();
 	}
-	public static void main(String[] args) throws UnknownHostException, IOException {
-		// TODO Auto-generated method stub
-		linkToServer("cics525group6.cloudapp.net", 12345);
-		System.out.println("created on: " + client.getRemoteSocketAddress());
-		try {
-			//downLoadFile();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		client.close();
+	public static void main(String[] args) throws IOException {
+		Path p = Paths.get("/Users/haonanxu/Desktop/download");
+		char file_spliter = File.separatorChar;
+		watchFile(p);
 	}
 }
