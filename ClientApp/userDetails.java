@@ -38,7 +38,7 @@ public class userDetails {
 			msg.setText("Please enter both passwords equal values");
 		}
 		else{
-			if(UpAndDownLoad.signUp(uname.getText(), npwd.getText())){
+			if(fileOperate.signUp(uname.getText(), npwd.getText())){
 				msg.setText("Account created successfully");
 			}else{
 				msg.setText("Account creation failed");

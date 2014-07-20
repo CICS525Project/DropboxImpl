@@ -16,7 +16,7 @@ public class Main extends Application {
 		Scene scene = new Scene(root);
 		GUICtl.getStage().setScene(scene);
 		GUICtl.getStage().show();
-		UpAndDownLoad.linkToServer("cics525group6.cloudapp.net", 12345);
+		fileOperate.linkToServer("cics525group6.cloudapp.net", 12345);
 	}
 
 	public static void main(String[] args) {

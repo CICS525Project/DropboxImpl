@@ -57,7 +57,7 @@ public class Filechoose {
 	public void listname() throws IOException{
 		ArrayList<String> getlist;
 		System.out.println("function called");
-		getlist = UpAndDownLoad.getRemoteList();
+		getlist = fileOperate.getRemoteList();
 		ObservableList obList = FXCollections.observableList(getlist);
 		glist.setItems(obList);
 	}
@@ -65,7 +65,7 @@ public class Filechoose {
 	@FXML
 	public void upload() throws IOException {
 		
-		UpAndDownLoad.upoLoadFile(mypath);
+		fileOperate.upoLoadFile(mypath);
 	}
 	
 	@FXML
@@ -73,11 +73,11 @@ public class Filechoose {
 		String pname = (String) glist.getValue();
 		System.out.println("selected " + pname);
 		String path = dpath.getText();
-		UpAndDownLoad.downLoadFile(path, pname);
+		fileOperate.downLoadFile(path, pname);
 	}
 	@FXML
 	public void logout() throws IOException{
-		UpAndDownLoad.closeConnection();
+		fileOperate.closeConnection();
 		Parent root = FXMLLoader.load(getClass().getResource("loginpage.fxml"));
 		Scene scene = new Scene(root);
 		GUICtl.getStage().setScene(scene);

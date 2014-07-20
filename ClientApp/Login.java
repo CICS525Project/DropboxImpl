@@ -45,7 +45,7 @@ public class Login {
 			String passw = pwd.getText();
 			System.out.println("the user name and pwd are : " + name + " "
 					+ passw);
-			if (UpAndDownLoad.signIn(name, passw)) {
+			if (fileOperate.signIn(name, passw)) {
 				Parent root = FXMLLoader.load(getClass().getResource("upload.fxml"));
 				Scene scene = new Scene(root);
 				GUICtl.getStage().setScene(scene);
