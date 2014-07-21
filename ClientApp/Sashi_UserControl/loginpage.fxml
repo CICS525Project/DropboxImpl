@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UserControl.Login">
+<children><AnchorPane fx:id="message" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F2F2F2;">
+<children><TextField fx:id="usrname" layoutX="243.74609375" layoutY="138.5" /><Text layoutX="149.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="63.291015625" /><Text layoutX="149.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" wrappingWidth="54.951171875" /><Button layoutX="243.93359375" layoutY="235.5" mnemonicParsing="false" onAction="#signin" text="SignIn" /><Button layoutX="318.6796875" layoutY="235.5" mnemonicParsing="false" onAction="#signup" text="Signup" /><Text fill="#0f7183" layoutX="239.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="   Cloud Box" wrappingWidth="149.0">
+<font>
+<Font name="System Bold" size="24.0" />
+</font></Text><ImageView fitHeight="127.0" fitWidth="173.0" layoutX="27.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@images.jpg" />
+</image></ImageView><Label fx:id="msg" layoutX="243.9970703125" layoutY="308.5" /><PasswordField fx:id="pwd" layoutX="243.9921875" layoutY="179.5" />
+</children>
+<cursor>
+<Cursor fx:constant="W_RESIZE" />
+</cursor></AnchorPane>
+</children></StackPane>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UserControl.userDetails">
+<children><AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F2F2F2;">
+<children><Text layoutX="129.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" /><Text layoutX="128.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" /><TextField fx:id="uname" layoutX="233.74609375" layoutY="115.5" /><Text layoutX="127.931640625" layoutY="222.5" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Password" /><Text layoutX="227.931640625" layoutY="73.5" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter User Details">
+<font>
+<Font name="System Bold Italic" size="18.0" />
+</font></Text><Button fx:id="createACC" layoutX="168.0" layoutY="263.0" mnemonicParsing="false" onAction="#createaccount" text="Create Account" /><Label fx:id="msg" layoutX="237.4462890625" layoutY="317.5" /><PasswordField fx:id="npwd" layoutX="233.74609375" layoutY="160.03125" /><PasswordField fx:id="cpwd" layoutX="234.0" layoutY="206.0" /><Button layoutX="309.0" layoutY="263.0" mnemonicParsing="false" onAction="#backTologin" prefHeight="25.0" prefWidth="96.0" text="Back" />
+</children></AnchorPane>
+</children></StackPane>
