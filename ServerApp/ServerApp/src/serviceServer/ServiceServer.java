@@ -4,6 +4,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+
+import authentication.Authentication;
+import RMIInterface.ServiceServerInterface;
 /*
  * -cp C:\Users\DBAdmin\Documents\RMIBookExample\src;C:\Users\DBAdmin\Documents\RMIBookExample\bin\ServerRemote.class
 -Djava.rmi.server.codebase=file:/C:/Users/DBAdmin/Documents/RMIBookExample/bin/ServerRemote.class
@@ -15,6 +18,20 @@ public class ServiceServer implements ServiceServerInterface {
 	public static final String HOST 		 = "cics525group6S3.cloudapp.net";
 	public static final int PORT			 = 12345;
 	
+	@Override
+	public boolean login(String username, String password)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		Authentication auth = new Authentication();
+		return auth.validUser(username, password);
+	}
+
+	@Override
+	public HashMap<String, String> getAddress(ArrayList<String> files,
+			String user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public ServiceServer() throws RemoteException {
 	}
 
@@ -49,4 +66,6 @@ public class ServiceServer implements ServiceServerInterface {
 		}
 
 	}
+
+	
 }
