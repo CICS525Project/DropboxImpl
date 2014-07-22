@@ -74,8 +74,8 @@ public class systemTray {
 			}
 		}
 	}	
-	public static void main(String[] args) throws MalformedURLException {
-		// TODO Auto-generated method stub
-		systemTray mapp = new systemTray();
-	}
+//	public static void main(String[] args) throws MalformedURLException {
+//		// TODO Auto-generated method stub
+//		systemTray mapp = new systemTray();
+//	}
 }

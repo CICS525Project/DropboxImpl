@@ -22,7 +22,7 @@ public interface ServiceServerInterface extends Remote {
 	 * @param user username of current user
 	 * @return hashmap with every filename and its corresponding service server address
 	 */
-	HashMap<String,String> getAddress(ArrayList<String> files, String user);
+	HashMap<String,String> getAddress(ArrayList<String> files, String user) throws RemoteException;
 	
 	
 	
