@@ -1,4 +1,6 @@
-/GreetingServer.class
 /authentication/
 /extra/
 /serviceServer/
+/oldImplementation/
+/dbCommunication/
+/routingTable/

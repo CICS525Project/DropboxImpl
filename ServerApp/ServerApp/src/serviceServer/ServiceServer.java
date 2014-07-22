@@ -10,10 +10,11 @@ import java.util.*;
 -Djava.rmi.server.hostname=cics525group6S3.cloudapp.net
 -Djava.security.policy=C:/Users/DBAdmin/Documents/RMIBookExample/server.policy
  */
-public class ServiceServer implements
-		ServiceServerInterface {
+public class ServiceServer implements ServiceServerInterface {
 
-
+	public static final String HOST 		 = "cics525group6S3.cloudapp.net";
+	public static final int PORT			 = 12345;
+	
 	public ServiceServer() throws RemoteException {
 	}
 
@@ -27,14 +28,14 @@ public class ServiceServer implements
 	}
 
 	public static void main(String args[]) throws RemoteException{
-		int port = 12345;
-		Registry registry = LocateRegistry.createRegistry(port);
+		
+		Registry registry = LocateRegistry.createRegistry(PORT);
 		try {
-			System.setProperty("java.rmi.server.hostname", "cics525group6S3.cloudapp.net");
+			System.setProperty("java.rmi.server.hostname", HOST);
 			ServiceServerInterface server = new ServiceServer();
-			ServiceServerInterface stub = (ServiceServerInterface) UnicastRemoteObject.exportObject(server, port);  
+			ServiceServerInterface stub = (ServiceServerInterface) UnicastRemoteObject.exportObject(server, PORT);  
 			 
-            registry = LocateRegistry.getRegistry(port);
+            registry = LocateRegistry.getRegistry(PORT);
 //            System.out.println(stub.toString());
             registry.bind("NiftyServer", stub);
             System.out.println("Server running...");
