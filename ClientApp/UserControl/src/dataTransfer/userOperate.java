@@ -2,7 +2,6 @@ package dataTransfer;
 
 import com.microsoft.windowsazure.services.blob.client.*;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -12,15 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import java.nio.file.*;
 
-import static java.nio.file.StandardWatchEventKinds.*;
 public class userOperate {
 
 	private static Socket client;

@@ -24,7 +24,7 @@ public class systemTray {
 		myTip = new ToolTip();
 		if(SystemTray.isSupported()){
 			//the image should be put in the bin folder of the application
-			URL url = this.getClass().getResource("/img/b.png");
+			URL url = this.getClass().getResource("/img/box.png");
 			ImageIcon icon = new ImageIcon(url);
 			Image image = icon.getImage();
 			TrayIcon trayIcon = new TrayIcon(image);
@@ -52,6 +52,18 @@ public class systemTray {
 				}
 			});
 			popupMenu.add(exit);
+			MenuItem shareItem = new MenuItem();
+			shareItem.setLabel("Share");
+			shareItem.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					System.out.println("share item shared.");
+					//user interface pop up here.
+				}
+			});
+			popupMenu.add(shareItem);
 			trayIcon.setPopupMenu(popupMenu);
 			SystemTray systemTray = SystemTray.getSystemTray();
 			try {
@@ -62,8 +74,8 @@ public class systemTray {
 			}
 		}
 	}	
-//	public static void main(String[] args) throws MalformedURLException {
-//		// TODO Auto-generated method stub
-//		systemTray mapp = new systemTray();
-//	}
+	public static void main(String[] args) throws MalformedURLException {
+		// TODO Auto-generated method stub
+		systemTray mapp = new systemTray();
+	}
 }
