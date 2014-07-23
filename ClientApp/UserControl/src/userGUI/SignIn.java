@@ -1,7 +1,7 @@
-package UserControl;
+package userGUI;
 
 import java.awt.Container;
-import java.awt.EventQueue;
+import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,8 +11,11 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+import dataTransfer.*;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class SignIn extends JFrame {
@@ -20,22 +23,8 @@ public class SignIn extends JFrame {
 	private JPanel contentPane;
 	private JTextField uName;
 	private JPasswordField pwd;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SignIn frame = new SignIn();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private String username;
+	private String password;
 
 	/**
 	 * Create the frame.
@@ -49,7 +38,7 @@ public class SignIn extends JFrame {
 		setContentPane(contentPane);
 
 		JLabel lblCloudbox = new JLabel("CloudBox");
-		lblCloudbox.setBounds(181, 22, 46, 14);
+		lblCloudbox.setBounds(181, 22, 80, 14);
 		contentPane.add(lblCloudbox);
 
 		uName = new JTextField();
@@ -63,11 +52,11 @@ public class SignIn extends JFrame {
 		contentPane.add(pwd);
 
 		JLabel lblUsername = new JLabel("Username");
-		lblUsername.setBounds(108, 93, 55, 17);
+		lblUsername.setBounds(108, 93, 70, 17);
 		contentPane.add(lblUsername);
 
 		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(108, 133, 46, 14);
+		lblPassword.setBounds(108, 133, 60, 14);
 		contentPane.add(lblPassword);
 
 		final JButton btnSignin = new JButton("SignIn");
@@ -80,25 +69,34 @@ public class SignIn extends JFrame {
 					JOptionPane.showMessageDialog(null,
 							"Please enter the Password");
 				} else {
-					String name = uName.getText();
-					String passw = pwd.getText();
-					if (true) {
-						try {
-							minimizeApp minimizeAppobj = new minimizeApp();
-							Container frame = btnSignin.getParent();
-							do
-								frame = frame.getParent();
-							while (!(frame instanceof JFrame));
-							((JFrame) frame).hide();
-							;
-
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+					username = uName.getText();
+					password = pwd.getText();
+					// user authorization
+					userOperate opt = new userOperate(
+							"cics525group6S3.cloudapp.net", 12345,
+							"/Users/haonanxu/Desktop/download");
+					try {
+						if (opt.signIn(username, password)) {
+							try {
+								systemTray minimizeAppobj = new systemTray();
+								Container frame = btnSignin.getParent();
+								do{
+									frame = frame.getParent();
+								}while (!(frame instanceof JFrame));
+								((JFrame) frame).hide();
+								
+							} catch (MalformedURLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"UserName and Password Not Found");
 						}
-					} else
-						JOptionPane.showMessageDialog(null,
-								"UserName and Password Not Found");
+					} catch (HeadlessException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 				}
 
@@ -106,9 +104,9 @@ public class SignIn extends JFrame {
 		});
 		btnSignin.setBounds(181, 173, 92, 23);
 		contentPane.add(btnSignin);
-
 		JButton btnSignup = new JButton("SignUp");
 		btnSignup.setBounds(283, 173, 92, 23);
 		contentPane.add(btnSignup);
 	}
+
 }

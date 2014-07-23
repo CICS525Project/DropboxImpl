@@ -28,18 +28,22 @@ public class userOperate {
 	private static DataInputStream streamReader;
 	private static DataOutputStream streamWriter;
 	private ServiceServerInterface serviceProvider;
-
+	private static fileOptHelper helper;
+	private ArrayList<String> filenames;
+	
 	/**
 	 * constrctor
 	 * 
 	 * @param hostname
 	 */
-	public userOperate(String hostname, int port) {
+	public userOperate(String hostname, int port, String folderPath) {
 		Registry registry;
 		try {
 			registry = LocateRegistry.getRegistry(hostname, port);
 			this.serviceProvider = (ServiceServerInterface) registry
 					.lookup("cloudboxRMI");
+			helper = new fileOptHelper();
+			filenames = helper.getFileInFolder(folderPath);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,6 +73,16 @@ public class userOperate {
 		return client;
 	}
 
+	/**
+	 * close tcp socket connections between client and user
+	 * 
+	 * @throws IOException
+	 */
+	public void closeConnection() throws IOException {
+		streamWriter.writeUTF("Q");
+		client.close();
+	}
+	
 	/**
 	 * upload file to Azure container filePath is the path for file that needs
 	 * to be uploaded.
@@ -123,7 +137,7 @@ public class userOperate {
 	 * @return
 	 * @throws IOException
 	 */
-	public ArrayList<String> getRemoteList() throws IOException {
+	public ArrayList<String> getRemoteFileList() throws IOException {
 		ArrayList<String> list = new ArrayList<String>();
 		try {
 			String msg = "download";
@@ -216,30 +230,15 @@ public class userOperate {
 	 * @return
 	 * @throws IOException
 	 */
-	public void signIn(String uname, String upass) throws IOException {
+	public boolean signIn(String uname, String upass) throws IOException {
 
 		if (serviceProvider.login(uname, upass)) {
-			System.out.println("login sccessfully.");
+			return true;
 		} else {
-			System.out.println("login failed.");
+			return false;
 		}
 	}
 
-	public HashMap<String, String> getFileAdd(ArrayList<String> files){
-		HashMap<String, String> res = new HashMap<String, String>();
-		try {
-			res = serviceProvider.getAddress(files, "jitin");
-			System.out.println("get hashmap length : " + res.size());
-			for (int i = 0; i < res.size() ; i++) {
-				System.out.println(res.get(files.get(i)));
-			}
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return res;
-	}
-	
 	/**
 	 * user sign up on the server
 	 * 
@@ -258,27 +257,25 @@ public class userOperate {
 		return false;
 	}
 
-	/**
-	 * close tcp socket connections between client and user
-	 * 
-	 * @throws IOException
-	 */
-	public void closeConnection() throws IOException {
-		streamWriter.writeUTF("Q");
-		client.close();
-	}
-
-	public static void main(String[] args) throws MalformedURLException {
-		// TODO Auto-generated method stub
-		userOperate opt = new userOperate("cics525Group6S3.cloudapp.net", 12345);
-		fileOptHelper helper = new fileOptHelper();
-		ArrayList<String> filenames = helper.getFileInFolder("/Users/haonanxu/Desktop/download");
+	
+	public HashMap<String, String> getFileAddress(ArrayList<String> files){
+		HashMap<String, String> res = new HashMap<String, String>();
 		try {
-			opt.signIn("jitin", "123");
-			opt.getFileAdd(filenames);
-		} catch (IOException e) {
+			res = serviceProvider.getAddress(files, "jitin");
+			System.out.println("get hashmap length : " + res.size());
+			for (int i = 0; i < res.size() ; i++) {
+				System.out.println(res.get(files.get(i)));
+			}
+		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return res;
+	}
+	
+
+	public static void main(String[] args) throws MalformedURLException {
+		// TODO Auto-generated method stub
+
 	}
 }

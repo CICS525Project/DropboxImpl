@@ -1,4 +1,4 @@
-package UserControl;
+package userGUI;
 
 
 import java.io.File;
