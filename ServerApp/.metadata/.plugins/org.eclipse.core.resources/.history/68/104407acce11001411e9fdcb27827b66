@@ -1,0 +1,21 @@
+package serviceServer;
+import java.rmi.*;
+import java.util.*;
+
+public interface ServiceServerInterface extends Remote {
+	// Dummy testing methods
+	Date getDate() throws RemoteException;
+	int execute(int i) throws RemoteException;
+	
+	// login method for user authentication
+	/**
+	 * 
+	 * @param username username provided by user in the GUI
+	 * @param password password password provided by user in GUI
+	 * @return
+	 * @throws RemoteException
+	 */
+	boolean login(String username, String password) throws RemoteException;
+	
+	// method to obtain server addresses for a given list of files
+}

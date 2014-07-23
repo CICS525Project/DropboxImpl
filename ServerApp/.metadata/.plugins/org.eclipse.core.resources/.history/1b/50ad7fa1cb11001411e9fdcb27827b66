@@ -1,0 +1,6 @@
+package serviceServer;
+
+public class Snippet {
+	public static final String HOST
+}
+

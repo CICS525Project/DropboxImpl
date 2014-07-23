@@ -22,8 +22,17 @@ public interface ServiceServerInterface extends Remote {
 	 * @param user username of current user
 	 * @return hashmap with every filename and its corresponding service server address
 	 */
-	HashMap<String,String> getAddress(ArrayList<String> files, String user);
+	HashMap<String,String> getAddress(ArrayList<String> files, String user) throws RemoteException;
 	
+	/**
+	 * Method that attempts to create a new account in the system
+	 * @param username new user name
+	 * @param password new password
+	 * @return returns true if the new account is created successfully or false otherwise
+	 * @throws RemoteException
+	 */
+	boolean signIn(String username, String password) throws RemoteException;
 	
+	HashMap<String,String> getCurrentFiles()  throws RemoteException; 
 	
 }

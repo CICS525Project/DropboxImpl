@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="authentication.Authentication"/>
 <fullyQualifiedTypeName name="java.net.SocketException"/>
+<fullyQualifiedTypeName name="authentication.Authentication"/>
+<fullyQualifiedTypeName name="routingTable.DBConnection"/>
 </qualifiedTypeNameHistroy>
