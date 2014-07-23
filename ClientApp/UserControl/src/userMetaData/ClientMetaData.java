@@ -21,9 +21,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import dataTransfer.userOperate;
+import dataTransfer.UserOperate;
 
-public class clientMetaData {
+public class ClientMetaData {
 
 	/**
 	 * create xml file for files in current folder

@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
-import dataTransfer.userOperate;
+import dataTransfer.UserOperate;
 
 
 public class SignUp extends JFrame {
@@ -83,7 +83,7 @@ public class SignUp extends JFrame {
 				else
 				{
 
-					userOperate opt = userOperate.getInstance();
+					UserOperate opt = UserOperate.getInstance();
 					System.out.println(userName.getText() + " " + nPassword.getText());
 					try {
 						if(opt.signIn(userName.getText(), nPassword.getText())){

@@ -19,7 +19,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 
-public class fileOptHelper {
+public class FileOptHelper {
 
 	/**
 	 * hashFile: used for calculating SHA-1 value for a file

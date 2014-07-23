@@ -16,10 +16,10 @@ import com.sun.glass.events.MouseEvent;
 
 import java.awt.PopupMenu;
 
-public class systemTray {
+public class MySystemTray {
 	ToolTip myTip;
 	
-	public systemTray() throws MalformedURLException {
+	public MySystemTray() throws MalformedURLException {
 		// TODO Auto-generated constructor stub
 		myTip = new ToolTip();
 		if(SystemTray.isSupported()){

@@ -78,11 +78,11 @@ public class SignIn extends JFrame {
 					username = uName.getText();
 					password = pwd.getText();
 					// user authorization
-					userOperate opt = userOperate.getInstance();
+					UserOperate opt = UserOperate.getInstance();
 					try {
 						if (opt.signIn(username, password)) {
 							try {
-								systemTray minimizeAppobj = new systemTray();
+								MySystemTray minimizeAppobj = new MySystemTray();
 								Container frame = btnSignin.getParent();
 								do{
 									frame = frame.getParent();
@@ -136,5 +136,4 @@ public class SignIn extends JFrame {
 			}
 		});
 	}
-
 }

@@ -23,19 +23,19 @@ import java.util.regex.Pattern;
 
 import RMIInterface.ServiceServerInterface;
 import dataTransfer.*;
-public class userOperate {
+public class UserOperate {
 
 	private ServiceServerInterface serviceProvider;
-	private static fileOptHelper helper;
+	private static FileOptHelper helper;
 	private ArrayList<String> filenames;
-	private static userOperate singleton = null;
+	private static UserOperate singleton = null;
 	private static String hostname;
 	private static int port;
 	private static String folder;
-	private userOperate(){}
-	public static userOperate getInstance(){
+	
+	public static UserOperate getInstance(){
 		if(singleton == null){
-			singleton = new userOperate(hostname,port,folder);
+			singleton = new UserOperate(hostname,port,folder);
 		}
 		return singleton;
 	}
@@ -44,13 +44,13 @@ public class userOperate {
 	 * 
 	 * @param hostname
 	 */
-	public userOperate(String hostname, int port, String folderPath) {
+	public UserOperate(String hostname, int port, String folderPath) {
 		Registry registry;
 		try {
 			registry = LocateRegistry.getRegistry(hostname, port);
 			this.serviceProvider = (ServiceServerInterface) registry
 					.lookup("cloudboxRMI");
-			helper = new fileOptHelper();
+			helper = new FileOptHelper();
 			filenames = helper.getFileInFolder(folderPath);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -209,12 +209,24 @@ public class userOperate {
 			return false;
 		}
 	}
+	/**
+	 * user sign up in the system
+	 * @param uname
+	 * @param upass
+	 * @return
+	 * @throws RemoteException
+	 */
 	public boolean signUp(String uname, String upass) throws RemoteException{
 		if(serviceProvider.signIn(uname, upass)){
 			return true;
 		}
 		return false;
 	}
+	/**
+	 * 
+	 * @param files
+	 * @return
+	 */
 	public HashMap<String, String> getFileAddress(ArrayList<String> files){
 		HashMap<String, String> res = new HashMap<String, String>();
 		try {
@@ -230,6 +242,10 @@ public class userOperate {
 		return res;
 	}
 	
+	/**
+	 * create the file wathcer
+	 * @param dir
+	 */
 	public void startWatcher(Path dir){
 		try {
 			helper.watchFile(dir);
@@ -238,6 +254,12 @@ public class userOperate {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * get all files visible to a user <file, version>
+	 * @param uname
+	 * @return
+	 */
 	public HashMap<String, Integer> getServerVersion(String uname){
 		HashMap<String, Integer> res = new HashMap<String, Integer>();
 		try {
@@ -248,6 +270,7 @@ public class userOperate {
 		}
 		return res;
 	}
+	
 	public ArrayList<String> getFileList(){
 		return filenames;
 	}
@@ -256,19 +279,19 @@ public class userOperate {
 		return hostname;
 	}
 	public static void setHostname(String hostname) {
-		userOperate.hostname = hostname;
+		UserOperate.hostname = hostname;
 	}
 	public static int getPort() {
 		return port;
 	}
 	public static void setPort(int port) {
-		userOperate.port = port;
+		UserOperate.port = port;
 	}
 	public static String getFolder() {
 		return folder;
 	}
 	public static void setFolder(String folder) {
-		userOperate.folder = folder;
+		UserOperate.folder = folder;
 	}
 	
 }
