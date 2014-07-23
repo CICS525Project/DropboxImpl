@@ -63,10 +63,20 @@ public class ServiceServer implements ServiceServerInterface {
 
 
 	@Override
-	public HashMap<String, String> getCurrentFiles() throws RemoteException {
+	public HashMap<String, Integer> getCurrentFiles(String user)
+			throws RemoteException {
 		// TODO Auto-generated method stub
-		return null;
+		DBConnection connection = new DBConnection();
+		HashMap<String,Integer> result = new HashMap<String,Integer>();
+		try {
+			result = connection.searchForFiles(user);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
+
 
 	public ServiceServer() throws RemoteException {
 	}
@@ -102,6 +112,7 @@ public class ServiceServer implements ServiceServerInterface {
 		}
 
 	}
+
 
 
 	

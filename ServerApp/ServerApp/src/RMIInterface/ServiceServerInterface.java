@@ -1,7 +1,11 @@
 package RMIInterface;
 import java.rmi.*;
 import java.util.*;
-
+/**
+ * Interface to implement RMI between Client and Service Server
+ * @author cics525
+ *
+ */
 public interface ServiceServerInterface extends Remote {
 	// Dummy testing methods
 	Date getDate() throws RemoteException;
@@ -33,6 +37,7 @@ public interface ServiceServerInterface extends Remote {
 	 */
 	boolean signIn(String username, String password) throws RemoteException;
 	
-	HashMap<String,String> getCurrentFiles()  throws RemoteException; 
+	
+	HashMap<String,Integer> getCurrentFiles(String user)  throws RemoteException; 
 	
 }
