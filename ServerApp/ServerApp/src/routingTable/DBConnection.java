@@ -16,11 +16,22 @@ import java.util.Set;
 import utils.ConnectionFactory;
 
 /**
+ * ClassName: DBConnection
+ * This class is used to Store the File Details in the Routing Table and the Shared Table
  * @author Jitin
- * @version 1.0, 19/July/2014
+ * @version 2.0, 22/July/2014
  */
 public class DBConnection {
-
+	/**
+	 * Method Name: insertRecordforUpload
+	 * This method will receive a Hashmap containing FileName and Version which is saved
+	 * into the Routing Table in the Server
+	 * @param fileList
+	 * @param userName
+	 * @param serverName
+	 * @return result
+	 * @throws SQLException
+	 */
 	public String insertRecordforUpload(HashMap<String,Integer> fileList,String userName,String serverName) throws SQLException{
 		String result=null;
 		Connection con = null;
@@ -44,6 +55,7 @@ public class DBConnection {
 		}
 		catch(Exception e){
 			result="failure";
+			throw new SQLException();
 		}
 		finally {
 			if (ps != null) try { ps.close(); } catch(Exception e) {}
@@ -51,7 +63,16 @@ public class DBConnection {
 		}
 		return result;
 	}
-
+/**
+ * Method Name: updateVersionForFile
+ * This method will receive a Hashmap containing FileName and Version for which 
+ * the Version number are updated in case of new Version Numbers
+ * @param fileList
+ * @param userName
+ * @param serverName
+ * @return result
+ * @throws SQLException
+ */
 	public String updateVersionForFile(HashMap<String,Integer> fileList,String userName,String serverName) throws SQLException {
 		String result=null;
 		Connection con = null;
@@ -75,6 +96,7 @@ public class DBConnection {
 		}
 		catch(Exception e){
 			result="failure";
+			throw new SQLException();
 		}
 		finally {
 			if (ps != null) try { ps.close(); } catch(Exception e) {}
@@ -83,7 +105,15 @@ public class DBConnection {
 		return result;
 
 	}
-
+/**
+ * Method Name: insertRecordforShare
+ * This method is used to insert the records to the sharedTable 
+ * when the given user shares files with other users
+ * @param fileList
+ * @param userName
+ * @return
+ * @throws SQLException
+ */
 	public String insertRecordforShare(HashMap<String,String> fileList,String userName) throws SQLException{
 		String result=null;
 		Connection con = null;
@@ -106,6 +136,7 @@ public class DBConnection {
 		}
 		catch(Exception e){
 			result="failure";
+			throw new SQLException();
 		}
 		finally {
 			if (ps != null) try { ps.close(); } catch(Exception e) {}
@@ -113,7 +144,15 @@ public class DBConnection {
 		}
 		return result;
 	}
-
+/**
+ * Method Name: searchForServerName
+ * This method is used to search for the Server DNS Names of the Given FileNames for
+ * a particular User. This includes both Owned Files and Shared Files for the User
+ * @param fileList
+ * @param userName
+ * @return
+ * @throws SQLException
+ */
 	public HashMap<String, String> searchForServerName(ArrayList<String> fileList,String userName)throws SQLException{
 		Connection con = null;
 		Connection con1 = null;
@@ -151,6 +190,8 @@ public class DBConnection {
 			}
 		}
 		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
 		}
 		finally {
 			if (ps != null) try { ps.close(); } catch(Exception e) {}
@@ -162,6 +203,13 @@ public class DBConnection {
 		}
 		return result;
 	}
+	/**
+	 * Method Name: searchForFileinSharedTable
+	 * Searches the Owner Name of the Files who shared with the Given UserName
+	 * @param fileList
+	 * @param userName
+	 * @return
+	 */
 	public ArrayList<String> searchForFileinSharedTable(ArrayList<String> fileList,String userName){
 		Connection con = null;
 		PreparedStatement ps=null;
@@ -181,11 +229,134 @@ public class DBConnection {
 			}
 		}
 		catch(Exception e){
+			e.printStackTrace();
 		}
 		finally {
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
 			if (ps != null) try { ps.close(); } catch(Exception e) {}
 			if (con != null) try { con.close(); } catch(Exception e) {}
 		}
 		return result;
 	}
+	/**
+	 * Method Name: searchForFileinSharedTable
+	 * Searches the Owner Name of the Files who shared with the Given UserName
+	 * @param userName
+	 * @return
+	 */
+	public ArrayList<String> searchForFileinSharedTable(String userName){
+		Connection con = null;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		ArrayList<String> result=new ArrayList<String>();
+		try{
+			con=ConnectionFactory.getConnection();
+				String query="SELECT userName FROM [sharedTable] WHERE sharedUserName=?";
+				ps=con.prepareStatement(query);
+				ps.setString(1, userName);
+				rs=ps.executeQuery();
+				while(rs.next()){
+					result.add(rs.getString(1));
+				}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally {
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+		}
+		return result;
+	}
+	/**
+	 * Method Name: searchForVersionNumber
+	 * This method is used to return the FileNumber and their Version Numbers
+	 * for a given List of Files
+	 * @param fileList
+	 * @param userName
+	 * @return result
+	 * @throws SQLException
+	 */
+	public HashMap<String, Integer> searchForVersionNumber(ArrayList<String> fileList,String userName)throws SQLException{
+		Connection con = null;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		HashMap<String, Integer>  result=new HashMap<String, Integer> ();
+		try{
+			con=ConnectionFactory.getConnection();
+			for(String file: fileList){
+				String query="SELECT version FROM [routingTable] WHERE userName=? AND fileName=?";
+				ps=con.prepareStatement(query);
+				ps.setString(1, userName);
+				ps.setString(2, file);
+				rs=ps.executeQuery();
+				while(rs.next()){
+					result.put(file,rs.getInt(1));
+				}
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
+		}
+		finally {
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+		}
+		return result;
+	}
+	/**
+	 * Method Name: searchForFiles
+	 * Used to retrieve the List of Files associated with a particular UserName
+	 * Includes both the Owned Files and Shared by files
+	 * @param userName
+	 * @return result
+	 * @throws SQLException
+	 */
+		public HashMap<String, Integer> searchForFiles(String userName)throws SQLException{
+			Connection con = null;
+			Connection con1 = null;
+			PreparedStatement ps=null;
+			PreparedStatement ps1=null;
+			ResultSet rs=null;
+			ResultSet rs1=null;
+			HashMap<String, Integer> result =new HashMap<String, Integer>();
+			ArrayList<String> userShareList=new ArrayList<String>();
+			try{
+				con=ConnectionFactory.getConnection();
+					String query="SELECT fileName,version FROM [routingTable] WHERE userName=?";
+					ps=con.prepareStatement(query);
+					ps.setString(1, userName);
+					rs=ps.executeQuery();
+					while(rs.next()){
+						result.put(rs.getString(1), rs.getInt(2));
+					}
+				userShareList=searchForFileinSharedTable(userName);
+				con1=ConnectionFactory.getConnection();
+				for(String user:userShareList){
+						String query1="SELECT fileName,version FROM [routingTable] WHERE userName=?";
+						ps1=con1.prepareStatement(query1);
+						ps1.setString(1, user);
+						rs1=ps1.executeQuery();
+						while(rs1.next()){
+							result.put(rs1.getString(1), rs1.getInt(2));
+						}
+				}
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				throw new SQLException();
+			}
+			finally {
+				if (ps != null) try { ps.close(); } catch(Exception e) {}
+				if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+				if (con != null) try { con.close(); } catch(Exception e) {}
+				if (con1 != null) try { con1.close(); } catch(Exception e) {}
+				if (rs != null) try { rs.close(); } catch(Exception e) {}
+				if (rs1 != null) try { rs1.close(); } catch(Exception e) {}
+			}
+			return result;
+		}
 }
