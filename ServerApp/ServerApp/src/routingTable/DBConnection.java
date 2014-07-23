@@ -343,6 +343,7 @@ public class DBConnection {
 						while(rs1.next()){
 							result.put(rs1.getString(1), rs1.getInt(2));
 						}
+						
 				}
 			}
 			catch(Exception e){
