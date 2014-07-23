@@ -351,6 +351,7 @@ public class DBConnection {
 				throw new SQLException();
 			}
 			finally {
+				
 				if (ps != null) try { ps.close(); } catch(Exception e) {}
 				if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
 				if (con != null) try { con.close(); } catch(Exception e) {}
