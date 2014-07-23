@@ -1,0 +1,5 @@
+package RMIInterface;
+
+public interface ServerServerComInterface {
+
+}

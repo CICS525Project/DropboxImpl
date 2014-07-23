@@ -3,4 +3,6 @@
 <fullyQualifiedTypeName name="java.net.SocketException"/>
 <fullyQualifiedTypeName name="authentication.Authentication"/>
 <fullyQualifiedTypeName name="routingTable.DBConnection"/>
+<fullyQualifiedTypeName name="java.rmi.RemoteException"/>
+<fullyQualifiedTypeName name="serviceServer.RoutingTable"/>
 </qualifiedTypeNameHistroy>

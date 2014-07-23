@@ -1,0 +1,14 @@
+package RMIInterface;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+import serviceServer.RoutingTable;
+/**
+ * Interface for Server to Server communication
+ * @author cics525
+ *
+ */
+public interface ServerServerComInterface extends Remote{
+	boolean synchronizeRT(RoutingTable localTable) throws RemoteException;
+}
