@@ -1,6 +1,8 @@
 package userGUI;
 
+
 import java.awt.Container;
+import java.awt.EventQueue;
 import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
@@ -30,6 +32,7 @@ public class SignIn extends JFrame {
 	 * Create the frame.
 	 */
 	public SignIn() {
+		setTitle("Login");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -84,7 +87,7 @@ public class SignIn extends JFrame {
 									frame = frame.getParent();
 								}while (!(frame instanceof JFrame));
 								((JFrame) frame).hide();
-								
+
 							} catch (MalformedURLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -104,9 +107,34 @@ public class SignIn extends JFrame {
 		});
 		btnSignin.setBounds(181, 173, 92, 23);
 		contentPane.add(btnSignin);
+
 		JButton btnSignup = new JButton("SignUp");
 		btnSignup.setBounds(283, 173, 92, 23);
 		contentPane.add(btnSignup);
+
+		btnSignup.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							Container frame = btnSignin.getParent();
+							do{
+								frame = frame.getParent();
+							}while (!(frame instanceof JFrame));
+							((JFrame) frame).hide();
+							SignUp signUpFrame = new SignUp();
+							signUpFrame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+
+			}
+		});
 	}
 
 }
