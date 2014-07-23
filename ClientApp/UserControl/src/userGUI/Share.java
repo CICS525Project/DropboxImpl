@@ -1,20 +1,24 @@
 package userGUI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.ListSelectionModel;
 
 public class Share extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField userName;
 
 	/**
 	 * Create the frame.
@@ -34,11 +38,12 @@ public class Share extends JFrame {
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(201, 110, 61, 14);
 		contentPane.add(lblUsername);
+		
 
-		textField = new JTextField();
-		textField.setBounds(272, 107, 86, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		userName = new JTextField();
+		userName.setBounds(272, 107, 86, 20);
+		contentPane.add(userName);
+		userName.setColumns(10);
 
 		JButton btnShare = new JButton("Share");
 		btnShare.setBounds(269, 148, 89, 23);
@@ -47,14 +52,42 @@ public class Share extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 56, 155, 177);
 		contentPane.add(scrollPane);
-		JList list = new JList(flist.toArray());
+		final JList list = new JList(flist.toArray());
 		scrollPane.setViewportView(list);
 		scrollPane.setViewportView(list);
+		
+		btnShare.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				if (userName == null || userName.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null,"Please enter the username to share the file");
+				} else if (list.getSelectedValues() == null
+						|| list.getSelectionModel().isSelectionEmpty()) {
+					JOptionPane.showMessageDialog(null,"Please Select the file to be shared");
+				}
+				else{
+				list.setSelectionMode(
+		                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				//ArrayList<String> sel = new ArrayList<String>(list.getSelectedValues());
+				Object[] selected = list.getSelectedValues();
+				ArrayList<String> sel = new ArrayList<String>(selected.length);
+				String[] selectedItems = new String[selected.length];
+
+				for(int i=0; i<selected.length;i++){
+
+				selectedItems[i] = selected[i].toString();
+				}
+				String name = userName.getText();
+				}
+			}
+		});
 
 	}
 
 	private ArrayList<String> getFileName() {
-		File folder = new File("/Users/haonanxu/Desktop/download");
+		File folder = new File("C:\\Users\\Sashiraj\\Desktop\\download");
 		File[] listoffiles = folder.listFiles();
 		ArrayList<String> finalFilelist = new ArrayList<String>();
 		System.out.println(listoffiles);
