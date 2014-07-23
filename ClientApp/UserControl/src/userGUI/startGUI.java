@@ -1,8 +1,5 @@
 package userGUI;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import dataTransfer.*;
 import userMetaData.*;
@@ -14,7 +11,9 @@ public class startGUI{
 		// TODO Auto-generated method stub
 		SignIn frame = new SignIn();
 		frame.setVisible(true);
-		Path dir = Paths.get("/Users/haonanxu/Desktop/download");
+		userOperate.setFolder("/Users/haonanxu/Desktop/download");
+		userOperate.setPort(12345);
+		userOperate.setHostname("cics525group6S3.cloudapp.net");
 		//opt.watchFile(dir);
 	}
 

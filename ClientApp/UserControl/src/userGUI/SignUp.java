@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
+import dataTransfer.userOperate;
+
 
 public class SignUp extends JFrame {
 
@@ -21,22 +24,6 @@ public class SignUp extends JFrame {
 	private JTextField userName;
 	private JPasswordField nPassword;
 	private JPasswordField cPassword;
-
-	/**
-	 * Launch the application.
-	 */
-	//	public static void main(String[] args) {
-	//		EventQueue.invokeLater(new Runnable() {
-	//			public void run() {
-	//				try {
-	//					SignUp frame = new SignUp();
-	//					frame.setVisible(true);
-	//				} catch (Exception e) {
-	//					e.printStackTrace();
-	//				}
-	//			}
-	//		});
-	//	}
 
 	/**
 	 * Create the frame.
@@ -96,9 +83,20 @@ public class SignUp extends JFrame {
 				else
 				{
 
-					// call signup function
-
-
+					userOperate opt = userOperate.getInstance();
+					System.out.println(userName.getText() + " " + nPassword.getText());
+					try {
+						if(opt.signIn(userName.getText(), nPassword.getText())){
+							JOptionPane.showMessageDialog(null,
+									"You have created your account.");
+						}else{
+							JOptionPane.showMessageDialog(null,
+									"Sorry, your account is not created successfully. Please try again.");
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		});

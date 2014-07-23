@@ -25,13 +25,20 @@ import RMIInterface.ServiceServerInterface;
 import dataTransfer.*;
 public class userOperate {
 
-	private static Socket client;
-	private static DataInputStream streamReader;
-	private static DataOutputStream streamWriter;
 	private ServiceServerInterface serviceProvider;
 	private static fileOptHelper helper;
 	private ArrayList<String> filenames;
-	
+	private static userOperate singleton = null;
+	private static String hostname;
+	private static int port;
+	private static String folder;
+	private userOperate(){}
+	public static userOperate getInstance(){
+		if(singleton == null){
+			singleton = new userOperate(hostname,port,folder);
+		}
+		return singleton;
+	}
 	/**
 	 * constrctor
 	 * 
@@ -55,36 +62,6 @@ public class userOperate {
 	}
 
 	/**
-	 * create TCP socket link
-	 * 
-	 * @param host
-	 * @param port
-	 */
-	public Socket linkToServer(String host, int port) {
-		try {
-			client = new Socket(host, port);
-			OutputStream out = client.getOutputStream();
-			streamWriter = new DataOutputStream(out);
-			InputStream in = client.getInputStream();
-			streamReader = new DataInputStream(in);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return client;
-	}
-
-	/**
-	 * close tcp socket connections between client and user
-	 * 
-	 * @throws IOException
-	 */
-	public void closeConnection() throws IOException {
-		streamWriter.writeUTF("Q");
-		client.close();
-	}
-	
-	/**
 	 * upload file to Azure container filePath is the path for file that needs
 	 * to be uploaded.
 	 * 
@@ -92,34 +69,27 @@ public class userOperate {
 	 * @throws IOException
 	 */
 	public void upoLoadFile(String FilePath) throws IOException {
-		try {
-			String msg = "upload";
-			streamWriter.writeUTF(msg);
-			System.out.println("message sent: " + msg);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		String filename = getFilename(FilePath);
-		System.out.println("filename is " + filename);
-		String addresses = streamReader.readUTF();
-		String[] part = addresses.split(",");
-		CloudStorageAccount storageAccount;
-		try {
-			storageAccount = CloudStorageAccount.parse(part[1]);
-			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-			String[] part2 = part[0].split("/");
-			String containerName = part2[part2.length - 1];
-			CloudBlobContainer container = blobClient
-					.getContainerReference(containerName);
-			container.createIfNotExist();
-			CloudBlockBlob blob = container.getBlockBlobReference(filename);
-			File source = new File(FilePath);
-			blob.upload(new FileInputStream(source), source.length());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+//		String filename = getFilename(FilePath);
+//		System.out.println("filename is " + filename);
+//		String addresses = streamReader.readUTF();
+//		String[] part = addresses.split(",");
+//		CloudStorageAccount storageAccount;
+//		try {
+//			storageAccount = CloudStorageAccount.parse(part[1]);
+//			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
+//			String[] part2 = part[0].split("/");
+//			String containerName = part2[part2.length - 1];
+//			CloudBlobContainer container = blobClient
+//					.getContainerReference(containerName);
+//			container.createIfNotExist();
+//			CloudBlockBlob blob = container.getBlockBlobReference(filename);
+//			File source = new File(FilePath);
+//			blob.upload(new FileInputStream(source), source.length());
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
@@ -140,38 +110,38 @@ public class userOperate {
 	 */
 	public ArrayList<String> getRemoteFileList() throws IOException {
 		ArrayList<String> list = new ArrayList<String>();
-		try {
-			String msg = "download";
-			streamWriter.writeUTF(msg);
-			System.out.println("message sent: " + msg);
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		String addresses = streamReader.readUTF();
-		String[] part = addresses.split(",");
-		CloudStorageAccount storageAccount;
-		try {
-			storageAccount = CloudStorageAccount.parse(part[1]);
-			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-			String[] part2 = part[0].split("/");
-			System.out.println("container name is: " + part2[part2.length - 1]);
-			String containerName = part2[part2.length - 1];
-			CloudBlobContainer container = blobClient
-					.getContainerReference(containerName);
-			System.out
-					.println("Here is a list of files in the remote container: ");
-			for (ListBlobItem blobItem : container.listBlobs()) {
-				if (blobItem instanceof CloudBlob) {
-					CloudBlob blob = (CloudBlob) blobItem;
-					list.add(blob.getName());
-					System.out.println(blob.getName());
-				}
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
+//		try {
+//			String msg = "download";
+//			streamWriter.writeUTF(msg);
+//			System.out.println("message sent: " + msg);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//		String addresses = streamReader.readUTF();
+//		String[] part = addresses.split(",");
+//		CloudStorageAccount storageAccount;
+//		try {
+//			storageAccount = CloudStorageAccount.parse(part[1]);
+//			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
+//			String[] part2 = part[0].split("/");
+//			System.out.println("container name is: " + part2[part2.length - 1]);
+//			String containerName = part2[part2.length - 1];
+//			CloudBlobContainer container = blobClient
+//					.getContainerReference(containerName);
+//			System.out
+//					.println("Here is a list of files in the remote container: ");
+//			for (ListBlobItem blobItem : container.listBlobs()) {
+//				if (blobItem instanceof CloudBlob) {
+//					CloudBlob blob = (CloudBlob) blobItem;
+//					list.add(blob.getName());
+//					System.out.println(blob.getName());
+//				}
+//			}
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
 		return list;
 	}
 
@@ -184,43 +154,43 @@ public class userOperate {
 	 */
 	public void downLoadFile(String filePath, String fileName)
 			throws IOException {
-		String spliter = File.separator;
-		filePath = filePath + spliter + fileName;
-		try {
-			String msg = "download";
-			streamWriter.writeUTF(msg);
-			System.out.println("message sent: " + msg);
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		String addresses = streamReader.readUTF();
-		String[] part = addresses.split(",");
-		CloudStorageAccount storageAccount;
-		try {
-			storageAccount = CloudStorageAccount.parse(part[1]);
-			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-			String[] part2 = part[0].split("/");
-			System.out.println("container name is: " + part2[part2.length - 1]);
-			String containerName = part2[part2.length - 1];
-			CloudBlobContainer container = blobClient
-					.getContainerReference(containerName);
-			System.out.println("path is " + filePath);
-			for (ListBlobItem blobItem : container.listBlobs()) {
-				if (blobItem instanceof CloudBlob) {
-					CloudBlob blob = (CloudBlob) blobItem;
-					if (fileName.equals(blob.getName())) {
-						blob.download(new FileOutputStream(filePath));
-						System.out.println("Your file has been downloaded.");
-						return;
-					}
-				}
-			}
-			System.out.println("Cannot find the file you selected.");
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
+//		String spliter = File.separator;
+//		filePath = filePath + spliter + fileName;
+//		try {
+//			String msg = "download";
+//			streamWriter.writeUTF(msg);
+//			System.out.println("message sent: " + msg);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//		String addresses = streamReader.readUTF();
+//		String[] part = addresses.split(",");
+//		CloudStorageAccount storageAccount;
+//		try {
+//			storageAccount = CloudStorageAccount.parse(part[1]);
+//			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
+//			String[] part2 = part[0].split("/");
+//			System.out.println("container name is: " + part2[part2.length - 1]);
+//			String containerName = part2[part2.length - 1];
+//			CloudBlobContainer container = blobClient
+//					.getContainerReference(containerName);
+//			System.out.println("path is " + filePath);
+//			for (ListBlobItem blobItem : container.listBlobs()) {
+//				if (blobItem instanceof CloudBlob) {
+//					CloudBlob blob = (CloudBlob) blobItem;
+//					if (fileName.equals(blob.getName())) {
+//						blob.download(new FileOutputStream(filePath));
+//						System.out.println("Your file has been downloaded.");
+//						return;
+//					}
+//				}
+//			}
+//			System.out.println("Cannot find the file you selected.");
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
@@ -239,26 +209,12 @@ public class userOperate {
 			return false;
 		}
 	}
-
-	/**
-	 * user sign up on the server
-	 * 
-	 * @param uname
-	 * @param upass
-	 * @return
-	 * @throws IOException
-	 */
-	public boolean signUp(String uname, String upass) throws IOException {
-		String msg = "crea," + uname + "," + upass;
-		streamWriter.writeUTF(msg);
-		String res = streamReader.readUTF();
-		if (res.equals("true")) {
+	public boolean signUp(String uname, String upass) throws RemoteException{
+		if(serviceProvider.signIn(uname, upass)){
 			return true;
 		}
 		return false;
 	}
-
-	
 	public HashMap<String, String> getFileAddress(ArrayList<String> files){
 		HashMap<String, String> res = new HashMap<String, String>();
 		try {
@@ -282,4 +238,37 @@ public class userOperate {
 			e.printStackTrace();
 		}
 	}
+	public HashMap<String, Integer> getServerVersion(String uname){
+		HashMap<String, Integer> res = new HashMap<String, Integer>();
+		try {
+			res = serviceProvider.getCurrentFiles(uname); 
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
+	}
+	public ArrayList<String> getFileList(){
+		return filenames;
+	}
+
+	public static String getHostname() {
+		return hostname;
+	}
+	public static void setHostname(String hostname) {
+		userOperate.hostname = hostname;
+	}
+	public static int getPort() {
+		return port;
+	}
+	public static void setPort(int port) {
+		userOperate.port = port;
+	}
+	public static String getFolder() {
+		return folder;
+	}
+	public static void setFolder(String folder) {
+		userOperate.folder = folder;
+	}
+	
 }

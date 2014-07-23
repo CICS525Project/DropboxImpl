@@ -48,7 +48,8 @@ public class systemTray {
 					// TODO Auto-generated method stub
 					//log out application
 					System.out.println("log out clicked");
-					myTip.setToolTip(new ImageIcon("img/warn.png"),"log out clicked");
+					//myTip.setToolTip(new ImageIcon("img/warn.png"),"log out clicked");
+					System.exit(0);
 				}
 			});
 			popupMenu.add(exit);
@@ -61,6 +62,8 @@ public class systemTray {
 					// TODO Auto-generated method stub
 					System.out.println("share item shared.");
 					//user interface pop up here.
+					Share shareGUI = new Share();
+					shareGUI.setVisible(true);
 				}
 			});
 			popupMenu.add(shareItem);
@@ -74,8 +77,4 @@ public class systemTray {
 			}
 		}
 	}	
-//	public static void main(String[] args) throws MalformedURLException {
-//		// TODO Auto-generated method stub
-//		systemTray mapp = new systemTray();
-//	}
 }

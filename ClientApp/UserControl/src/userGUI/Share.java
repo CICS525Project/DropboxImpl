@@ -1,6 +1,5 @@
 package userGUI;
 
-
 import java.io.File;
 import java.util.ArrayList;
 
@@ -44,7 +43,7 @@ public class Share extends JFrame {
 		JButton btnShare = new JButton("Share");
 		btnShare.setBounds(269, 148, 89, 23);
 		contentPane.add(btnShare);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 56, 155, 177);
 		contentPane.add(scrollPane);
@@ -55,14 +54,18 @@ public class Share extends JFrame {
 	}
 
 	private ArrayList<String> getFileName() {
-		File folder = new File("C:/Users/Sashiraj/Desktop/Upload");
+		File folder = new File("/Users/haonanxu/Desktop/download");
 		File[] listoffiles = folder.listFiles();
 		ArrayList<String> finalFilelist = new ArrayList<String>();
 		System.out.println(listoffiles);
 		for (int i = 0; i < listoffiles.length; i++) {
 			System.out.println(listoffiles[i]);
 			File file = new File(listoffiles[i].toString());
-			finalFilelist.add(file.getName());
+			if (file.getName().startsWith(".")) {
+				continue;
+			} else {
+				finalFilelist.add(file.getName());
+			}
 		}
 		return finalFilelist;
 	}

@@ -13,12 +13,15 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+import com.sun.xml.bind.v2.runtime.reflect.opt.OptimizedAccessorFactory;
+
 import dataTransfer.*;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 
 public class SignIn extends JFrame {
 
@@ -68,16 +71,14 @@ public class SignIn extends JFrame {
 				if (uName == null || uName.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null,
 							"Please enter the Username");
-				} else if (pwd == null) {
+				} else if (pwd.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null,
 							"Please enter the Password");
 				} else {
 					username = uName.getText();
 					password = pwd.getText();
 					// user authorization
-					userOperate opt = new userOperate(
-							"cics525group6S3.cloudapp.net", 12345,
-							"/Users/haonanxu/Desktop/download");
+					userOperate opt = userOperate.getInstance();
 					try {
 						if (opt.signIn(username, password)) {
 							try {
@@ -87,7 +88,9 @@ public class SignIn extends JFrame {
 									frame = frame.getParent();
 								}while (!(frame instanceof JFrame));
 								((JFrame) frame).hide();
-
+								/////
+								HashMap<String, Integer>  res = opt.getServerVersion(username);
+								System.out.println(res.size());
 							} catch (MalformedURLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -100,9 +103,7 @@ public class SignIn extends JFrame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
 				}
-
 			}
 		});
 		btnSignin.setBounds(181, 173, 92, 23);
@@ -132,7 +133,6 @@ public class SignIn extends JFrame {
 						}
 					}
 				});
-
 			}
 		});
 	}
