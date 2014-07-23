@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
+import java.nio.file.Path;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -273,9 +274,12 @@ public class userOperate {
 		return res;
 	}
 	
-
-	public static void main(String[] args) throws MalformedURLException {
-		// TODO Auto-generated method stub
-
+	public void startWatcher(Path dir){
+		try {
+			helper.watchFile(dir);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -27,7 +27,7 @@ public class fileOptHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static byte[] hashFile(String filename) throws Exception
+	public byte[] hashFile(String filename) throws Exception
 	{
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		InputStream is = Files.newInputStream(Paths.get(filename));
@@ -54,7 +54,7 @@ public class fileOptHelper {
 	 * @param dir
 	 * @throws IOException
 	 */
-	public static void watchFile(Path dir) throws IOException{
+	public void watchFile(Path dir) throws IOException{
 		WatchService watcher = FileSystems.getDefault().newWatchService();
 		dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
 		while (true) {
@@ -67,7 +67,17 @@ public class fileOptHelper {
 					}
 					WatchEvent<Path> e = (WatchEvent<Path>)event;
 					Path fileName = e.context();
-					System.out.println("Event "+kind.name()+ " happened, which filename is " + fileName);
+					String fn = fileName.toString();
+					if(fn.startsWith(".DS"))
+					{
+						System.out.println(".ds checked");
+						continue;
+					}
+					else
+					{
+						//add new operations here
+						System.out.println("Event "+kind.name()+ " happened, which filename is " + fn);
+					}
 				}
 				if(!key.reset()){
 					break;
@@ -85,7 +95,7 @@ public class fileOptHelper {
 	 * @param dir
 	 * @return
 	 */
-	public static ArrayList<String> getFileInFolder(String dir){
+	public ArrayList<String> getFileInFolder(String dir){
 		File folder = new File(dir);
 		File [] fileList = folder.listFiles();
 		ArrayList<String> files = new ArrayList<String>();
@@ -97,4 +107,14 @@ public class fileOptHelper {
 		}
 		return files;
 	}
+//	public static void main(String[] args) {
+//		Path dir = Paths.get("/Users/haonanxu/Desktop/download");
+//		fileOptHelper opt = new fileOptHelper();
+//		try {
+//			opt.watchFile(dir);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }
