@@ -37,7 +37,19 @@ public interface ServiceServerInterface extends Remote {
 	 */
 	boolean signIn(String username, String password) throws RemoteException;
 	
-	
+	/**
+	 * Method that returns all the files associated with a given user
+	 * @param user user (owner or shared beneficiary) for whom to look files 
+	 * @return Returns a hashmap with the file name and the corresponding version number
+	 * @throws RemoteException
+	 */
 	HashMap<String,Integer> getCurrentFiles(String user)  throws RemoteException; 
+	
+	/**
+	 * Method that allows a remote client to obtain the address of the container associated with the current server
+	 * @return Returns a string with the values of the storageConnectionString and container name, separated by comma (,)
+	 * @throws RemoteException
+	 */
+	String getContainer() throws RemoteException;
 	
 }

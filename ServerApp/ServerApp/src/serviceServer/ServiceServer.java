@@ -20,7 +20,12 @@ public class ServiceServer implements ServiceServerInterface {
 	public static final String HOST 		 = "cics525group6S3.cloudapp.net";
 	public static final int PORT			 = 12345;
 	public static final String DB			 = "cics525group6DB3";
-	
+	// Storage credentials for container service3
+	public static final String STORAGECONNECTIONSTRING = 
+		    "DefaultEndpointsProtocol=http;" + 
+		    "AccountName=cics525group6;" + 
+		    "AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
+	public static final String CONTAINER = "service3";
 	
 	public boolean login(String username, String password)
 			throws RemoteException {
@@ -78,6 +83,13 @@ public class ServiceServer implements ServiceServerInterface {
 	}
 
 
+	@Override
+	public String getContainer() throws RemoteException {
+		// TODO Auto-generated method stub
+		return (STORAGECONNECTIONSTRING + "," + CONTAINER);
+	}
+
+
 	public ServiceServer() throws RemoteException {
 	}
 
@@ -112,7 +124,6 @@ public class ServiceServer implements ServiceServerInterface {
 		}
 
 	}
-
 
 
 	
