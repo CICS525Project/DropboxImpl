@@ -22,36 +22,21 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import RMIInterface.ServiceServerInterface;
-import dataTransfer.*;
 public class UserOperate {
 
 	private ServiceServerInterface serviceProvider;
 	private static FileOptHelper helper;
-	private ArrayList<String> filenames;
-	private static UserOperate singleton = null;
-	private static String hostname;
-	private static int port;
-	private static String folder;
-	
-	public static UserOperate getInstance(){
-		if(singleton == null){
-			singleton = new UserOperate(hostname,port,folder);
-		}
-		return singleton;
-	}
+
 	/**
 	 * constrctor
 	 * 
 	 * @param hostname
 	 */
-	public UserOperate(String hostname, int port, String folderPath) {
-		Registry registry;
+	public UserOperate(String hostname, int port) {
 		try {
-			registry = LocateRegistry.getRegistry(hostname, port);
+			Registry registry = LocateRegistry.getRegistry(hostname, port);
 			this.serviceProvider = (ServiceServerInterface) registry
 					.lookup("cloudboxRMI");
-			helper = new FileOptHelper();
-			filenames = helper.getFileInFolder(folderPath);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,96 +89,6 @@ public class UserOperate {
 	}
 
 	/**
-	 * 
-	 * @return
-	 * @throws IOException
-	 */
-	public ArrayList<String> getRemoteFileList() throws IOException {
-		ArrayList<String> list = new ArrayList<String>();
-//		try {
-//			String msg = "download";
-//			streamWriter.writeUTF(msg);
-//			System.out.println("message sent: " + msg);
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-//		String addresses = streamReader.readUTF();
-//		String[] part = addresses.split(",");
-//		CloudStorageAccount storageAccount;
-//		try {
-//			storageAccount = CloudStorageAccount.parse(part[1]);
-//			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-//			String[] part2 = part[0].split("/");
-//			System.out.println("container name is: " + part2[part2.length - 1]);
-//			String containerName = part2[part2.length - 1];
-//			CloudBlobContainer container = blobClient
-//					.getContainerReference(containerName);
-//			System.out
-//					.println("Here is a list of files in the remote container: ");
-//			for (ListBlobItem blobItem : container.listBlobs()) {
-//				if (blobItem instanceof CloudBlob) {
-//					CloudBlob blob = (CloudBlob) blobItem;
-//					list.add(blob.getName());
-//					System.out.println(blob.getName());
-//				}
-//			}
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-		return list;
-	}
-
-	/**
-	 * download file from Azure container
-	 * 
-	 * @param filePath
-	 * @param fileName
-	 * @throws IOException
-	 */
-	public void downLoadFile(String filePath, String fileName)
-			throws IOException {
-//		String spliter = File.separator;
-//		filePath = filePath + spliter + fileName;
-//		try {
-//			String msg = "download";
-//			streamWriter.writeUTF(msg);
-//			System.out.println("message sent: " + msg);
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-//		String addresses = streamReader.readUTF();
-//		String[] part = addresses.split(",");
-//		CloudStorageAccount storageAccount;
-//		try {
-//			storageAccount = CloudStorageAccount.parse(part[1]);
-//			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-//			String[] part2 = part[0].split("/");
-//			System.out.println("container name is: " + part2[part2.length - 1]);
-//			String containerName = part2[part2.length - 1];
-//			CloudBlobContainer container = blobClient
-//					.getContainerReference(containerName);
-//			System.out.println("path is " + filePath);
-//			for (ListBlobItem blobItem : container.listBlobs()) {
-//				if (blobItem instanceof CloudBlob) {
-//					CloudBlob blob = (CloudBlob) blobItem;
-//					if (fileName.equals(blob.getName())) {
-//						blob.download(new FileOutputStream(filePath));
-//						System.out.println("Your file has been downloaded.");
-//						return;
-//					}
-//				}
-//			}
-//			System.out.println("Cannot find the file you selected.");
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-	}
-
-	/**
 	 * user sign in to server
 	 * 
 	 * @param uname
@@ -227,10 +122,12 @@ public class UserOperate {
 	 * @param files
 	 * @return
 	 */
-	public HashMap<String, String> getFileAddress(ArrayList<String> files){
+	public HashMap<String, String> getFileAddress(){
 		HashMap<String, String> res = new HashMap<String, String>();
+		helper = new FileOptHelper();
+		ArrayList<String> files = helper.getFileInFolder(sessionInfo.getInstance().getWorkFolder());
 		try {
-			res = serviceProvider.getAddress(files, "jitin");
+			res = serviceProvider.getAddress(files, sessionInfo.getInstance().getUsername());
 			System.out.println("get hashmap length : " + res.size());
 			for (int i = 0; i < res.size() ; i++) {
 				System.out.println(res.get(files.get(i)));
@@ -240,19 +137,6 @@ public class UserOperate {
 			e.printStackTrace();
 		}
 		return res;
-	}
-	
-	/**
-	 * create the file wathcer
-	 * @param dir
-	 */
-	public void startWatcher(Path dir){
-		try {
-			helper.watchFile(dir);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -271,27 +155,14 @@ public class UserOperate {
 		return res;
 	}
 	
-	public ArrayList<String> getFileList(){
-		return filenames;
+	public String fileContainer(){
+		String containerKey = null;
+		try {
+			containerKey = serviceProvider.getContainer();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return containerKey;
 	}
-
-	public static String getHostname() {
-		return hostname;
-	}
-	public static void setHostname(String hostname) {
-		UserOperate.hostname = hostname;
-	}
-	public static int getPort() {
-		return port;
-	}
-	public static void setPort(int port) {
-		UserOperate.port = port;
-	}
-	public static String getFolder() {
-		return folder;
-	}
-	public static void setFolder(String folder) {
-		UserOperate.folder = folder;
-	}
-	
 }

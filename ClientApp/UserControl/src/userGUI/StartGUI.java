@@ -10,9 +10,7 @@ public class StartGUI{
 		// TODO Auto-generated method stub
 		SignIn frame = new SignIn();
 		frame.setVisible(true);
-		UserOperate.setFolder("/Users/haonanxu/Desktop/download");
-		UserOperate.setPort(12345);
-		UserOperate.setHostname("cics525group6S3.cloudapp.net");
+		sessionInfo.getInstance().setWorkFolder("/Users/haonanxu/Desktop/download");
 	}
 
 

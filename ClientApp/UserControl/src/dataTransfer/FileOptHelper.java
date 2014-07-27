@@ -1,23 +1,15 @@
 package dataTransfer;
 
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
-
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import userMetaData.ClientMetaData;
 
 public class FileOptHelper {
 
@@ -40,7 +32,7 @@ public class FileOptHelper {
 	 * @param sha
 	 * @return
 	 */
-	public static String getHashCode(byte[] sha){
+	public String getHashCode(byte[] sha){
 		String result = "";
 		for (int i=0; i < sha.length; i++) {  
 		       result += Integer.toString( ( sha[i] & 0xff ) + 0x100, 16).substring(1); 
@@ -48,46 +40,6 @@ public class FileOptHelper {
 		return result;
 	}
 	
-	
-	/**
-	 * watch operations on files in the folder
-	 * @param dir
-	 * @throws IOException
-	 */
-	public void watchFile(Path dir) throws IOException{
-		WatchService watcher = FileSystems.getDefault().newWatchService();
-		dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-		while (true) {
-			try {
-				WatchKey key = watcher.take();
-				for (WatchEvent<?> event : key.pollEvents()) {
-					WatchEvent.Kind kind = event.kind();
-					if(kind == OVERFLOW){
-						continue;
-					}
-					WatchEvent<Path> e = (WatchEvent<Path>)event;
-					Path fileName = e.context();
-					String fn = fileName.toString();
-					if(fn.startsWith(".DS"))
-					{
-						System.out.println(".ds checked");
-						continue;
-					}
-					else
-					{
-						//add new operations here
-						System.out.println("Event "+kind.name()+ " happened, which filename is " + fn);
-					}
-				}
-				if(!key.reset()){
-					break;
-				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
 	
 	/**
 	 * get all filenames in a folder
@@ -107,14 +59,29 @@ public class FileOptHelper {
 		}
 		return files;
 	}
-//	public static void main(String[] args) {
-//		Path dir = Paths.get("/Users/haonanxu/Desktop/download");
-//		fileOptHelper opt = new fileOptHelper();
-//		try {
-//			opt.watchFile(dir);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	
+	/**
+	 * compare if there are two different version numbers of a file, yes then add to download queue
+	 * initialize download queue when user logs in
+	 */
+	public void initialDownloadQueue(){
+		String dir = sessionInfo.getInstance().getWorkFolder();
+		UserOperate uopt = new UserOperate(sessionInfo.getInstance().getRemoteDNS(),12345);
+		ClientMetaData cmd = new ClientMetaData();
+		cmd.removeRecord(dir, getFileInFolder(dir));
+		HashMap<String, String> localFileAndVersion = cmd.readXML(dir, getFileInFolder(dir));
+		HashMap<String, Integer> remoteFileAndVersion = uopt.getServerVersion(sessionInfo.getInstance().getUsername());
+		ArrayList<String> remoteFileList = new ArrayList<String>(remoteFileAndVersion.keySet());
+		for (int i = 0; i < remoteFileList.size(); i++) {
+			String fname = remoteFileList.get(i);
+			//if file exists on both local and remote
+			if(localFileAndVersion.containsKey(fname)){
+				//if local version is not same as remote version
+				if(!localFileAndVersion.get(fname).equals(remoteFileAndVersion.get(fname).toString())){
+					/*******Simply add the download request into the download queue*******/
+					OperationQueue.getInstance().add(fname, OperationQueue.getInstance().getDownloadQueue());
+				}
+			}
+		}
+	}
 }

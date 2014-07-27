@@ -82,8 +82,7 @@ public class SignUp extends JFrame {
 				}
 				else
 				{
-
-					UserOperate opt = UserOperate.getInstance();
+					UserOperate opt = new UserOperate("cics525group6S3.cloudapp.net",12345);
 					System.out.println(userName.getText() + " " + nPassword.getText());
 					try {
 						if(opt.signIn(userName.getText(), nPassword.getText())){

@@ -78,11 +78,21 @@ public class SignIn extends JFrame {
 					username = uName.getText();
 					password = pwd.getText();
 					// user authorization
-					UserOperate opt = UserOperate.getInstance();
+					UserOperate opt = new UserOperate("cics525group6S3.cloudapp.net", 12345);
+					//initilize session data
+					sessionInfo.getInstance().setUsername(username);
+					sessionInfo.getInstance().setUserPwd(password);
+					sessionInfo.getInstance().setRemoteDNS("cics525group6S3.cloudapp.net");
+					
+					HashMap<String, String> fileDNS = opt.getFileAddress();
+					sessionInfo.getInstance().setFileLocations(fileDNS);
 					try {
 						if (opt.signIn(username, password)) {
 							try {
 								MySystemTray minimizeAppobj = new MySystemTray();
+								//start thread for folder watcher
+								new folderWatcher(sessionInfo.getInstance().getWorkFolder());
+								
 								Container frame = btnSignin.getParent();
 								do{
 									frame = frame.getParent();

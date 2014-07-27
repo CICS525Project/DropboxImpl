@@ -10,7 +10,7 @@ public interface ServiceServerInterface extends Remote {
 	// Dummy testing methods
 	Date getDate() throws RemoteException;
 	int execute(int i) throws RemoteException;
-
+	
 	/**
 	 * login method for local user authentication
 	 * @param username username provided by user in the GUI
@@ -19,7 +19,7 @@ public interface ServiceServerInterface extends Remote {
 	 * @throws RemoteException
 	 */
 	boolean login(String username, String password) throws RemoteException;
-
+	
 	/** method to obtain server addresses for a given list of files
 	 * 
 	 * @param files array list with files in user's local cloudbox directory
@@ -27,7 +27,7 @@ public interface ServiceServerInterface extends Remote {
 	 * @return hashmap with every filename and its corresponding service server address
 	 */
 	HashMap<String,String> getAddress(ArrayList<String> files, String user) throws RemoteException;
-
+	
 	/**
 	 * Method that attempts to create a new account in the system
 	 * @param username new user name
@@ -36,8 +36,20 @@ public interface ServiceServerInterface extends Remote {
 	 * @throws RemoteException
 	 */
 	boolean signIn(String username, String password) throws RemoteException;
-
-
+	
+	/**
+	 * Method that returns all the files associated with a given user
+	 * @param user user (owner or shared beneficiary) for whom to look files 
+	 * @return Returns a hashmap with the file name and the corresponding version number
+	 * @throws RemoteException
+	 */
 	HashMap<String,Integer> getCurrentFiles(String user)  throws RemoteException; 
-
+	
+	/**
+	 * Method that allows a remote client to obtain the address of the container associated with the current server
+	 * @return Returns a string with the values of the storageConnectionString and container name, separated by comma (,)
+	 * @throws RemoteException
+	 */
+	String getContainer() throws RemoteException;
+	
 }
