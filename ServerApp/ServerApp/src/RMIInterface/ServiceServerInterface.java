@@ -8,9 +8,9 @@ import java.util.*;
  */
 public interface ServiceServerInterface extends Remote {
 	// Dummy testing methods
-	Date getDate() throws RemoteException;
-	int execute(int i) throws RemoteException;
-	
+//	Date getDate() throws RemoteException;
+//	int execute(int i) throws RemoteException;
+//	
 	/**
 	 * login method for local user authentication
 	 * @param username username provided by user in the GUI

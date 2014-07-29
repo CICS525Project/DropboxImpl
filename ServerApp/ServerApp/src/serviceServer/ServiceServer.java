@@ -9,23 +9,19 @@ import java.util.*;
 import routingTable.DBConnection;
 import authentication.Authentication;
 import RMIInterface.ServiceServerInterface;
-/*
- * -cp C:\Users\DBAdmin\Documents\RMIBookExample\src;C:\Users\DBAdmin\Documents\RMIBookExample\bin\ServerRemote.class
--Djava.rmi.server.codebase=file:/C:/Users/DBAdmin/Documents/RMIBookExample/bin/ServerRemote.class
--Djava.rmi.server.hostname=cics525group6S3.cloudapp.net
--Djava.security.policy=C:/Users/DBAdmin/Documents/RMIBookExample/server.policy
- */
+
+
 public class ServiceServer implements ServiceServerInterface {
 
-	public static final String HOST 		 = "cics525group6S3.cloudapp.net";
-	public static final int PORT			 = 12345;
-	public static final String DB			 = "cics525group6DB3";
 	// Storage credentials for container service3
-	public static final String STORAGECONNECTIONSTRING = 
-		    "DefaultEndpointsProtocol=http;" + 
-		    "AccountName=cics525group6;" + 
-		    "AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
+	public static final String STORAGECONNECTIONSTRING = "DefaultEndpointsProtocol=http;"
+			+ "AccountName=cics525group6;"
+			+ "AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
 	public static final String CONTAINER = "service3";
+	
+	private ServerServerCommunication mySSCom;
+	private ServerClientCommunication mySCCom;
+	
 	
 	public boolean login(String username, String password)
 			throws RemoteException {
@@ -48,14 +44,6 @@ public class ServiceServer implements ServiceServerInterface {
 		}
 		return result;
 
-//		HashMap<String,String> result = new HashMap<String,String>();
-//		
-//		for(String name : files) {
-//			result.put(name, "cics525group6S3.cloudapp.net");
-//		}
-//		
-//
-//		return result;
 	}
 	
 	
@@ -91,40 +79,44 @@ public class ServiceServer implements ServiceServerInterface {
 
 
 	public ServiceServer() throws RemoteException {
-	}
-
-	// implement the ServerRemote interface
-	public Date getDate() throws RemoteException {
-		return new Date();
-	}
-
-	public int execute(int i) throws RemoteException {
-		return i*i*i*i;
-	}
-
-	public static void main(String args[]) throws RemoteException{
 		
-		Registry registry = LocateRegistry.createRegistry(PORT);
-		try {
-			System.setProperty("java.rmi.server.hostname", HOST);
-			ServiceServerInterface server = new ServiceServer();
-			ServiceServerInterface stub = (ServiceServerInterface) UnicastRemoteObject.exportObject(server, PORT);  
-			 
-            registry = LocateRegistry.getRegistry(PORT);
-//            System.out.println(stub.toString());
-            registry.bind("cloudboxRMI", stub);
-            System.out.println("Server running...");
-			
-		} catch (java.io.IOException e) {
-			System.err.println(e);
-			// problem registering server
-		} catch (AlreadyBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		mySSCom = new ServerServerCommunication();
+		mySCCom = new ServerClientCommunication();
+		
+		
+	}
+	
+	/**
+	 * This method is called from the ServiceServer instance to refresh the
+	 * content of the routing table based on the contents of the container. Once
+	 * the changes have been identified, it modifies the routing table and makes
+	 * changes on other service servers RT and finally notify user(s) of the
+	 * changes so the they can update their local copy of files
+	 */
+	public void refreshRT() {
+		// Call Jitin's method to obtain information from the container
+		
+		// Based on the results obtained from the poll method, execute the following methods:
+		// myServerServerCommunication.broadcastChanges();
+		// to notify other service servers
+		// myServerClientCommunication.sendNotification(user, message);
+		// to notify the user of recent changes.
+		
+		mySSCom.broadcastChanges();
+		mySCCom.sendNotification("jitin", "upload,file1"); // repeat this notification for every user related to file1
+		
 	}
 
 
 	
+//	Testing code...
+//	public Date getDate() throws RemoteException {
+//		return new Date();
+//	}
+//
+//	public int execute(int i) throws RemoteException {
+//		return i*i*i*i;
+//	}
+
+		
 }

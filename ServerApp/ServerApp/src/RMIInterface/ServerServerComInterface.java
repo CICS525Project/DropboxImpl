@@ -10,13 +10,13 @@ import serviceServer.RoutingTable;
  *
  */
 public interface ServerServerComInterface extends Remote{
-//	/**
-//	 * Method that synchronizes the routing table in the current machine with the one provided as argument
-//	 * @param table
-//	 * @return returns true if operation is successful or false otherwise
-//	 * @throws RemoteException
-//	 */
-//	boolean synchronizeRT(RoutingTable table) throws RemoteException;
+
+	/**
+	 * This method is used to modify the routing table the service server. Is called as RMI from another service server
+	 * @return returns true if successful or false in case of errors
+	 * @throws RemoteException
+	 */
+	boolean updateTable() throws RemoteException;
 	
 	
 }
