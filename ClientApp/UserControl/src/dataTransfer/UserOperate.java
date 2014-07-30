@@ -47,37 +47,6 @@ public class UserOperate {
 	}
 
 	/**
-	 * upload file to Azure container filePath is the path for file that needs
-	 * to be uploaded.
-	 * 
-	 * @param FilePath
-	 * @throws IOException
-	 */
-	public void upoLoadFile(String FilePath) throws IOException {
-
-//		String filename = getFilename(FilePath);
-//		System.out.println("filename is " + filename);
-//		String addresses = streamReader.readUTF();
-//		String[] part = addresses.split(",");
-//		CloudStorageAccount storageAccount;
-//		try {
-//			storageAccount = CloudStorageAccount.parse(part[1]);
-//			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-//			String[] part2 = part[0].split("/");
-//			String containerName = part2[part2.length - 1];
-//			CloudBlobContainer container = blobClient
-//					.getContainerReference(containerName);
-//			container.createIfNotExist();
-//			CloudBlockBlob blob = container.getBlockBlobReference(filename);
-//			File source = new File(FilePath);
-//			blob.upload(new FileInputStream(source), source.length());
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-	}
-
-	/**
 	 * 
 	 * @param path
 	 * @return
@@ -128,7 +97,7 @@ public class UserOperate {
 		ArrayList<String> files = helper.getFileInFolder(sessionInfo.getInstance().getWorkFolder());
 		try {
 			res = serviceProvider.getAddress(files, sessionInfo.getInstance().getUsername());
-			System.out.println("get hashmap length : " + res.size());
+			System.out.println("get loacal hashmap length : " + res.size());
 			for (int i = 0; i < res.size() ; i++) {
 				System.out.println(res.get(files.get(i)));
 			}
@@ -165,4 +134,10 @@ public class UserOperate {
 		}
 		return containerKey;
 	}
+	
+//	public static void main(String[] args) throws RemoteException {
+//		UserOperate uopt = new UserOperate("cics525group6S3.cloudapp.net", 12345);
+//		HashMap<String, Integer> res = uopt.serviceProvider.getCurrentFiles("jitin");
+//		System.out.println(res.size());
+//	}
 }

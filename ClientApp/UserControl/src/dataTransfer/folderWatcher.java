@@ -46,7 +46,11 @@ public class folderWatcher implements Runnable {
 					if (fn.startsWith(".DS")) {
 						System.out.println(".ds checked");
 						continue;
-					} else {
+					} else if (fn.equals("file.xml")) {
+						System.out.println("xml checked");
+						continue;
+					}
+					else {
 						// add new operations here
 						System.out.println("Event " + kind.name()
 								+ " happened, which filename is " + fn);

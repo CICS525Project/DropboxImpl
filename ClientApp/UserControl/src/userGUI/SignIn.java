@@ -113,6 +113,7 @@ public class SignIn extends JFrame {
 								new folderWatcher(sessionInfo.getInstance().getWorkFolder());
 								//initializae download queueu
 								fopt.initialDownloadQueue();
+								System.out.println("download queue size is: " + OperationQueue.getInstance().getDownloadQueue().size());
 								/******** start download thread********/
 								new DownloadFile();
 								/******** create initial upload queue********/

@@ -95,6 +95,7 @@ public class DownloadFile implements Runnable {
 				.getRemoteDNS(), 12345);
 		HashMap<String, String> fileAndDNS = uopt.getFileAddress();
 		String fileRemoteDNS = fileAndDNS.get(fileName);
+		System.out.println("remote DNS for file " + fileName + " is " + fileRemoteDNS);
 		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, 12345);
 		String fileContainerString = fileDNSOPT.fileContainer();
 		String[] part = fileContainerString.split(",");

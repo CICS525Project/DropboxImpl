@@ -148,6 +148,7 @@ public class FileOptHelper {
 					filesInfolder.remove(fname);
 				}else{
 					//need to compare version number to determine if download or upload
+					
 				}
 			}
 			else{

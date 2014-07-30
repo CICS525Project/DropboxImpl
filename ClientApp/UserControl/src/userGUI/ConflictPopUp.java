@@ -50,7 +50,7 @@ public class ConflictPopUp extends JFrame {
 				}
 				//user wants to upload conflict with existing download
 				//user choose download
-				if(choice == 2){
+				if(choice == 3){
 					//discard upload 
 				}
 				for (Frame frame : Frame.getFrames()) {
