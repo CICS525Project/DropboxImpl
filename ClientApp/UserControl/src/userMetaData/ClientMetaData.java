@@ -5,6 +5,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,6 +20,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,17 +30,48 @@ import dataTransfer.FileOptHelper;
 import dataTransfer.UserOperate;
 
 public class ClientMetaData {
-
+	FileOptHelper fopt = new FileOptHelper();
+	
+	/**
+	 * 
+	 * @param path
+	 */
+	public boolean checkXML(String path) {
+		try {
+			String XMLpath = path + File.separator + "file.xml";
+			File f = new File(XMLpath);
+			if (!f.exists()) {
+				PrintWriter writer;
+				writer = new PrintWriter(XMLpath, "UTF-8");
+				writer.close();
+				return true;
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 	/**
 	 * create xml file for files in current folder filelist conatins all file
 	 * names in current folder path is the current folder path
 	 * 
 	 * @param filelist
 	 * @param path
+	 * @throws Exception 
+	 * @throws DOMException 
 	 */
-	public void createXML(ArrayList<String> filelist, String path) {
+	public void createXML(ArrayList<String> filelist, String path) throws DOMException, Exception {
 		try {
-			path = path + File.separator+"file.xml";
+			String XMLpath = path + File.separator+"file.xml";
+//			File f = new File(XMLpath);
+//			if(!f.exists()){
+//				PrintWriter writer = new PrintWriter(XMLpath, "UTF-8");
+//				writer.close();
+//			}
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -49,6 +85,9 @@ public class ClientMetaData {
 				Element filename = doc.createElement("Filename");
 				filename.setTextContent(name);
 				file.appendChild(filename);
+				Element checkSum = doc.createElement("CheckSum");
+				checkSum.setTextContent(fopt.getHashCode(fopt.hashFile(path + File.separator+name)));
+				file.appendChild(checkSum);
 				Element version = doc.createElement("Version");
 				version.setTextContent("1");
 				file.appendChild(version);
@@ -57,7 +96,7 @@ public class ClientMetaData {
 					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(path));
+			StreamResult result = new StreamResult(new File(XMLpath));
 			transformer.transform(source, result);
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -118,7 +157,53 @@ public class ClientMetaData {
 		}
 		return res;
 	}
+	/**
+	 * read hashcode in the xml file
+	 * @param files
+	 * @param path
+	 * @return
+	 */
+	public HashMap<String, String> readHashCode(String path) {
+		HashMap<String, String> res = new HashMap<String, String>();
+		try {
+			path = path + File.separator + "file.xml";
+			File xmlFile = new File(path);
+			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder metaBuilder = metaFactory.newDocumentBuilder();
+			Document doc = metaBuilder.parse(xmlFile);
+			doc.getDocumentElement().normalize();
+			System.out.println("Root element: "
+					+ doc.getDocumentElement().getNodeName());
 
+			NodeList nodeList = doc.getElementsByTagName("File");
+			System.out.println("------------------");
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node nNode = nodeList.item(i);
+				System.out.println("Current Element : " + nNode.getNodeName());
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					String fname = eElement.getElementsByTagName("Filename")
+							.item(0).getTextContent();
+					String vnum = eElement.getElementsByTagName("CheckSum")
+							.item(0).getTextContent();
+					res.put(fname, vnum);
+					System.out.println("Filename :"
+							+ eElement.getElementsByTagName("Filename").item(0)
+									.getTextContent());
+					System.out.println("CheckSum # :"
+							+ eElement.getElementsByTagName("CheckSum").item(0)
+									.getTextContent());
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		return res;
+	}
+	
 	/**
 	 * modify information for a xml entry of a specific file filename is the
 	 * specific file's name versionNum is the file's version number path is the
@@ -128,7 +213,7 @@ public class ClientMetaData {
 	 * @param versionNum
 	 * @param path
 	 */
-	public void modifyInfo(String filename, String versionNum, String path) {
+	public void modifyInfo(String filename, String checkSum, String versionNum, String path) {
 		try {
 			path = path + File.separator+"file.xml";
 			File xmlFile = new File(path);
@@ -148,8 +233,9 @@ public class ClientMetaData {
 					if (fname.equals(filename)) {
 						eElement.getElementsByTagName("Version").item(0)
 								.setTextContent(versionNum);
+						eElement.getElementsByTagName("CheckSum").item(0).setTextContent(checkSum);
 						System.out.println("Change version number for: "
-								+ filename + " to " + versionNum);
+								+ filename + " to " + versionNum + " and checkSum to: " + checkSum);
 					}
 				}
 			}
@@ -174,8 +260,8 @@ public class ClientMetaData {
 	 */
 	public void addToXML(String filename, String path) {
 		try {
-			path = path + File.separator+"file.xml";
-			File xmlFile = new File(path);
+			String XMLpath = path + File.separator+"file.xml";
+			File xmlFile = new File(XMLpath);
 			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder metaBuilder = metaFactory.newDocumentBuilder();
@@ -188,6 +274,9 @@ public class ClientMetaData {
 			Element fn = document.createElement("Filename");
 			fn.setTextContent(filename);
 			file.appendChild(fn);
+			Element checkSum = document.createElement("CheckSum");
+			checkSum.setTextContent(fopt.getHashCode(fopt.hashFile(path + File.separator+filename)));
+			file.appendChild(checkSum);
 			Element version = document.createElement("Version");
 			version.setTextContent("1");
 			file.appendChild(version);
@@ -195,7 +284,7 @@ public class ClientMetaData {
 					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource domSource = new DOMSource(document);
-			StreamResult streamResult = new StreamResult(new File(path));
+			StreamResult streamResult = new StreamResult(new File(XMLpath));
 			transformer.transform(domSource, streamResult);
 			System.out.println("File added.");
 		} catch (Exception e) {
@@ -242,22 +331,23 @@ public class ClientMetaData {
 		}
 	}
 
-//	public static void main(String[] args) {
-//		// TODO Auto-generated method stub
-//		FileOptHelper opter = new FileOptHelper();
-//		ArrayList<String> reStrings = opter
-//				.getFileInFolder("/Users/haonanxu/Desktop/download");
-//		for(String name : reStrings){
-//			System.out.println("Current file : " + name);
-//		}
-//		ClientMetaData cmd = new ClientMetaData();
+	public static void main(String[] args) throws DOMException, Exception {
+		// TODO Auto-generated method stub
+		FileOptHelper opter = new FileOptHelper();
+		ArrayList<String> reStrings = opter.getFileInFolder("/Users/haonanxu/Desktop/download");
+		for(String name : reStrings){
+			System.out.println("Current file : " + name);
+		}
+		ClientMetaData cmd = new ClientMetaData();
+		cmd.readHashCode("/Users/haonanxu/Desktop/download");
+//		cmd.createXML(reStrings, "/Users/haonanxu/Desktop/download");
 //		cmd.createXML(reStrings, "/Users/haonanxu/Desktop/download");
 //		cmd.removeRecord("/Users/haonanxu/Desktop/download", reStrings);
 //		 createXML(reStrings, "/Users/haonanxu/Desktop/download");
-//		 modifyInfo("test.html","1","/Users/haonanxu/Desktop/download/file.xml");
-//		 addToXML("tst.txt", "/Users/haonanxu/Desktop/download/file.xml");
+//		cmd.modifyInfo("test.html","1","1","/Users/haonanxu/Desktop/download");
+//		 cmd.addToXML("tst.txt", "/Users/haonanxu/Desktop/download");
 //		 reStrings.add("tst.txt");
 //		 readXML("/Users/haonanxu/Desktop/download/file.xml", reStrings);
-//	}
+	}
 
 }

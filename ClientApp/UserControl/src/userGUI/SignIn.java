@@ -13,6 +13,10 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+import org.w3c.dom.DOMException;
+
+import userMetaData.ClientMetaData;
+
 import com.sun.xml.bind.v2.runtime.reflect.opt.OptimizedAccessorFactory;
 
 import dataTransfer.*;
@@ -78,20 +82,43 @@ public class SignIn extends JFrame {
 					username = uName.getText();
 					password = pwd.getText();
 					// user authorization
-					UserOperate opt = new UserOperate("cics525group6S3.cloudapp.net", 12345);
+					UserOperate uopt = new UserOperate("cics525group6S3.cloudapp.net", 12345);
+					ClientMetaData cmd = new ClientMetaData();
+					FileOptHelper fopt = new FileOptHelper();
 					//initilize session data
 					sessionInfo.getInstance().setUsername(username);
 					sessionInfo.getInstance().setUserPwd(password);
 					sessionInfo.getInstance().setRemoteDNS("cics525group6S3.cloudapp.net");
-					
-					HashMap<String, String> fileDNS = opt.getFileAddress();
+					HashMap<String, String> fileDNS = uopt.getFileAddress();
+					String workpath = sessionInfo.getInstance().getWorkFolder();
 					sessionInfo.getInstance().setFileLocations(fileDNS);
+					//check if work folder already has xml file.
+					if(cmd.checkXML(workpath)){
+						try {
+							//if not, create a initial file
+							cmd.createXML(fopt.getFileInFolder(workpath), workpath);
+						} catch (DOMException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					try {
-						if (opt.signIn(username, password)) {
+						if (uopt.signIn(username, password)) {
 							try {
 								MySystemTray minimizeAppobj = new MySystemTray();
 								//start thread for folder watcher
 								new folderWatcher(sessionInfo.getInstance().getWorkFolder());
+								//initializae download queueu
+								fopt.initialDownloadQueue();
+								/******** start download thread********/
+								new DownloadFile();
+								/******** create initial upload queue********/
+								
+								/******** start upload thread********/
+								
 								
 								Container frame = btnSignin.getParent();
 								do{
@@ -99,7 +126,7 @@ public class SignIn extends JFrame {
 								}while (!(frame instanceof JFrame));
 								((JFrame) frame).hide();
 								/////
-								HashMap<String, Integer>  res = opt.getServerVersion(username);
+								HashMap<String, Integer>  res = uopt.getServerVersion(username);
 								System.out.println(res.size());
 							} catch (MalformedURLException e) {
 								// TODO Auto-generated catch block

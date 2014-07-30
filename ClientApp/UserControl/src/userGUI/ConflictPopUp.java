@@ -96,8 +96,6 @@ public class ConflictPopUp extends JFrame {
 			}
 		});
 		
-
-		
 		cancel = new JButton();
 		cancel.setLocation(253, 237);
 		cancel.setSize(80, 40);
@@ -131,7 +129,13 @@ public class ConflictPopUp extends JFrame {
 			contentPane.add(downLoad);
 			contentPane.add(cancel);
 		}
-		
+		//if upload conflict with a existing upload action
+		if(i == 3){
+			upDate.setLocation(50, 237);
+			cancel.setLocation(250, 237);
+			contentPane.add(upDate);
+			contentPane.add(cancel);
+		}
 		warnTx = new JLabel();
 		warnTx.setLocation(42, 124);
 		warnTx.setSize(300, 50);

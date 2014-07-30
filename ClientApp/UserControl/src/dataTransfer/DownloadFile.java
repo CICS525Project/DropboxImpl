@@ -10,7 +10,9 @@ import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
 import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
+
 import userGUI.ConflictPopUp;
+import userMetaData.ClientMetaData;
 
 public class DownloadFile implements Runnable {
 
@@ -21,7 +23,8 @@ public class DownloadFile implements Runnable {
 		opt = OperationQueue.getInstance();
 		downloader = new Thread(this);
 		// downLoadFileControl(opt.getDownloadQueue());
-		downloadImpl();
+		//downloadImpl();
+		start();
 	}
 
 	/**
@@ -82,6 +85,9 @@ public class DownloadFile implements Runnable {
 	 * @throws IOException
 	 */
 	public void downLoadFile(String fileName) throws IOException {
+		
+		ClientMetaData cmd = new ClientMetaData();
+		FileOptHelper fopt = new FileOptHelper();
 		String spliter = File.separator;
 		String downPath = sessionInfo.getInstance().getWorkFolder() + spliter
 				+ fileName;
@@ -94,19 +100,23 @@ public class DownloadFile implements Runnable {
 		String[] part = fileContainerString.split(",");
 		CloudStorageAccount storageAccount;
 		try {
-			storageAccount = CloudStorageAccount.parse(part[1]);
+			storageAccount = CloudStorageAccount.parse(part[0]);
 			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-			String[] part2 = part[0].split("/");
-			System.out.println("container name is: " + part2[part2.length - 1]);
-			String containerName = part2[part2.length - 1];
+			String containerName = part[1];
 			CloudBlobContainer container = blobClient
 					.getContainerReference(containerName);
 			System.out.println("download path is " + downPath);
 			for (ListBlobItem blobItem : container.listBlobs()) {
 				if (blobItem instanceof CloudBlob) {
 					CloudBlob blob = (CloudBlob) blobItem;
+					blob.downloadAttributes();
 					if (fileName.equals(blob.getName())) {
 						blob.download(new FileOutputStream(downPath));
+						/*****need to change version number of the file download as meta in container******/
+						HashMap<String, String> res = blob.getMetadata();
+						String latestVersion = res.get("version");
+						String checkSum = fopt.getHashCode(fopt.hashFile(sessionInfo.getInstance().getWorkFolder()+File.separator+fileName));
+						cmd.modifyInfo(fileName, checkSum, latestVersion, sessionInfo.getInstance().getWorkFolder());
 						System.out.println("Your file has been downloaded.");
 						return;
 					}
@@ -134,7 +144,7 @@ public class DownloadFile implements Runnable {
 		downloadImpl();
 	}
 
-	// public static void main(String[] args) {
-	// new DownloadFile();
-	// }
+//	 public static void main(String[] args) {
+//	 new DownloadFile();
+//	 }
 }

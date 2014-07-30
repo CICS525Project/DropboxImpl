@@ -51,13 +51,13 @@ public class folderWatcher implements Runnable {
 						System.out.println("Event " + kind.name()
 								+ " happened, which filename is " + fn);
 						if (kind.name().equals("ENTRY_CREATE")) {
-
+							
 						}
 						if (kind.name().equals("ENTRY_MODIFY")) {
-
+							
 						}
 						if (kind.name().equals("ENTRY_DELETE")) {
-
+							
 						}
 
 					}
