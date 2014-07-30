@@ -2,6 +2,7 @@ package RMIInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import serviceServer.RoutingTable;
 /**
@@ -16,7 +17,7 @@ public interface ServerServerComInterface extends Remote{
 	 * @return returns true if successful or false in case of errors
 	 * @throws RemoteException
 	 */
-	boolean updateTable() throws RemoteException;
+	boolean updateTable(ArrayList<RoutingTable> missMatch) throws RemoteException;
 	
 	
 }

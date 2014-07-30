@@ -5,6 +5,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import RMIInterface.ServerServerComInterface;
 import RMIInterface.ServiceServerInterface;
 
 /* Block of arguments to be passed to java VM when running the program. Not used in this version of the code
@@ -14,27 +15,43 @@ import RMIInterface.ServiceServerInterface;
 -Djava.security.policy=C:/Users/DBAdmin/Documents/RMIBookExample/server.policy
  */
 
+/**
+ * Runner method to start the service server
+ * @author ignacio
+ *
+ */
 public class StartServer {
 
 	// Constant definitions
 	public static final String HOST 		 = "cics525group6S3.cloudapp.net";
-	public static final int PORT			 = 12345;
+	public static final int CPORT			 = 12345; 	// port for RMI with client
+	public static final int SPORT			 = 9999;	// port for RMI with other service servers
 	public static final String DB			 = "cics525group6DB3";
 		
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
 		try {
-			Registry registry = LocateRegistry.createRegistry(PORT);
+			// Starting the RMI interface to communicate with Client machine
+			Registry clientRegistry = LocateRegistry.createRegistry(CPORT);
 			System.setProperty("java.rmi.server.hostname", HOST);
 			ServiceServerInterface server = new ServiceServer();
-			ServiceServerInterface stub = (ServiceServerInterface) UnicastRemoteObject.exportObject(server, PORT);  
+			ServiceServerInterface stub = (ServiceServerInterface) UnicastRemoteObject.exportObject(server, CPORT);  
 			 
-            registry = LocateRegistry.getRegistry(PORT);
-//            System.out.println(stub.toString());
-            registry.bind("cloudboxRMI", stub);
-            System.out.println("Server running...");
+			clientRegistry = LocateRegistry.getRegistry(CPORT);
+
+			clientRegistry.bind("cloudboxRMI", stub);
+            System.out.println("Client-Server RMI running...");
 			
+            // Starting the RMI interface to communicate with other service Servers
+            Registry serverRegistry = LocateRegistry.createRegistry(SPORT);
+//          System.setProperty("java.rmi.server.hostname", HOST);
+            ServerServerComInterface ssInt = new ServerServerCommunication();
+            ServerServerComInterface serverStub = (ServerServerComInterface) UnicastRemoteObject.exportObject(ssInt, SPORT);
+            serverRegistry = LocateRegistry.getRegistry(SPORT);
+            serverRegistry.bind("serverServerRMI", serverStub);
+            System.out.println("Server-Server RMI running...");
+            
 		} catch (java.io.IOException e) {
 			System.err.println(e);
 			// problem registering server

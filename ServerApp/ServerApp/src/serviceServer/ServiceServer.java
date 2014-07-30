@@ -7,10 +7,15 @@ import java.sql.SQLException;
 import java.util.*;
 
 import routingTable.DBConnection;
+import routingTable.ServiceContainer;
 import authentication.Authentication;
 import RMIInterface.ServiceServerInterface;
 
-
+/**
+ * container class for main service server functionality.
+ * @author ignacio
+ *
+ */
 public class ServiceServer implements ServiceServerInterface {
 
 	// Storage credentials for container service3
@@ -18,6 +23,7 @@ public class ServiceServer implements ServiceServerInterface {
 			+ "AccountName=cics525group6;"
 			+ "AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
 	public static final String CONTAINER = "service3";
+
 	
 	private ServerServerCommunication mySSCom;
 	private ServerClientCommunication mySCCom;
@@ -80,6 +86,7 @@ public class ServiceServer implements ServiceServerInterface {
 
 	public ServiceServer() throws RemoteException {
 		
+		// create instances of communication classes
 		mySSCom = new ServerServerCommunication();
 		mySCCom = new ServerClientCommunication();
 		
@@ -93,8 +100,14 @@ public class ServiceServer implements ServiceServerInterface {
 	 * changes on other service servers RT and finally notify user(s) of the
 	 * changes so the they can update their local copy of files
 	 */
-	public void refreshRT() {
+	public void refreshRT(int port) {
 		// Call Jitin's method to obtain information from the container
+		
+		ServiceContainer serviceContainer = new ServiceContainer();
+		ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
+		
+		missMatch = serviceContainer.checkContainerWithRoutingTable(CONTAINER, "cics525group6S3.cloudapp.net");
+		
 		
 		// Based on the results obtained from the poll method, execute the following methods:
 		// myServerServerCommunication.broadcastChanges();
@@ -102,21 +115,13 @@ public class ServiceServer implements ServiceServerInterface {
 		// myServerClientCommunication.sendNotification(user, message);
 		// to notify the user of recent changes.
 		
-		mySSCom.broadcastChanges();
+		mySSCom.broadcastChanges(port, missMatch);
 		mySCCom.sendNotification("jitin", "upload,file1"); // repeat this notification for every user related to file1
 		
 	}
-
+	
 
 	
-//	Testing code...
-//	public Date getDate() throws RemoteException {
-//		return new Date();
-//	}
-//
-//	public int execute(int i) throws RemoteException {
-//		return i*i*i*i;
-//	}
-
-		
+	
+	
 }
