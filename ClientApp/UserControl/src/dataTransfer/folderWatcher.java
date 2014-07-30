@@ -55,13 +55,14 @@ public class folderWatcher implements Runnable {
 						System.out.println("Event " + kind.name()
 								+ " happened, which filename is " + fn);
 						if (kind.name().equals("ENTRY_CREATE")) {
-							
+							//add into up load queue
 						}
 						if (kind.name().equals("ENTRY_MODIFY")) {
-							
+							//add into upload queue
 						}
 						if (kind.name().equals("ENTRY_DELETE")) {
-							
+							//change version number in the remote container to -1
+							//delete file in the container
 						}
 
 					}

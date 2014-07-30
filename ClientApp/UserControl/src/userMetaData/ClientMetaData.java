@@ -216,6 +216,7 @@ public class ClientMetaData {
 	public void modifyInfo(String filename, String checkSum, String versionNum, String path) {
 		try {
 			path = path + File.separator+"file.xml";
+			System.out.println("modify file path is:  " + path);
 			File xmlFile = new File(path);
 			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
 					.newInstance();

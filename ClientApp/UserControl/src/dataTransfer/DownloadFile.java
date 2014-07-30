@@ -3,6 +3,7 @@ package dataTransfer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.microsoft.windowsazure.services.blob.client.CloudBlob;
@@ -22,13 +23,11 @@ public class DownloadFile implements Runnable {
 	public DownloadFile() {
 		opt = OperationQueue.getInstance();
 		downloader = new Thread(this);
-		// downLoadFileControl(opt.getDownloadQueue());
-		//downloadImpl();
 		start();
 	}
 
 	/**
-	 * when a file needs to be downloaded, first check the download and upload
+	 * when a file needs to be download, first check the download and upload
 	 * queues.
 	 * 
 	 * @param downloadQ
@@ -85,7 +84,6 @@ public class DownloadFile implements Runnable {
 	 * @throws IOException
 	 */
 	public void downLoadFile(String fileName) throws IOException {
-		
 		ClientMetaData cmd = new ClientMetaData();
 		FileOptHelper fopt = new FileOptHelper();
 		String spliter = File.separator;
@@ -93,9 +91,7 @@ public class DownloadFile implements Runnable {
 				+ fileName;
 		UserOperate uopt = new UserOperate(sessionInfo.getInstance()
 				.getRemoteDNS(), 12345);
-		HashMap<String, String> fileAndDNS = uopt.getFileAddress();
-		String fileRemoteDNS = fileAndDNS.get(fileName);
-		System.out.println("remote DNS for file " + fileName + " is " + fileRemoteDNS);
+		String fileRemoteDNS = uopt.getOneFileAddress(fileName);
 		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, 12345);
 		String fileContainerString = fileDNSOPT.fileContainer();
 		String[] part = fileContainerString.split(",");
@@ -106,18 +102,24 @@ public class DownloadFile implements Runnable {
 			String containerName = part[1];
 			CloudBlobContainer container = blobClient
 					.getContainerReference(containerName);
-			System.out.println("download path is " + downPath);
 			for (ListBlobItem blobItem : container.listBlobs()) {
 				if (blobItem instanceof CloudBlob) {
 					CloudBlob blob = (CloudBlob) blobItem;
 					blob.downloadAttributes();
 					if (fileName.equals(blob.getName())) {
+						ArrayList<String> originFileInfolder = fopt.getFileInFolder(sessionInfo.getInstance().getWorkFolder());
 						blob.download(new FileOutputStream(downPath));
 						/*****need to change version number of the file download as meta in container******/
 						HashMap<String, String> res = blob.getMetadata();
 						String latestVersion = res.get("version");
 						String checkSum = fopt.getHashCode(fopt.hashFile(sessionInfo.getInstance().getWorkFolder()+File.separator+fileName));
-						cmd.modifyInfo(fileName, checkSum, latestVersion, sessionInfo.getInstance().getWorkFolder());
+						System.out.println("version: " + latestVersion + " check sum: " + checkSum);
+						System.out.println("work folder is: " + sessionInfo.getInstance().getWorkFolder());
+						if(originFileInfolder.contains(fileName)){
+							cmd.modifyInfo(fileName, checkSum, latestVersion, sessionInfo.getInstance().getWorkFolder());
+						}else{
+							cmd.addToXML(fileName, sessionInfo.getInstance().getWorkFolder());
+						}
 						System.out.println("Your file has been downloaded.");
 						return;
 					}

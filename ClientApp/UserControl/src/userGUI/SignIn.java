@@ -89,7 +89,7 @@ public class SignIn extends JFrame {
 					sessionInfo.getInstance().setUsername(username);
 					sessionInfo.getInstance().setUserPwd(password);
 					sessionInfo.getInstance().setRemoteDNS("cics525group6S3.cloudapp.net");
-					HashMap<String, String> fileDNS = uopt.getFileAddress();
+					HashMap<String, String> fileDNS = uopt.getFileInFolderAddress();
 					String workpath = sessionInfo.getInstance().getWorkFolder();
 					sessionInfo.getInstance().setFileLocations(fileDNS);
 					//check if work folder already has xml file.

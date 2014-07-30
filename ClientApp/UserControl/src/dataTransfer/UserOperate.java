@@ -1,18 +1,7 @@
 package dataTransfer;
 
-import com.microsoft.windowsazure.services.blob.client.*;
-import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.*;
-import java.nio.file.Path;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -91,13 +80,13 @@ public class UserOperate {
 	 * @param files
 	 * @return
 	 */
-	public HashMap<String, String> getFileAddress(){
+	public HashMap<String, String> getFileInFolderAddress(){
 		HashMap<String, String> res = new HashMap<String, String>();
 		helper = new FileOptHelper();
 		ArrayList<String> files = helper.getFileInFolder(sessionInfo.getInstance().getWorkFolder());
 		try {
 			res = serviceProvider.getAddress(files, sessionInfo.getInstance().getUsername());
-			System.out.println("get loacal hashmap length : " + res.size());
+//			System.out.println("get loacal hashmap length : " + res.size());
 			for (int i = 0; i < res.size() ; i++) {
 				System.out.println(res.get(files.get(i)));
 			}
@@ -106,6 +95,28 @@ public class UserOperate {
 			e.printStackTrace();
 		}
 		return res;
+	}
+	
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	public String getOneFileAddress(String filename){
+		HashMap<String, String> res = new HashMap<String, String>();
+		ArrayList<String> file = new ArrayList<String>();
+		String address = "";
+		file.add(filename);
+		try {
+			res = serviceProvider.getAddress(file, sessionInfo.getInstance().getUsername());
+			address = res.get(filename);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+//		System.out.println(res);
+//		System.out.println("address is " + address);
+		return address;
 	}
 	
 	/**
