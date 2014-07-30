@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.net.SocketException"/>
-<fullyQualifiedTypeName name="authentication.Authentication"/>
-<fullyQualifiedTypeName name="routingTable.DBConnection"/>
+<fullyQualifiedTypeName name="utils.ContainerUtility"/>
+<fullyQualifiedTypeName name="java.io.Serializable"/>
 <fullyQualifiedTypeName name="java.rmi.RemoteException"/>
-<fullyQualifiedTypeName name="serviceServer.RoutingTable"/>
 </qualifiedTypeNameHistroy>

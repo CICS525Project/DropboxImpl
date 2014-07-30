@@ -2,25 +2,26 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jackson-core-asl-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jackson-jaxrs-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jackson-mapper-asl-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jackson-xc-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/javax.inject-1.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jaxb-impl-2.2.3-1-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jaxb-impl-2.2.3-1.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-client-1.13-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-client-1.13.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-core-1.13-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-core-1.13.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-json-1.13-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-json-1.13.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jettison-1.1.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/mail-1.4.5-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/mail-1.4.5.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/microsoft-windowsazure-api-0.4.6.jar"/>
-	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/mysql-connector-java-5.1.29/mysql-connector-java-5.1.29-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jackson-mapper-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/javax.inject-1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jaxb-impl-2.2.3-1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jaxb-impl-2.2.3-1-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jersey-client-1.13.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jersey-client-1.13-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jersey-core-1.13.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jersey-core-1.13-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jersey-json-1.13.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jersey-json-1.13-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/mail-1.4.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/mail-1.4.5-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/microsoft-windowsazure-api-0.4.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/sqljdbc4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DBAdmin/Documents/GitHub/DropboxImpl/ServerApp/sun.misc.BASE64Decoder.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

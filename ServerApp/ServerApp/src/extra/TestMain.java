@@ -60,8 +60,9 @@ public class TestMain {
 			// this code will manually upload a file to the container
 			
 			ServiceContainer container=new ServiceContainer();
-			String filePath="C:\\Users\\DBAdmin\\Desktop\\test\\sample3.txt";
-			container.uploadBlobIntoContainer(filePath, "service3");
+
+			String filePath="C:\\Users\\DBAdmin\\Desktop\\test\\sample7.txt";
+			container.uploadBlobIntoContainer(filePath, "service1");
 		}
 		catch(Exception e){
 			e.printStackTrace();

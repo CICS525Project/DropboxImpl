@@ -52,4 +52,13 @@ public interface ServiceServerInterface extends Remote {
 	 */
 	String getContainer() throws RemoteException;
 	
+	/**
+	 * 
+	 * @param fileList list containing the filename and the shared username
+	 * @param userName owner of the file
+	 * @return return a message indicating success or failure
+	 * @throws RemoteException
+	 */
+	String shareFile(HashMap<String,String> fileList,String userName) throws RemoteException;
+	
 }

@@ -23,10 +23,10 @@ import RMIInterface.ServiceServerInterface;
 public class StartServer {
 
 	// Constant definitions
-	public static final String HOST 		 = "cics525group6S3.cloudapp.net";
+	public static final String HOST 		 = "cics525group6S1.cloudapp.net";
 	public static final int CPORT			 = 12345; 	// port for RMI with client
 	public static final int SPORT			 = 9999;	// port for RMI with other service servers
-	public static final String DB			 = "cics525group6DB3";
+	public static final String DB			 = "cics525group6DB1";
 		
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

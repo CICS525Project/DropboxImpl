@@ -1,4 +1,5 @@
 package serviceServer;
+
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -13,6 +14,7 @@ import RMIInterface.ServiceServerInterface;
 
 /**
  * container class for main service server functionality.
+ * 
  * @author ignacio
  *
  */
@@ -20,15 +22,13 @@ public class ServiceServer implements ServiceServerInterface {
 
 	// Storage credentials for container service3
 	public static final String STORAGECONNECTIONSTRING = "DefaultEndpointsProtocol=http;"
-			+ "AccountName=cics525group6;"
-			+ "AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
-	public static final String CONTAINER = "service3";
+			+ "AccountName=portalvhdsnq9hdydm7mjhf;AccountKey=2v7HZEVkrWSbSZ599UKsmt/5iutYlpoE1m3DOM5yZ6hFdZfn4VZrGGuZRk1L/eHraWFBGT6s7MQ1FyzvvLJjLg==";
 
-	
+	public static final String CONTAINER = "service1";
+
 	private ServerServerCommunication mySSCom;
 	private ServerClientCommunication mySCCom;
-	
-	
+
 	public boolean login(String username, String password)
 			throws RemoteException {
 		// TODO Auto-generated method stub
@@ -36,14 +36,13 @@ public class ServiceServer implements ServiceServerInterface {
 		return auth.validUser(username, password);
 	}
 
-	
 	public HashMap<String, String> getAddress(ArrayList<String> files,
 			String user) throws RemoteException {
 		// TODO Auto-generated method stub
 		DBConnection connection = new DBConnection();
-		HashMap<String,String> result = new HashMap<String,String>();
+		HashMap<String, String> result = new HashMap<String, String>();
 		try {
-			result = connection.searchForServerName(files,user);
+			result = connection.searchForServerName(files, user);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,8 +50,7 @@ public class ServiceServer implements ServiceServerInterface {
 		return result;
 
 	}
-	
-	
+
 	public boolean signIn(String username, String password)
 			throws RemoteException {
 		// TODO Auto-generated method stub
@@ -60,13 +58,12 @@ public class ServiceServer implements ServiceServerInterface {
 		return auth.createUser(username, password);
 	}
 
-
 	@Override
 	public HashMap<String, Integer> getCurrentFiles(String user)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		DBConnection connection = new DBConnection();
-		HashMap<String,Integer> result = new HashMap<String,Integer>();
+		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		try {
 			result = connection.searchForFiles(user);
 		} catch (SQLException e) {
@@ -76,20 +73,30 @@ public class ServiceServer implements ServiceServerInterface {
 		return result;
 	}
 
-
 	@Override
 	public String getContainer() throws RemoteException {
 		// TODO Auto-generated method stub
 		return (STORAGECONNECTIONSTRING + "," + CONTAINER);
 	}
 
-
 	public ServiceServer() throws RemoteException {
-		
+
 		// create instances of communication classes
 		mySSCom = new ServerServerCommunication();
 		mySCCom = new ServerClientCommunication();
-		
+
+	}
+
+	public String shareFile(HashMap<String,String> fileList,String userName) throws RemoteException {
+		DBConnection connection = new DBConnection();
+		String result=null;
+		try {
+			result = connection.insertRecordforShare(fileList, userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 		
 	}
 	
@@ -102,34 +109,33 @@ public class ServiceServer implements ServiceServerInterface {
 	 */
 	public void refreshRT(int port) {
 		// Call Jitin's method to obtain information from the container
-		
+
 		ServiceContainer serviceContainer = new ServiceContainer();
 		ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
-		
-		missMatch = serviceContainer.checkContainerWithRoutingTable(CONTAINER, "cics525group6S3.cloudapp.net");
-		
-		// temporary code to test update with the current routing table.
+
+		missMatch = serviceContainer.checkContainerWithRoutingTable(CONTAINER,
+				"cics525group6S1.cloudapp.net");
+
+//		 temporary code to test update with the current routing table.
 		try {
 			serviceContainer.updateRTComplete(missMatch);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		// Based on the results obtained from the poll method, execute the following methods:
+
+		// Based on the results obtained from the poll method, execute the
+		// following methods:
 		// myServerServerCommunication.broadcastChanges();
 		// to notify other service servers
 		// myServerClientCommunication.sendNotification(user, message);
 		// to notify the user of recent changes.
-		
-//		mySSCom.broadcastChanges(port, missMatch);
-//		mySCCom.sendNotification("jitin", "upload,file1"); // repeat this notification for every user related to file1
-		
-	}
-	
+		if (!missMatch.isEmpty()){
+			mySSCom.broadcastChanges(port, missMatch);
+		}
+		// mySCCom.sendNotification("jitin", "upload,file1"); // repeat this
+		// notification for every user related to file1
 
-	
-	
-	
+	}
+
 }

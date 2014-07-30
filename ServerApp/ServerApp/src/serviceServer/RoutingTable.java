@@ -1,10 +1,12 @@
 package serviceServer;
 
+import java.io.Serializable;
+
 /**
  * @author Jitin
  *
  */
-public class RoutingTable {
+public class RoutingTable implements Serializable {
 	
 	private String userName;
 	private String fileName;
