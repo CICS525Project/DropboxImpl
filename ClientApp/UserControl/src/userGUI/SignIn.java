@@ -117,9 +117,9 @@ public class SignIn extends JFrame {
 								/******** start download thread********/
 								new DownloadFile();
 								/******** create initial upload queue********/
-								
+								fopt.initilizeUploadQueue();
 								/******** start upload thread********/
-								
+								new UploadFile();
 								
 								Container frame = btnSignin.getParent();
 								do{

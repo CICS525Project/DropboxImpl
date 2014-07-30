@@ -43,15 +43,17 @@ public class ConflictPopUp extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				//user wants to upload conflict with existing upload
+				//user wants to upload conflict with existing dowload
 				//user choose upload
 				if(choice == 1){
 					//discard download
+					OperationQueue.getInstance().removeDownAddUp(filen);
 				}
-				//user wants to upload conflict with existing download
+				//user wants to upload conflict with existing upload
 				//user choose download
 				if(choice == 3){
 					//discard upload 
+					OperationQueue.getInstance().remiveUploadAddUpload(filen);
 				}
 				for (Frame frame : Frame.getFrames()) {
 					if (frame.isActive()) {
@@ -124,16 +126,20 @@ public class ConflictPopUp extends JFrame {
 		}
 		//if download conflict with an existing download action
 		if(i == 2){
-			downLoad.setLocation(50, 237);
-			cancel.setLocation(250, 237);
-			contentPane.add(downLoad);
+			warnMsg = "The file is already in the download task queue.";
+			cancel.setText("OK");
+//			downLoad.setLocation(50, 237);
+			cancel.setLocation(150, 237);
+//			contentPane.add(downLoad);
 			contentPane.add(cancel);
 		}
 		//if upload conflict with a existing upload action
 		if(i == 3){
-			upDate.setLocation(50, 237);
-			cancel.setLocation(250, 237);
-			contentPane.add(upDate);
+			warnMsg = "the file is already in the upload task queue.";
+			cancel.setText("OK");
+//			upDate.setLocation(50, 237);
+			cancel.setLocation(150, 237);
+//			contentPane.add(upDate);
 			contentPane.add(cancel);
 		}
 		warnTx = new JLabel();
@@ -157,7 +163,7 @@ public class ConflictPopUp extends JFrame {
 		setResizable(true);
 
 	}
-//	public static void main(String args[]) {
-//		new ConflictPopUp("Test",1, "1");
-//	}
+	public static void main(String args[]) {
+		new ConflictPopUp("Test",3, "1");
+	}
 }

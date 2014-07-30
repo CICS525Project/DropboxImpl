@@ -118,7 +118,11 @@ public class FileOptHelper {
 					}else{
 						//different version number
 						//need to compare version numbers 
-						OperationQueue.getInstance().add(fname, OperationQueue.getInstance().getDownloadQueue());
+						//only add to download queue when remote version number is greater than the local version number
+						int localVersion = Integer.parseInt(localFileAndVersion.get(fname));
+						if(remoteFileAndVersion.get(fname) > localVersion){
+							OperationQueue.getInstance().add(fname, OperationQueue.getInstance().getDownloadQueue());
+						}
 					}
 				}
 			}else{
@@ -137,6 +141,7 @@ public class FileOptHelper {
 		HashMap<String, Integer> remoteFileAndVersion = uopt.getServerVersion(sessionInfo.getInstance().getUsername());
 		HashMap<String, String> localFileAndCheckSum = cmd.readHashCode(dir);
 		ArrayList<String> filesInfolder = fopt.getFileInFolder(dir);
+		HashMap<String, String> localFileAndVersion = cmd.readXML(dir, filesInfolder);
 		//compare with remote files and versions
 		for(String fname : filesInfolder){
 			if(remoteFileAndVersion.containsKey(fname)){
@@ -144,15 +149,22 @@ public class FileOptHelper {
 				//just delete it in work space
 				//remote it in the list
 				if(remoteFileAndVersion.get(fname).equals(-1)){
-					deleteFileInFoler(sessionInfo.getInstance().getWorkFolder()+File.separator+fname);
+					deleteFileInFoler(dir + File.separator+fname);
 					filesInfolder.remove(fname);
 				}else{
 					//need to compare version number to determine if download or upload
-					
+					int localVersion = Integer.parseInt(localFileAndVersion.get(fname));
+					//only if local version is greater than the remote version
+					//add file in upload queue
+					//else do nothing
+					if(remoteFileAndVersion.get(fname) < localVersion){
+						OperationQueue.getInstance().add(fname, OperationQueue.getInstance().getUploadQueue());
+					}
 				}
 			}
 			else{
 				//just upload file
+				OperationQueue.getInstance().add(fname, OperationQueue.getInstance().getUploadQueue());
 			}
 		}
 		//compare with local files and checksum

@@ -1,5 +1,6 @@
 package dataTransfer;
 
+import java.rmi.Remote;
 import java.util.*;
 
 public class OperationQueue {
@@ -92,7 +93,14 @@ public class OperationQueue {
 		remove(fn, optQueueDown);
 		add(fn, optQueueUp);
 	}
-
+	public synchronized void removeDownAddUp(String fn){
+		remove(fn, optQueueDown);
+		add(fn, optQueueUp);
+	}
+	public synchronized void remiveUploadAddUpload(String fn){
+		remove(fn, optQueueUp);
+		add(fn, optQueueUp);
+	}
 	public static void main(String[] args) {
 //		OperationQueue opt = OperationQueue.getInstance();
 //		String file = opt.peekDown();
