@@ -10,14 +10,15 @@ import java.sql.SQLException;
  * @version 1.0, 19/July/2014
  */
 public class ConnectionFactory {
+
+	//static reference to DBS3
 	
-	//static reference to itself	
-	public static final String URL 		 = "jdbc:sqlserver://r8n9umoc58.database.windows.net;";
+	public static final String URL 		 = "jdbc:sqlserver://x4dtun92cb.database.windows.net;";
 	public static final String USER 	 = "cics525";
 	public static final String PASSWORD  = "MSSgroup6";
 	public static final String DRIVER	 = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	public static final String SQLSERVER = "r8n9umoc58";
-	public static final String DBNAME    = "cics525group6DBS1";
+	public static final String SQLSERVER = "x4dtun92cb";
+	public static final String DBNAME    = "cics525group6DBS3";
 	
 	private static Connection myConnection;	
 	

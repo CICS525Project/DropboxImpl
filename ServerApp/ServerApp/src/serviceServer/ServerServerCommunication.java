@@ -17,10 +17,12 @@ public class ServerServerCommunication implements ServerServerComInterface {
 
 	ServerServerCommunication() {
 		ss = new HashMap<String, String>();
-		ss.put("SS1", "cics525group5S1.cloudapp.net");
-		ss.put("SS2", "cics525group5S2.cloudapp.net");
-		ss.put("SS3", "cics525group5S3.cloudapp.net");
-//		ss.put("SS4", "cics525group5S4.cloudapp.net");
+		ss.put("SS1", "cics525group6S1.cloudapp.net");
+		ss.put("SS2", "cics525group6S2.cloudapp.net");
+		ss.put("SS3", "cics525group6S3.cloudapp.net");
+		ss.put("SS4", "cics525group6s4.cloudapp.net");
+		ss.put("BS1", "cics525group6.cloudapp.net");
+		ss.put("BS2", "cics525group6b2.cloudapp.net");
 	}
 
 	// Method implementation to update information of other service servers

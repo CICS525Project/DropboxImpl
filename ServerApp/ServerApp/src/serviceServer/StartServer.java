@@ -52,6 +52,14 @@ public class StartServer {
             serverRegistry.bind("serverServerRMI", serverStub);
             System.out.println("Server-Server RMI running...");
             
+            
+            ServiceServer updateInstance = new ServiceServer();
+            System.out.println("Entering infinite refresh loop... ");
+            while (true) {
+                updateInstance.refreshRT(9999);
+            }
+
+            
 		} catch (java.io.IOException e) {
 			System.err.println(e);
 			// problem registering server

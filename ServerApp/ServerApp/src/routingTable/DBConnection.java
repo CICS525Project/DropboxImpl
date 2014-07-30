@@ -217,8 +217,8 @@ public class DBConnection {
 		ResultSet rs=null;
 		ArrayList<String> result=new ArrayList<String>();
 		try{
-			con=ConnectionFactory.getConnection();
 			for(String file: fileList){
+				con=ConnectionFactory.getConnection();
 				String query="SELECT userName FROM [sharedTable] WHERE sharedUserName=? AND fileName=?";
 				ps=con.prepareStatement(query);
 				ps.setString(1, userName);
@@ -251,7 +251,7 @@ public class DBConnection {
 		ResultSet rs=null;
 		ArrayList<String> result=new ArrayList<String>();
 		try{
-			con=ConnectionFactory.getConnection();
+				con=ConnectionFactory.getConnection();
 				String query="SELECT userName FROM [sharedTable] WHERE sharedUserName=?";
 				ps=con.prepareStatement(query);
 				ps.setString(1, userName);

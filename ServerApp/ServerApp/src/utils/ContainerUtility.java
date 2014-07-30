@@ -8,9 +8,9 @@ package utils;
  *
  */
 public class ContainerUtility {
-	
+	// constants to establish communication with the container
 	public static final String storageConnectionString = "DefaultEndpointsProtocol=http;"
-			+ "AccountName=portalvhdsnq9hdydm7mjhf;AccountKey=2v7HZEVkrWSbSZ599UKsmt/5iutYlpoE1m3DOM5yZ6hFdZfn4VZrGGuZRk1L/eHraWFBGT6s7MQ1FyzvvLJjLg==";
+			+ "AccountName=cics525group6;AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
 	
 	public String getContainerConnection(){
 		return storageConnectionString;

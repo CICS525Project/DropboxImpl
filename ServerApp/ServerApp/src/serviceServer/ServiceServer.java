@@ -108,6 +108,14 @@ public class ServiceServer implements ServiceServerInterface {
 		
 		missMatch = serviceContainer.checkContainerWithRoutingTable(CONTAINER, "cics525group6S3.cloudapp.net");
 		
+		// temporary code to test update with the current routing table.
+		try {
+			serviceContainer.updateRTComplete(missMatch);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		// Based on the results obtained from the poll method, execute the following methods:
 		// myServerServerCommunication.broadcastChanges();
@@ -115,8 +123,8 @@ public class ServiceServer implements ServiceServerInterface {
 		// myServerClientCommunication.sendNotification(user, message);
 		// to notify the user of recent changes.
 		
-		mySSCom.broadcastChanges(port, missMatch);
-		mySCCom.sendNotification("jitin", "upload,file1"); // repeat this notification for every user related to file1
+//		mySSCom.broadcastChanges(port, missMatch);
+//		mySCCom.sendNotification("jitin", "upload,file1"); // repeat this notification for every user related to file1
 		
 	}
 	
