@@ -113,14 +113,11 @@ public class DownloadFile implements Runnable {
 						HashMap<String, String> res = blob.getMetadata();
 						String latestVersion = res.get("version");
 						String checkSum = fopt.getHashCode(fopt.hashFile(sessionInfo.getInstance().getWorkFolder()+File.separator+fileName));
-						System.out.println("version: " + latestVersion + " check sum: " + checkSum);
-						System.out.println("work folder is: " + sessionInfo.getInstance().getWorkFolder());
 						if(originFileInfolder.contains(fileName)){
 							cmd.modifyInfo(fileName, checkSum, latestVersion, sessionInfo.getInstance().getWorkFolder());
 						}else{
 							cmd.addToXML(fileName, sessionInfo.getInstance().getWorkFolder());
 						}
-						System.out.println("Your file has been downloaded.");
 						return;
 					}
 				}

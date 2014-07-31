@@ -55,7 +55,6 @@ public class FileOptHelper {
 		ArrayList<String> files = new ArrayList<String>();
 		for(int i = 0; i < fileList.length; i++){
 			if(fileList[i].isFile() && !fileList[i].getName().startsWith(".") && !fileList[i].getName().endsWith("xml")){
-				System.out.println("File name is: " + fileList[i].getName());
 				files.add(fileList[i].getName());
 			}
 		}
@@ -165,6 +164,9 @@ public class FileOptHelper {
 			else{
 				//just upload file
 				OperationQueue.getInstance().add(fname, OperationQueue.getInstance().getUploadQueue());
+				//should be files add when client is off line
+				//create meta data in xml file
+				cmd.addToXML(fname, dir);
 			}
 		}
 		//compare with local files and checksum

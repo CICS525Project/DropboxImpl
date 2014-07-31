@@ -12,11 +12,6 @@ import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
 import com.microsoft.windowsazure.services.blob.client.CloudBlockBlob;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
-/*
- * @author Sashiraj
- * 
- */
-import com.sun.xml.internal.ws.handler.ClientMessageHandlerTube;
 
 public class UploadFile implements Runnable {
 
@@ -28,12 +23,7 @@ public class UploadFile implements Runnable {
 		System.out.println("New thread goin to start...");
 		uploader = new Thread(this);
 		System.out.println("New thread started...");
-		try {
-			uploadImpl();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		start();
 	}
 
 	/***
@@ -42,19 +32,18 @@ public class UploadFile implements Runnable {
 	 */
 	public void uploadImpl() throws IOException{
 		Thread thisThread = Thread.currentThread();
-		System.out.println("Same thread");
 		while (uploader == thisThread) {
 			if (optQ.peekUp() != null) {
+				System.out.println("in the uoload  imple");
 				uploadFile(optQ.peekUp());
-
 				OperationQueue.getInstance().pollUp();
 			}
 		}
 	}
 
 	/**
-	 * first check the upload and download before uploading in queues.
 	 * 
+	 * @param fn
 	 */
 	public void uploadFileControl(String fn) {
 		// operation already exists
@@ -76,7 +65,7 @@ public class UploadFile implements Runnable {
 		}
 
 	}
-
+	
 	//start thread
 	public void start(){
 		System.out.println("upload thread running....");
@@ -88,14 +77,26 @@ public class UploadFile implements Runnable {
 		uploader = null;
 	}
 
+	/**
+	 * 
+	 * @param fileName
+	 */
 	public void uploadFile(String fileName){
-		System.out.println("Inside UploadFile");
+		System.out.println("upload queue size is: " + OperationQueue.getInstance().getUploadQueue().size());
 		String spliter = File.separator;
 		String workSpace = sessionInfo.getInstance().getWorkFolder();
 		String upPath  = workSpace + File.separator + fileName;
+		String fileRemoteDNS;
+		System.out.println("uploading filename is " + upPath);
 		UserOperate uopt = new UserOperate(sessionInfo.getInstance()
 					.getRemoteDNS(), 12345);
-		String fileRemoteDNS = uopt.getOneFileAddress(fileName);
+		if(uopt.getOneFileAddress(fileName)==null){
+			fileRemoteDNS = sessionInfo.getInstance().getRemoteDNS();
+		}else{
+			fileRemoteDNS = uopt.getOneFileAddress(fileName);
+		}
+		//= uopt.getOneFileAddress(fileName);
+		System.out.println("Upload file DNS is : " + fileRemoteDNS);
 		FileOptHelper fopt = new FileOptHelper();
 		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, 12345);
 		String fileContainerString = fileDNSOPT.fileContainer();
@@ -104,7 +105,8 @@ public class UploadFile implements Runnable {
 		try{
 			storageAccount = CloudStorageAccount.parse(part[0]);
 			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-			String containerName = part[0];
+			String containerName = part[1];
+			System.out.println("Container name is: " + containerName);
 			CloudBlobContainer container = blobClient.getContainerReference(containerName);
 			container.createIfNotExist();
 			CloudBlockBlob blob = container.getBlockBlobReference(fileName);
@@ -112,11 +114,11 @@ public class UploadFile implements Runnable {
 			blob.upload(new FileInputStream(source), source.length());
 			
 			/**change remote version number as well**/
-			/**may be error here**/
 			ClientMetaData cmd = new ClientMetaData();
 			HashMap<String, String> localMeta = cmd.readXML(workSpace, fopt.getFileInFolder(workSpace));
 			HashMap<String, String> meta = new HashMap<String, String>();
 			System.out.println("The metadata for the file: " + fileName +" is " + localMeta.get(fileName));
+			meta.put("name", sessionInfo.getInstance().getUsername());
 			meta.put("version", localMeta.get(fileName));
 			blob.setMetadata(meta);
 			blob.uploadMetadata();
@@ -137,13 +139,6 @@ public class UploadFile implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	public static void main(String[] args){
-
-		UploadFile upf = new UploadFile();
-		upf.start();
-		upf.uploadFile("sas_test2");
 	}
 }
 

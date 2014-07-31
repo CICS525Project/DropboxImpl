@@ -31,7 +31,7 @@ import dataTransfer.UserOperate;
 
 public class ClientMetaData {
 	FileOptHelper fopt = new FileOptHelper();
-	
+
 	/**
 	 * 
 	 * @param path
@@ -55,23 +55,25 @@ public class ClientMetaData {
 		}
 		return false;
 	}
+
 	/**
 	 * create xml file for files in current folder filelist conatins all file
 	 * names in current folder path is the current folder path
 	 * 
 	 * @param filelist
 	 * @param path
-	 * @throws Exception 
-	 * @throws DOMException 
+	 * @throws Exception
+	 * @throws DOMException
 	 */
-	public void createXML(ArrayList<String> filelist, String path) throws DOMException, Exception {
+	public void createXML(ArrayList<String> filelist, String path)
+			throws DOMException, Exception {
 		try {
-			String XMLpath = path + File.separator+"file.xml";
-//			File f = new File(XMLpath);
-//			if(!f.exists()){
-//				PrintWriter writer = new PrintWriter(XMLpath, "UTF-8");
-//				writer.close();
-//			}
+			String XMLpath = path + File.separator + "file.xml";
+			// File f = new File(XMLpath);
+			// if(!f.exists()){
+			// PrintWriter writer = new PrintWriter(XMLpath, "UTF-8");
+			// writer.close();
+			// }
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -86,7 +88,8 @@ public class ClientMetaData {
 				filename.setTextContent(name);
 				file.appendChild(filename);
 				Element checkSum = doc.createElement("CheckSum");
-				checkSum.setTextContent(fopt.getHashCode(fopt.hashFile(path + File.separator+name)));
+				checkSum.setTextContent(fopt.getHashCode(fopt.hashFile(path
+						+ File.separator + name)));
 				file.appendChild(checkSum);
 				Element version = doc.createElement("Version");
 				version.setTextContent("1");
@@ -119,21 +122,16 @@ public class ClientMetaData {
 			ArrayList<String> filenames) {
 		HashMap<String, String> res = new HashMap<String, String>();
 		try {
-			path = path + File.separator+"file.xml";
+			path = path + File.separator + "file.xml";
 			File xmlFile = new File(path);
 			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder metaBuilder = metaFactory.newDocumentBuilder();
 			Document doc = metaBuilder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
-			System.out.println("Root element: "
-					+ doc.getDocumentElement().getNodeName());
-
 			NodeList nodeList = doc.getElementsByTagName("File");
-			System.out.println("------------------");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node nNode = nodeList.item(i);
-				System.out.println("Current Element : " + nNode.getNodeName());
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
 					String fname = eElement.getElementsByTagName("Filename")
@@ -143,12 +141,6 @@ public class ClientMetaData {
 								.item(0).getTextContent();
 						res.put(fname, vnum);
 					}
-					System.out.println("Filename :"
-							+ eElement.getElementsByTagName("Filename").item(0)
-									.getTextContent());
-					System.out.println("Version # :"
-							+ eElement.getElementsByTagName("Version").item(0)
-									.getTextContent());
 				}
 			}
 		} catch (Exception e) {
@@ -157,8 +149,10 @@ public class ClientMetaData {
 		}
 		return res;
 	}
+
 	/**
 	 * read hashcode in the xml file
+	 * 
 	 * @param files
 	 * @param path
 	 * @return
@@ -173,14 +167,9 @@ public class ClientMetaData {
 			DocumentBuilder metaBuilder = metaFactory.newDocumentBuilder();
 			Document doc = metaBuilder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
-			System.out.println("Root element: "
-					+ doc.getDocumentElement().getNodeName());
-
 			NodeList nodeList = doc.getElementsByTagName("File");
-			System.out.println("------------------");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node nNode = nodeList.item(i);
-				System.out.println("Current Element : " + nNode.getNodeName());
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
 					String fname = eElement.getElementsByTagName("Filename")
@@ -188,22 +177,15 @@ public class ClientMetaData {
 					String vnum = eElement.getElementsByTagName("CheckSum")
 							.item(0).getTextContent();
 					res.put(fname, vnum);
-					System.out.println("Filename :"
-							+ eElement.getElementsByTagName("Filename").item(0)
-									.getTextContent());
-					System.out.println("CheckSum # :"
-							+ eElement.getElementsByTagName("CheckSum").item(0)
-									.getTextContent());
 				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-
 		return res;
 	}
-	
+
 	/**
 	 * modify information for a xml entry of a specific file filename is the
 	 * specific file's name versionNum is the file's version number path is the
@@ -213,9 +195,10 @@ public class ClientMetaData {
 	 * @param versionNum
 	 * @param path
 	 */
-	public void modifyInfo(String filename, String checkSum, String versionNum, String path) {
+	public void modifyInfo(String filename, String checkSum, String versionNum,
+			String path) {
 		try {
-			path = path + File.separator+"file.xml";
+			path = path + File.separator + "file.xml";
 			System.out.println("modify file path is:  " + path);
 			File xmlFile = new File(path);
 			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
@@ -226,7 +209,6 @@ public class ClientMetaData {
 			NodeList nodeList = doc.getElementsByTagName("File");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node nNode = nodeList.item(i);
-				System.out.println("Current Element : " + nNode.getNodeName());
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
 					String fname = eElement.getElementsByTagName("Filename")
@@ -234,9 +216,8 @@ public class ClientMetaData {
 					if (fname.equals(filename)) {
 						eElement.getElementsByTagName("Version").item(0)
 								.setTextContent(versionNum);
-						eElement.getElementsByTagName("CheckSum").item(0).setTextContent(checkSum);
-						System.out.println("Change version number for: "
-								+ filename + " to " + versionNum + " and checkSum to: " + checkSum);
+						eElement.getElementsByTagName("CheckSum").item(0)
+								.setTextContent(checkSum);
 					}
 				}
 			}
@@ -261,7 +242,7 @@ public class ClientMetaData {
 	 */
 	public void addToXML(String filename, String path) {
 		try {
-			String XMLpath = path + File.separator+"file.xml";
+			String XMLpath = path + File.separator + "file.xml";
 			File xmlFile = new File(XMLpath);
 			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
 					.newInstance();
@@ -276,7 +257,8 @@ public class ClientMetaData {
 			fn.setTextContent(filename);
 			file.appendChild(fn);
 			Element checkSum = document.createElement("CheckSum");
-			checkSum.setTextContent(fopt.getHashCode(fopt.hashFile(path + File.separator+filename)));
+			checkSum.setTextContent(fopt.getHashCode(fopt.hashFile(path
+					+ File.separator + filename)));
 			file.appendChild(checkSum);
 			Element version = document.createElement("Version");
 			version.setTextContent("1");
@@ -287,7 +269,6 @@ public class ClientMetaData {
 			DOMSource domSource = new DOMSource(document);
 			StreamResult streamResult = new StreamResult(new File(XMLpath));
 			transformer.transform(domSource, streamResult);
-			System.out.println("File added.");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -296,7 +277,7 @@ public class ClientMetaData {
 
 	public void removeRecord(String path, ArrayList<String> fileInfolder) {
 		try {
-			path = path + File.separator+"file.xml";
+			path = path + File.separator + "file.xml";
 			File xmlFile = new File(path);
 			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
 					.newInstance();
@@ -309,12 +290,9 @@ public class ClientMetaData {
 				Node nNode = nodeList.item(i);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
-					System.out.println("XML file name : " + eElement.getElementsByTagName("Filename")
-							.item(0).getTextContent());
 					String fname = eElement.getElementsByTagName("Filename")
 							.item(0).getTextContent();
 					if (!fileInfolder.contains(fname)) {
-						System.out.println(fname + " is not in current file list, will be deleted");
 						eElement.getParentNode().removeChild(eElement);
 					}
 				}
@@ -325,30 +303,9 @@ public class ClientMetaData {
 			DOMSource domSource = new DOMSource(document);
 			StreamResult streamResult = new StreamResult(new File(path));
 			transformer.transform(domSource, streamResult);
-			System.out.println("Non-related records removed.");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) throws DOMException, Exception {
-		// TODO Auto-generated method stub
-		FileOptHelper opter = new FileOptHelper();
-		ArrayList<String> reStrings = opter.getFileInFolder("/Users/haonanxu/Desktop/download");
-		for(String name : reStrings){
-			System.out.println("Current file : " + name);
-		}
-		ClientMetaData cmd = new ClientMetaData();
-		cmd.readHashCode("/Users/haonanxu/Desktop/download");
-//		cmd.createXML(reStrings, "/Users/haonanxu/Desktop/download");
-//		cmd.createXML(reStrings, "/Users/haonanxu/Desktop/download");
-//		cmd.removeRecord("/Users/haonanxu/Desktop/download", reStrings);
-//		 createXML(reStrings, "/Users/haonanxu/Desktop/download");
-//		cmd.modifyInfo("test.html","1","1","/Users/haonanxu/Desktop/download");
-//		 cmd.addToXML("tst.txt", "/Users/haonanxu/Desktop/download");
-//		 reStrings.add("tst.txt");
-//		 readXML("/Users/haonanxu/Desktop/download/file.xml", reStrings);
-	}
-
 }

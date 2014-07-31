@@ -115,12 +115,13 @@ public class SignIn extends JFrame {
 								fopt.initialDownloadQueue();
 								System.out.println("download queue size is: " + OperationQueue.getInstance().getDownloadQueue().size());
 								/******** start download thread********/
-								new DownloadFile();
+								//new DownloadFile();
 								/******** create initial upload queue********/
 								fopt.initilizeUploadQueue();
 								/******** start upload thread********/
 								new UploadFile();
 								
+								/**close login window **/
 								Container frame = btnSignin.getParent();
 								do{
 									frame = frame.getParent();
