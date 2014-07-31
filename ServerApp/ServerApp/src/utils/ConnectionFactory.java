@@ -14,27 +14,15 @@ public class ConnectionFactory {
 	//static reference to DBS3
 	//static reference to itself  
 
-    public static final String URL       = "jdbc:sqlserver://r8n9umoc58.database.windows.net;";
-
-    public static final String USER      = "cics525";
-
-    public static final String PASSWORD  = "MSSgroup6";
-
-    public static final String DRIVER   = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-
-    public static final String SQLSERVER = "r8n9umoc58";
-
-    public static final String DBNAME    = "cics525group6DBS1";
-
 	
 	private static Connection myConnection;	
 	
-	public static final String connectionUrl = URL +"databaseName="+DBNAME+";user="+USER+"@"+SQLSERVER+";"
-		      		+ "password="+PASSWORD+"";
+	public static final String connectionUrl = Constants.URL +"databaseName="+Constants.DBNAME+";user="+Constants.USER+"@"+Constants.SQLSERVER+";"
+		      		+ "password="+Constants.PASSWORD+"";
 	//private constructor
 	static {
 		try{
-			Class.forName(DRIVER);
+			Class.forName(Constants.DRIVER);
 		}
 		catch(ClassNotFoundException classNotFoundException){
 			classNotFoundException.printStackTrace();

@@ -4,7 +4,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-
+import utils.Constants;
 import RMIInterface.ServerServerComInterface;
 import RMIInterface.ServiceServerInterface;
 
@@ -22,42 +22,40 @@ import RMIInterface.ServiceServerInterface;
  */
 public class StartServer {
 
-	// Constant definitions
-	public static final String HOST 		 = "cics525group6S1.cloudapp.net";
-	public static final int CPORT			 = 12345; 	// port for RMI with client
-	public static final int SPORT			 = 9999;	// port for RMI with other service servers
-	public static final String DB			 = "cics525group6DB1";
-		
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
 		try {
 			// Starting the RMI interface to communicate with Client machine
-			Registry clientRegistry = LocateRegistry.createRegistry(CPORT);
-			System.setProperty("java.rmi.server.hostname", HOST);
+			Registry clientRegistry = LocateRegistry
+					.createRegistry(Constants.CPORT);
+			System.setProperty("java.rmi.server.hostname", Constants.HOST);
 			ServiceServerInterface server = new ServiceServer();
-			ServiceServerInterface stub = (ServiceServerInterface) UnicastRemoteObject.exportObject(server, CPORT);  
-			 
-			clientRegistry = LocateRegistry.getRegistry(CPORT);
+			ServiceServerInterface stub = (ServiceServerInterface) UnicastRemoteObject
+					.exportObject(server, Constants.CPORT);
+
+			clientRegistry = LocateRegistry.getRegistry(Constants.CPORT);
 
 			clientRegistry.bind("cloudboxRMI", stub);
-            System.out.println("Client-Server RMI running...");
-			
-            // Starting the RMI interface to communicate with other service Servers
-            Registry serverRegistry = LocateRegistry.createRegistry(SPORT);
-//          System.setProperty("java.rmi.server.hostname", HOST);
-            ServerServerComInterface ssInt = new ServerServerCommunication();
-            ServerServerComInterface serverStub = (ServerServerComInterface) UnicastRemoteObject.exportObject(ssInt, SPORT);
-            serverRegistry = LocateRegistry.getRegistry(SPORT);
-            serverRegistry.bind("serverServerRMI", serverStub);
-            System.out.println("Server-Server RMI running...");
-            
-            
-            ServiceServer updateInstance = new ServiceServer();
-            System.out.println("Entering infinite refresh loop... ");
-            while (true) {
-                updateInstance.refreshRT(9999);
-            }
+			System.out.println("Client-Server RMI running...");
+
+			// Starting the RMI interface to communicate with other service
+			// Servers
+			Registry serverRegistry = LocateRegistry.createRegistry(Constants.SPORT);
+			// System.setProperty("java.rmi.server.hostname", HOST);
+			ServerServerComInterface ssInt = new ServerServerCommunication();
+			ServerServerComInterface serverStub = (ServerServerComInterface) UnicastRemoteObject
+					.exportObject(ssInt, Constants.SPORT);
+			serverRegistry = LocateRegistry.getRegistry(Constants.SPORT);
+			serverRegistry.bind("serverServerRMI", serverStub);
+			System.out.println("Server-Server RMI running...");
+
+			ServiceServer updateInstance = new ServiceServer();
+			System.out.println("Entering infinite refresh loop... ");
+			while (true) {
+				updateInstance.refreshRT(9999);
+			}
 
             
 		} catch (java.io.IOException e) {

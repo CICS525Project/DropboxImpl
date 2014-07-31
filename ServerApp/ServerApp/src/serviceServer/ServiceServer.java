@@ -6,7 +6,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.*;
-
+import utils.Constants;
 import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 import authentication.Authentication;
@@ -20,12 +20,7 @@ import RMIInterface.ServiceServerInterface;
  */
 public class ServiceServer implements ServiceServerInterface {
 
-	// Storage credentials for container service3
-	public static final String STORAGECONNECTIONSTRING = "DefaultEndpointsProtocol=http;"
-			+ "AccountName=portalvhdsnq9hdydm7mjhf;AccountKey=2v7HZEVkrWSbSZ599UKsmt/5iutYlpoE1m3DOM5yZ6hFdZfn4VZrGGuZRk1L/eHraWFBGT6s7MQ1FyzvvLJjLg==";
-
-	public static final String CONTAINER = "service1";
-
+	
 	private ServerServerCommunication mySSCom;
 	private ServerClientCommunication mySCCom;
 
@@ -76,7 +71,7 @@ public class ServiceServer implements ServiceServerInterface {
 	@Override
 	public String getContainer() throws RemoteException {
 		// TODO Auto-generated method stub
-		return (STORAGECONNECTIONSTRING + "," + CONTAINER);
+		return (Constants.STORAGECONNECTIONSTRING + "," + Constants.CONTAINER);
 	}
 
 	public ServiceServer() throws RemoteException {
@@ -113,8 +108,8 @@ public class ServiceServer implements ServiceServerInterface {
 		ServiceContainer serviceContainer = new ServiceContainer();
 		ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
 
-		missMatch = serviceContainer.checkContainerWithRoutingTable(CONTAINER,
-				"cics525group6S1.cloudapp.net");
+		missMatch = serviceContainer.checkContainerWithRoutingTable(Constants.CONTAINER,
+				Constants.HOST);
 
 //		 temporary code to test update with the current routing table.
 		try {
