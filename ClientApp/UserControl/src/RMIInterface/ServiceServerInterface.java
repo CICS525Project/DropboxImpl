@@ -8,9 +8,9 @@ import java.util.*;
  */
 public interface ServiceServerInterface extends Remote {
 	// Dummy testing methods
-	Date getDate() throws RemoteException;
-	int execute(int i) throws RemoteException;
-	
+//	Date getDate() throws RemoteException;
+//	int execute(int i) throws RemoteException;
+//	
 	/**
 	 * login method for local user authentication
 	 * @param username username provided by user in the GUI
@@ -51,5 +51,14 @@ public interface ServiceServerInterface extends Remote {
 	 * @throws RemoteException
 	 */
 	String getContainer() throws RemoteException;
+	
+	/**
+	 * 
+	 * @param fileList list containing the filename and the shared username
+	 * @param userName owner of the file
+	 * @return return a message indicating success or failure
+	 * @throws RemoteException
+	 */
+	String shareFile(HashMap<String,String> fileList,String userName) throws RemoteException;
 	
 }
