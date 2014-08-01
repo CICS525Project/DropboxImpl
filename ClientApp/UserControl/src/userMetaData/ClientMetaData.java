@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 
 import dataTransfer.FileOptHelper;
 import dataTransfer.UserOperate;
-import dataTransfer.sessionInfo;
+import dataTransfer.SessionInfo;
 
 public class ClientMetaData {
 	private FileOptHelper fopt;
@@ -81,7 +81,7 @@ public class ClientMetaData {
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement("Files");
-			rootElement.setAttribute("owner", sessionInfo.getInstance().getUsername());
+			rootElement.setAttribute("owner", SessionInfo.getInstance().getUsername());
 			doc.appendChild(rootElement);
 
 			for (String name : filelist) {
@@ -161,7 +161,7 @@ public class ClientMetaData {
 	public String readVersionForOne(String filename){
 		ArrayList<String> file = new ArrayList<String>();
 		file.add(filename);
-		HashMap<String, String> allVersion = readXML(sessionInfo.getInstance().getWorkFolder(), file);
+		HashMap<String, String> allVersion = readXML(SessionInfo.getInstance().getWorkFolder(), file);
 		return allVersion.get(filename);
 	}
 	
@@ -172,11 +172,11 @@ public class ClientMetaData {
 	 */
 	public int compareLcalandRmtVersion(String fn){
 	
-		uopt = new UserOperate(sessionInfo
-				.getInstance().getRemoteDNS(), sessionInfo
+		uopt = new UserOperate(SessionInfo
+				.getInstance().getRemoteDNS(), SessionInfo
 				.getInstance().getPortNum());
 		HashMap<String, Integer> remoteFileAndVersion = uopt
-				.getServerVersion(sessionInfo.getInstance()
+				.getServerVersion(SessionInfo.getInstance()
 						.getUsername());
 		String localVersion = readVersionForOne(fn);
 		int lv = Integer.parseInt(localVersion);

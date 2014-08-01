@@ -83,9 +83,9 @@ public class UserOperate {
 	public HashMap<String, String> getFileInFolderAddress(){
 		HashMap<String, String> res = new HashMap<String, String>();
 		helper = new FileOptHelper();
-		ArrayList<String> files = helper.getFileInFolder(sessionInfo.getInstance().getWorkFolder());
+		ArrayList<String> files = helper.getFileInFolder(SessionInfo.getInstance().getWorkFolder());
 		try {
-			res = serviceProvider.getAddress(files, sessionInfo.getInstance().getUsername());
+			res = serviceProvider.getAddress(files, SessionInfo.getInstance().getUsername());
 //			System.out.println("get loacal hashmap length : " + res.size());
 			for (int i = 0; i < res.size() ; i++) {
 				System.out.println(res.get(files.get(i)));
@@ -108,7 +108,7 @@ public class UserOperate {
 		String address = "";
 		file.add(filename);
 		try {
-			res = serviceProvider.getAddress(file, sessionInfo.getInstance().getUsername());
+			res = serviceProvider.getAddress(file, SessionInfo.getInstance().getUsername());
 			address = res.get(filename);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -150,12 +150,12 @@ public class UserOperate {
 	
 	public void shareFile(String[] files, String shareUser){
 		HashMap<String, String> shareList = new HashMap<String,String>();
-		String username = sessionInfo.getInstance().getUsername();
+		String username = SessionInfo.getInstance().getUsername();
 		for(String fname:files){
-			shareList.put(fname, username);
+			shareList.put(fname, shareUser);
 		}
 		try {
-			serviceProvider.shareFile(shareList, shareUser);
+			serviceProvider.shareFile(shareList, username);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

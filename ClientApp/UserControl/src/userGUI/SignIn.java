@@ -16,8 +16,6 @@ import org.w3c.dom.DOMException;
 
 import userMetaData.ClientMetaData;
 
-import com.sun.xml.bind.v2.runtime.reflect.opt.OptimizedAccessorFactory;
-
 import dataTransfer.*;
 
 import java.awt.event.ActionListener;
@@ -25,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SignIn extends JFrame {
@@ -84,19 +81,19 @@ public class SignIn extends JFrame {
 					password = pwd.getText();
 					// user authorization
 					UserOperate uopt = new UserOperate(
-							"cics525group6S3.cloudapp.net", 12345);
+							ConfigurationData.SERVICE_S3, ConfigurationData.PORT_NUM);
 					ClientMetaData cmd = new ClientMetaData();
 					FileOptHelper fopt = new FileOptHelper();
 					// initilize session data
-					sessionInfo.getInstance().setUsername(username);
-					sessionInfo.getInstance().setUserPwd(password);
-					sessionInfo.getInstance().setRemoteDNS(
-							"cics525group6S3.cloudapp.net");
-					sessionInfo.getInstance().setPortNum(12345);
+					SessionInfo.getInstance().setUsername(username);
+					SessionInfo.getInstance().setUserPwd(password);
+					SessionInfo.getInstance().setRemoteDNS(
+							ConfigurationData.SERVICE_S3);
+					SessionInfo.getInstance().setPortNum(12345);
 					HashMap<String, String> fileDNS = uopt
 							.getFileInFolderAddress();
-					String workpath = sessionInfo.getInstance().getWorkFolder();
-					sessionInfo.getInstance().setFileLocations(fileDNS);
+					String workpath = SessionInfo.getInstance().getWorkFolder();
+					SessionInfo.getInstance().setFileLocations(fileDNS);
 					// check if work folder already has xml file.
 					if (cmd.checkXML(workpath)) {
 						try {
@@ -133,7 +130,7 @@ public class SignIn extends JFrame {
 							try {
 								MySystemTray minimizeAppobj = new MySystemTray();
 								// start thread for folder watcher
-								new folderWatcher(sessionInfo.getInstance()
+								new FolderWatch(SessionInfo.getInstance()
 										.getWorkFolder());
 								// initializae download queueu
 								fopt.initialDownloadQueue();

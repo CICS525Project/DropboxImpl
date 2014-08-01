@@ -105,15 +105,15 @@ public class FileOptHelper {
 	 * add to download queue initialize download queue when user logs in
 	 */
 	public void initialDownloadQueue() {
-		String dir = sessionInfo.getInstance().getWorkFolder();
-		UserOperate uopt = new UserOperate(sessionInfo.getInstance()
+		String dir = SessionInfo.getInstance().getWorkFolder();
+		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
 				.getRemoteDNS(), 12345);
 		ClientMetaData cmd = new ClientMetaData();
 		cmd.removeRecord(dir, getFileInFolder(dir));
 		HashMap<String, String> localFileAndVersion = cmd.readXML(dir,
 				getFileInFolder(dir));
 		HashMap<String, Integer> remoteFileAndVersion = uopt
-				.getServerVersion(sessionInfo.getInstance().getUsername());
+				.getServerVersion(SessionInfo.getInstance().getUsername());
 		ArrayList<String> remoteFileList = new ArrayList<String>(
 				remoteFileAndVersion.keySet());
 		for (int i = 0; i < remoteFileList.size(); i++) {
@@ -127,7 +127,7 @@ public class FileOptHelper {
 					if (remoteFileAndVersion.get(fname).equals(-1)) {
 						// file is deleted in the remote folder
 						// client will also deleted it.
-						deleteFileInFoler(sessionInfo.getInstance()
+						deleteFileInFoler(SessionInfo.getInstance()
 								.getWorkFolder() + File.separator + fname);
 					} else {
 						// different version number
@@ -157,14 +157,14 @@ public class FileOptHelper {
 	 */
 	public void initilizeUploadQueue() {
 		// get work space path
-		String dir = sessionInfo.getInstance().getWorkFolder();
+		String dir = SessionInfo.getInstance().getWorkFolder();
 		ClientMetaData cmd = new ClientMetaData();
 		FileOptHelper fopt = new FileOptHelper();
-		UserOperate uopt = new UserOperate(sessionInfo.getInstance()
+		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
 				.getRemoteDNS(), 12345);
 		ArrayList<String> filesInfolder = fopt.getFileInFolder(dir);
 		HashMap<String, Integer> remoteFileAndVersion = uopt
-				.getServerVersion(sessionInfo.getInstance().getUsername());
+				.getServerVersion(SessionInfo.getInstance().getUsername());
 		HashMap<String, String> localFileAndCheckSum = cmd.readHashCode(dir);
 		HashMap<String, String> localFileAndVersion = cmd.readXML(dir,
 				filesInfolder);
@@ -182,7 +182,7 @@ public class FileOptHelper {
 						// modify local version number here
 						int newVersion = Integer.parseInt(originVersion) + 1;
 						cmd.modifyInfo(fname, checks, Integer
-								.toString(newVersion), sessionInfo
+								.toString(newVersion), SessionInfo
 								.getInstance().getWorkFolder());
 						localFileAndVersion.put(fname,
 								Integer.toString(newVersion));

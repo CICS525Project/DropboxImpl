@@ -17,7 +17,7 @@ import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
 
 import dataTransfer.UserOperate;
-import dataTransfer.sessionInfo;
+import dataTransfer.SessionInfo;
 
 public class Share extends JFrame {
 
@@ -86,8 +86,8 @@ public class Share extends JFrame {
 					JOptionPane.showMessageDialog(null,
 							"Please Select the file to be shared");
 				} else {
-					UserOperate uopt = new UserOperate(sessionInfo
-							.getInstance().getRemoteDNS(), sessionInfo
+					UserOperate uopt = new UserOperate(SessionInfo
+							.getInstance().getRemoteDNS(), SessionInfo
 							.getInstance().getPortNum());
 					list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 					Object[] selected = list.getSelectedValues();
@@ -98,6 +98,7 @@ public class Share extends JFrame {
 					}
 					String name = userName.getText();
 					uopt.shareFile(selectedItems, name);
+					//pop up here
 				}
 			}
 		});
@@ -105,7 +106,7 @@ public class Share extends JFrame {
 	}
 
 	private ArrayList<String> getFileName() {
-		File folder = new File(sessionInfo.getInstance().getWorkFolder());
+		File folder = new File(SessionInfo.getInstance().getWorkFolder());
 		File[] listoffiles = folder.listFiles();
 		ArrayList<String> finalFilelist = new ArrayList<String>();
 		System.out.println(listoffiles);

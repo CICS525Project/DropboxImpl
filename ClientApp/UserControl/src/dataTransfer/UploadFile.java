@@ -85,14 +85,14 @@ public class UploadFile implements Runnable {
 	public void uploadFile(String fileName){
 		//System.out.println("upload queue size is: " + OperationQueue.getInstance().getUploadQueue().size());
 		String spliter = File.separator;
-		String workSpace = sessionInfo.getInstance().getWorkFolder();
+		String workSpace = SessionInfo.getInstance().getWorkFolder();
 		String upPath  = workSpace + File.separator + fileName;
 		String fileRemoteDNS;
 		//System.out.println("uploading filename is " + upPath);
-		UserOperate uopt = new UserOperate(sessionInfo.getInstance()
+		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
 					.getRemoteDNS(), 12345);
 		if(uopt.getOneFileAddress(fileName)==null){
-			fileRemoteDNS = sessionInfo.getInstance().getRemoteDNS();
+			fileRemoteDNS = SessionInfo.getInstance().getRemoteDNS();
 		}else{
 			fileRemoteDNS = uopt.getOneFileAddress(fileName);
 		}
@@ -118,12 +118,12 @@ public class UploadFile implements Runnable {
 			HashMap<String, String> localMeta = cmd.readXML(workSpace, fopt.getFileInFolder(workSpace));
 			HashMap<String, String> meta = new HashMap<String, String>();
 			//System.out.println("The metadata for the file: " + fileName +" is " + localMeta.get(fileName));
-			meta.put("name", sessionInfo.getInstance().getUsername());
+			meta.put("name", SessionInfo.getInstance().getUsername());
 			meta.put("version", localMeta.get(fileName));
 			blob.setMetadata(meta);
 			blob.uploadMetadata();
 			System.out.println("File is been uploaded");
-			myTip.setToolTip(new ImageIcon(configurationData.UP_IMG), "File "+fileName+" is uploaded successfully!");
+			myTip.setToolTip(new ImageIcon(ConfigurationData.UP_IMG), "File "+fileName+" is uploaded successfully!");
 		}
 		catch(Exception e){
 			e.printStackTrace();

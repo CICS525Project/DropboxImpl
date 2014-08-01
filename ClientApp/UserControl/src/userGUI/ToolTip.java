@@ -16,7 +16,7 @@ import javax.swing.JTextArea;
 import javax.swing.JWindow;
 import javax.swing.border.EtchedBorder;
 
-import dataTransfer.configurationData;
+import dataTransfer.ConfigurationData;
 
 public class ToolTip {
 
@@ -259,6 +259,6 @@ public class ToolTip {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ToolTip tip = new ToolTip();
-        tip.setToolTip(new ImageIcon(configurationData.DOWN_IMG),"warning warning warning!!!");
+        tip.setToolTip(new ImageIcon(ConfigurationData.DOWN_IMG),"warning warning warning!!!");
 	}
 }

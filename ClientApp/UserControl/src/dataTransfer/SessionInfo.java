@@ -2,7 +2,7 @@ package dataTransfer;
 
 import java.util.HashMap;
 
-public class sessionInfo {
+public class SessionInfo {
 	
 	private String username;
 	private String userPwd;
@@ -10,11 +10,11 @@ public class sessionInfo {
 	private String workFolder;
 	private String remoteDNS;
 	private int portNum;
-	private static sessionInfo singleton = null;
+	private static SessionInfo singleton = null;
 	
-	public static sessionInfo getInstance(){
+	public static SessionInfo getInstance(){
 		if(singleton == null){
-			singleton = new sessionInfo();
+			singleton = new SessionInfo();
 		}
 		return singleton;
 	}

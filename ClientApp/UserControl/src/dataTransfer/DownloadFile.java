@@ -91,9 +91,9 @@ public class DownloadFile implements Runnable {
 		ClientMetaData cmd = new ClientMetaData();
 		FileOptHelper fopt = new FileOptHelper();
 		String spliter = File.separator;
-		String downPath = sessionInfo.getInstance().getWorkFolder() + spliter
+		String downPath = SessionInfo.getInstance().getWorkFolder() + spliter
 				+ fileName;
-		UserOperate uopt = new UserOperate(sessionInfo.getInstance()
+		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
 				.getRemoteDNS(), 12345);
 		String fileRemoteDNS = uopt.getOneFileAddress(fileName);
 		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, 12345);
@@ -111,18 +111,18 @@ public class DownloadFile implements Runnable {
 					CloudBlob blob = (CloudBlob) blobItem;
 					blob.downloadAttributes();
 					if (fileName.equals(blob.getName())) {
-						ArrayList<String> originFileInfolder = fopt.getFileInFolder(sessionInfo.getInstance().getWorkFolder());
+						ArrayList<String> originFileInfolder = fopt.getFileInFolder(SessionInfo.getInstance().getWorkFolder());
 						blob.download(new FileOutputStream(downPath));
 						/*****need to change version number of the file download as meta in container******/
 						HashMap<String, String> res = blob.getMetadata();
 						String latestVersion = res.get("version");
-						String checkSum = fopt.getHashCode(fopt.hashFile(sessionInfo.getInstance().getWorkFolder()+File.separator+fileName));
+						String checkSum = fopt.getHashCode(fopt.hashFile(SessionInfo.getInstance().getWorkFolder()+File.separator+fileName));
 						if(originFileInfolder.contains(fileName)){
-							cmd.modifyInfo(fileName, checkSum, latestVersion, sessionInfo.getInstance().getWorkFolder());
+							cmd.modifyInfo(fileName, checkSum, latestVersion, SessionInfo.getInstance().getWorkFolder());
 						}else{
-							cmd.addToXML(fileName, sessionInfo.getInstance().getWorkFolder());
+							cmd.addToXML(fileName, SessionInfo.getInstance().getWorkFolder());
 						}
-						myTip.setToolTip(new ImageIcon(configurationData.DOWN_IMG), "File " + fileName+" is download secessfully!");
+						myTip.setToolTip(new ImageIcon(ConfigurationData.DOWN_IMG), "File " + fileName+" is download secessfully!");
 						return;
 					}
 				}

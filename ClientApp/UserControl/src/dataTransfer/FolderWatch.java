@@ -17,12 +17,12 @@ import java.util.HashMap;
 
 import userMetaData.ClientMetaData;
 
-public class folderWatcher implements Runnable {
+public class FolderWatch implements Runnable {
 	private Path dir;
 	private ClientMetaData cmd;
 	private UserOperate uopt;
 	private FileOptHelper fopt;
-	public folderWatcher(String path) {
+	public FolderWatch(String path) {
 		this.dir = Paths.get(path);
 		cmd = new ClientMetaData();
 		fopt = new FileOptHelper();
@@ -36,8 +36,8 @@ public class folderWatcher implements Runnable {
 	 * @throws Exception 
 	 */
 	public void watchFile(Path dir) throws Exception {
-		uopt = new UserOperate(sessionInfo.getInstance().getRemoteDNS(),
-				sessionInfo.getInstance().getPortNum());
+		uopt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(),
+				SessionInfo.getInstance().getPortNum());
 		WatchService watcher = FileSystems.getDefault().newWatchService();
 		dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
 		while (true) {
@@ -64,10 +64,10 @@ public class folderWatcher implements Runnable {
 						if (kind.name().equals("ENTRY_CREATE")) {
 							// if remote does not have this file
 							HashMap<String, Integer> remoteFiles = uopt
-									.getServerVersion(sessionInfo.getInstance()
+									.getServerVersion(SessionInfo.getInstance()
 											.getUsername());
 							if (!remoteFiles.containsKey(fn)) {
-								cmd.addToXML(fn, sessionInfo.getInstance()
+								cmd.addToXML(fn, SessionInfo.getInstance()
 										.getWorkFolder());
 								OperationQueue.getInstance().add(
 										fn,
@@ -77,7 +77,7 @@ public class folderWatcher implements Runnable {
 								// if file is deleted and user uploads it again,
 								// need to set version as 1
 								if (cmd.compareLcalandRmtVersion(fn) == 1) {
-									cmd.addToXML(fn, sessionInfo.getInstance()
+									cmd.addToXML(fn, SessionInfo.getInstance()
 											.getWorkFolder());
 									OperationQueue.getInstance().add(
 											fn,
@@ -91,8 +91,8 @@ public class folderWatcher implements Runnable {
 							/** modify local version number here **/
 							String oldVersion = cmd.readVersionForOne(fn);
 							int newVersion = Integer.parseInt(oldVersion) + 1;
-							String checkSum = fopt.getHashCode(fopt.hashFile(sessionInfo.getInstance().getWorkFolder()+File.separator+fn));
-							cmd.modifyInfo(fn, checkSum, String.valueOf(newVersion), sessionInfo.getInstance().getWorkFolder());
+							String checkSum = fopt.getHashCode(fopt.hashFile(SessionInfo.getInstance().getWorkFolder()+File.separator+fn));
+							cmd.modifyInfo(fn, checkSum, String.valueOf(newVersion), SessionInfo.getInstance().getWorkFolder());
 							OperationQueue.getInstance().add(
 									fn,
 									OperationQueue.getInstance()
