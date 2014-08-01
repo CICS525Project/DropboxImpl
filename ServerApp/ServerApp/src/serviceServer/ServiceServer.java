@@ -137,11 +137,14 @@ public class ServiceServer implements ServiceServerInterface {
 			// Update routing table
 			mySSCom.broadcastChanges(port, missMatch);
 			// backing up files
-//			mySBCom.downloadMissMatch(missMatch);
-//			mySBCom.uploadBackup(missMatch);
-//			mySBCom.cleanTemp(missMatch);
+			mySBCom.downloadMissMatch(missMatch);
+			mySBCom.uploadBackup(missMatch);
+			mySBCom.cleanTemp(missMatch);
 			
 		}
+		
+		// sync local routing table values with values of other remote routing tables
+		mySSCom.syncRT();
 		// mySCCom.sendNotification("jitin", "upload,file1"); // repeat this
 		// notification for every user related to file1
 

@@ -100,16 +100,17 @@ public class ServiceContainer {
 				blockBlob.downloadAttributes();
 				HashMap<String, String> metaValues=new HashMap<>();
 				metaValues=blockBlob.getMetadata();
+				RoutingTable routingTable=new RoutingTable();
 				if(metaValues.get("name")!=null && metaValues.get("version") !=null){
 					userName=metaValues.get("name");
 					version=Integer.parseInt(metaValues.get("version"));
+					routingTable.setUserName(userName);
+					routingTable.setFileName(filename);
+					routingTable.setServerName(serverName);
+					routingTable.setVersion(version);
 				}
-				//System.out.println("File Details :"+filename+" "+userName+" "+version+" "+serverName);
-				RoutingTable routingTable=new RoutingTable();
-				routingTable.setUserName(userName);
-				routingTable.setFileName(filename);
-				routingTable.setServerName(serverName);
-				routingTable.setVersion(version);
+				System.out.println("File Details Service 3:"+filename+" "+userName+" "+version+" "+serverName);
+
 				containerList.add(routingTable);
 			}
 			
@@ -173,11 +174,13 @@ public class ServiceContainer {
 			String query="INSERT INTO [routingTable] VALUES (?,?,?,?)";
 			ps=con.prepareStatement(query);
 			for(RoutingTable i:missingList){
+				if(!(i.getUserName()==null || i.getFileName()==null || i.getServerName()==null ||i.getVersion()==0)){
 				ps.setString(1, i.getUserName());
 				ps.setString(2, i.getFileName());
 				ps.setString(3, i.getServerName());
 				ps.setInt(4, i.getVersion());
 				ps.addBatch();
+				}
 			}
 			ps.executeBatch();
 		}
@@ -260,5 +263,34 @@ public class ServiceContainer {
 			if (rs != null) try { rs.close(); } catch(Exception e) {}
 		}
 	}
+	/**
+	 * Method Name: compareRT
+	 * Used to compare the current Server RoutingTable with the other RoutingTable (Given)
+	 * It fetches the details of new data in the other Table
+	 * @param firstList
+	 * @param secondList
+	 * @return
+	 */
+	public ArrayList<RoutingTable> compareRT(ArrayList<RoutingTable> firstList,ArrayList<RoutingTable> secondList){
+		ArrayList<RoutingTable> result=new ArrayList<RoutingTable>();
+		for(RoutingTable routingTable:secondList){
+			boolean flag=false;
+			for(RoutingTable routingTable2:firstList){
+				if(routingTable2.getFileName().equalsIgnoreCase(routingTable.getFileName()) && routingTable2.getServerName().equalsIgnoreCase(routingTable.getServerName()) 
+						&& routingTable2.getUserName().equalsIgnoreCase(routingTable.getUserName()) ){
+					if(routingTable2.getVersion()==routingTable.getVersion() || routingTable2.getVersion()>routingTable.getVersion()){
+					flag=true;
+					break;
+					}
+				}
+
+			}
+			if(!flag){
+				result.add(routingTable);
+			}
+		}
+		return result;
+	}
+	
 }
 

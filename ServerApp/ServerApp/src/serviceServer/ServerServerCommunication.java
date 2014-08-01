@@ -68,16 +68,49 @@ public class ServerServerCommunication implements ServerServerComInterface {
 			} 
 
 		}
-
-		
-
 	}
 
+	/**
+	 * sync local routing table values with values of other remote routing tables
+	 */
+	public void syncRT() {
+		ArrayList<RoutingTable> result = new ArrayList<RoutingTable>();
+		ArrayList<RoutingTable> selfRT = new ArrayList<RoutingTable>();
+		ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
+		DBConnection connection=new DBConnection();
+		try {
+			selfRT=connection.getAllFromRoutingTable();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		for (String key : ss.keySet()) {
+			String address = ss.get(key);
+			try {
+				Registry registry = LocateRegistry.getRegistry(address, Constants.SPORT);
+				ServerServerComInterface server = (ServerServerComInterface) registry
+						.lookup("serverServerRMI");
+				result = server.getRoutingDetails();
+				ServiceContainer container=new ServiceContainer();
+				missMatch=container.compareRT(selfRT, result);
+				if(!missMatch.isEmpty()){
+					container.insertMissingInRoutingTable(missMatch);
+				}
+			} catch (Exception e) {
+				System.out.println("Error synchronizing RTs...");
+				System.out.println("Error connecting to server " + address);
+				// System.err.println(e);
+				// I/O Error or bad URL
+			} 
+
+		}
+	}
+	
 	@Override
 	public ArrayList<RoutingTable> getRoutingDetails() throws RemoteException {
 		DBConnection connect = new DBConnection();
 		try {
-			return connect.getAllFromRoutingTable(Constants.HOST);
+			return connect.getAllFromRoutingTable();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

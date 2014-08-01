@@ -1,9 +1,14 @@
 package serviceServer;
 
+
+import java.io.File;
 import java.rmi.AlreadyBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+
+
+
 import utils.Constants;
 import RMIInterface.ServerServerComInterface;
 import RMIInterface.ServiceServerInterface;
@@ -25,6 +30,17 @@ public class StartServer {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
+		// cleaning temp dir before running the server again
+		File file = new File("C:\\cloudboxTemp");        
+        String[] myFiles;      
+            if(file.isDirectory()){  
+                myFiles = file.list();  
+                for (int i=0; i<myFiles.length; i++) {  
+                    File myFile = new File(file, myFiles[i]);   
+                    myFile.delete();  
+                }  
+             }
 		
 		try {
 			// Starting the RMI interface to communicate with Client machine
