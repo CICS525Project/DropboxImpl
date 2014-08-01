@@ -46,12 +46,8 @@ public class ConnectionFactory {
 	
 	public static Connection getConnection() throws SQLException
 	{
-		if (myConnection == null || myConnection.isClosed() ||
-				! myConnection.isValid(0)) 
-		{
 			myConnection = createConnection();
 			myConnection.setAutoCommit(true);
-		}
 		if (myConnection == null) {
 			throw new SQLException("Could not connect to DB");
 		}

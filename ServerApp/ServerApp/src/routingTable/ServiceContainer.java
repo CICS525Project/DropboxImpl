@@ -104,6 +104,7 @@ public class ServiceContainer {
 					userName=metaValues.get("name");
 					version=Integer.parseInt(metaValues.get("version"));
 				}
+				//System.out.println("File Details :"+filename+" "+userName+" "+version+" "+serverName);
 				RoutingTable routingTable=new RoutingTable();
 				routingTable.setUserName(userName);
 				routingTable.setFileName(filename);

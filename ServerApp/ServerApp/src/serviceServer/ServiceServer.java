@@ -23,6 +23,7 @@ public class ServiceServer implements ServiceServerInterface {
 	
 	private ServerServerCommunication mySSCom;
 	private ServerClientCommunication mySCCom;
+	private ServerBackupCommunication mySBCom;
 
 	public boolean login(String username, String password)
 			throws RemoteException {
@@ -79,6 +80,8 @@ public class ServiceServer implements ServiceServerInterface {
 		// create instances of communication classes
 		mySSCom = new ServerServerCommunication();
 		mySCCom = new ServerClientCommunication();
+		mySBCom = new ServerBackupCommunication();
+		
 
 	}
 
@@ -112,8 +115,13 @@ public class ServiceServer implements ServiceServerInterface {
 				Constants.HOST);
 
 //		 temporary code to test update with the current routing table.
+		
 		try {
-			serviceContainer.updateRTComplete(missMatch);
+			if (!missMatch.isEmpty()) {
+				System.out.println("Miss Match "+missMatch.toString());
+				serviceContainer.updateRTComplete(missMatch);
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,7 +134,13 @@ public class ServiceServer implements ServiceServerInterface {
 		// myServerClientCommunication.sendNotification(user, message);
 		// to notify the user of recent changes.
 		if (!missMatch.isEmpty()){
+			// Update routing table
 			mySSCom.broadcastChanges(port, missMatch);
+			// backing up files
+//			mySBCom.downloadMissMatch(missMatch);
+//			mySBCom.uploadBackup(missMatch);
+//			mySBCom.cleanTemp(missMatch);
+			
 		}
 		// mySCCom.sendNotification("jitin", "upload,file1"); // repeat this
 		// notification for every user related to file1

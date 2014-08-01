@@ -19,5 +19,10 @@ public interface ServerServerComInterface extends Remote{
 	 */
 	boolean updateTable(ArrayList<RoutingTable> missMatch) throws RemoteException;
 	
-	
+	/**
+	 * Method to obtain routing table values of the current machine
+	 * @return arraylist of routing table values
+	 * @throws RemoteException
+	 */
+	ArrayList<RoutingTable> getRoutingDetails() throws RemoteException;
 }
