@@ -6,6 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
@@ -25,6 +26,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import dataTransfer.FileOptHelper;
 import dataTransfer.UserOperate;
@@ -79,6 +81,7 @@ public class ClientMetaData {
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement("Files");
+			rootElement.setAttribute("owner", sessionInfo.getInstance().getUsername());
 			doc.appendChild(rootElement);
 
 			for (String name : filelist) {
@@ -350,4 +353,35 @@ public class ClientMetaData {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public boolean checkXMLOwner(String username, String path){
+		path = path + File.separator + "file.xml";
+		try {
+			File xmlFile = new File(path);
+			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder metaBuilder = metaFactory.newDocumentBuilder();
+			Document doc = metaBuilder.parse(xmlFile);
+			doc.getDocumentElement().normalize();
+			Element root = doc.getDocumentElement();
+			String fileOwner = root.getAttribute("owner");
+			if(fileOwner.equals(username)){
+				return true;
+			}
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

@@ -14,6 +14,8 @@ import javax.swing.ImageIcon;
 
 import com.sun.glass.events.MouseEvent;
 
+import dataTransfer.configurationData;
+
 import java.awt.PopupMenu;
 
 public class MySystemTray {
@@ -24,7 +26,7 @@ public class MySystemTray {
 		myTip = new ToolTip();
 		if(SystemTray.isSupported()){
 			//the image should be put in the bin folder of the application
-			URL url = this.getClass().getResource("/img/box.png");
+			URL url = this.getClass().getResource(configurationData.BOX_IMG);
 			ImageIcon icon = new ImageIcon(url);
 			Image image = icon.getImage();
 			TrayIcon trayIcon = new TrayIcon(image);

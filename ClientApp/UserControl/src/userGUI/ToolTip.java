@@ -16,6 +16,8 @@ import javax.swing.JTextArea;
 import javax.swing.JWindow;
 import javax.swing.border.EtchedBorder;
 
+import dataTransfer.configurationData;
+
 public class ToolTip {
 
 	private int width = 300;
@@ -254,9 +256,9 @@ public class ToolTip {
 		this.width = width;
 	}
 
-//	public static void main(String[] args) {
-//		// TODO Auto-generated method stub
-//		ToolTip tip = new ToolTip();
-//        tip.setToolTip(new ImageIcon("/Users/haonanxu/Desktop/warn.png"),"warning warning warning!!!");
-//	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ToolTip tip = new ToolTip();
+        tip.setToolTip(new ImageIcon(configurationData.DOWN_IMG),"warning warning warning!!!");
+	}
 }

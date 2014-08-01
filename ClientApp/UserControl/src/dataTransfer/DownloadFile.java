@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.ImageIcon;
+
 import com.microsoft.windowsazure.services.blob.client.CloudBlob;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
@@ -13,15 +15,17 @@ import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 
 import userGUI.ConflictPopUp;
+import userGUI.ToolTip;
 import userMetaData.ClientMetaData;
 
 public class DownloadFile implements Runnable {
 
 	private OperationQueue opt;
 	private volatile Thread downloader;
-
+	private ToolTip myTip;
 	public DownloadFile() {
 		opt = OperationQueue.getInstance();
+		myTip = new ToolTip();
 		downloader = new Thread(this);
 		start();
 	}
@@ -118,6 +122,7 @@ public class DownloadFile implements Runnable {
 						}else{
 							cmd.addToXML(fileName, sessionInfo.getInstance().getWorkFolder());
 						}
+						myTip.setToolTip(new ImageIcon(configurationData.DOWN_IMG), "File " + fileName+" is download secessfully!");
 						return;
 					}
 				}

@@ -114,8 +114,6 @@ public class UserOperate {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-//		System.out.println(res);
-//		System.out.println("address is " + address);
 		return address;
 	}
 	
@@ -135,6 +133,10 @@ public class UserOperate {
 		return res;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String fileContainer(){
 		String containerKey = null;
 		try {
@@ -146,9 +148,17 @@ public class UserOperate {
 		return containerKey;
 	}
 	
-//	public static void main(String[] args) throws RemoteException {
-//		UserOperate uopt = new UserOperate("cics525group6S3.cloudapp.net", 12345);
-//		HashMap<String, Integer> res = uopt.serviceProvider.getCurrentFiles("jitin");
-//		System.out.println(res.size());
-//	}
+	public void shareFile(String[] files, String shareUser){
+		HashMap<String, String> shareList = new HashMap<String,String>();
+		String username = sessionInfo.getInstance().getUsername();
+		for(String fname:files){
+			shareList.put(fname, username);
+		}
+		try {
+			serviceProvider.shareFile(shareList, shareUser);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

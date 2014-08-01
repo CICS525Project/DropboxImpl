@@ -1,6 +1,5 @@
 package userGUI;
 
-
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.HeadlessException;
@@ -23,8 +22,10 @@ import dataTransfer.*;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SignIn extends JFrame {
@@ -82,25 +83,46 @@ public class SignIn extends JFrame {
 					username = uName.getText();
 					password = pwd.getText();
 					// user authorization
-					UserOperate uopt = new UserOperate("cics525group6S3.cloudapp.net", 12345);
+					UserOperate uopt = new UserOperate(
+							"cics525group6S3.cloudapp.net", 12345);
 					ClientMetaData cmd = new ClientMetaData();
 					FileOptHelper fopt = new FileOptHelper();
-					//initilize session data
+					// initilize session data
 					sessionInfo.getInstance().setUsername(username);
 					sessionInfo.getInstance().setUserPwd(password);
-					sessionInfo.getInstance().setRemoteDNS("cics525group6S3.cloudapp.net");
+					sessionInfo.getInstance().setRemoteDNS(
+							"cics525group6S3.cloudapp.net");
 					sessionInfo.getInstance().setPortNum(12345);
-					HashMap<String, String> fileDNS = uopt.getFileInFolderAddress();
+					HashMap<String, String> fileDNS = uopt
+							.getFileInFolderAddress();
 					String workpath = sessionInfo.getInstance().getWorkFolder();
 					sessionInfo.getInstance().setFileLocations(fileDNS);
-					//check if work folder already has xml file.
-					if(cmd.checkXML(workpath)){
+					// check if work folder already has xml file.
+					if (cmd.checkXML(workpath)) {
 						try {
-							//if not, create a initial file
-							cmd.createXML(fopt.getFileInFolder(workpath), workpath);
+							// if not, create a initial file
+							cmd.createXML(fopt.getFileInFolder(workpath),
+									workpath);
 						} catch (DOMException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else {
+						/** Check if is the same user login to the application **/
+						// if not, delete all the files in folder
+						if (!cmd.checkXMLOwner(username, workpath)) {
+							File folder = new File(workpath);
+							File[] fileList = folder.listFiles();
+							for (int i = 0; i < fileList.length; i++) {
+								fopt.deleteFileInFoler(workpath + File.separator + fileList[i].getName());
+							}
+						}
+						try {
+							cmd.createXML(fopt.getFileInFolder(workpath),
+									workpath);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -110,28 +132,30 @@ public class SignIn extends JFrame {
 						if (uopt.signIn(username, password)) {
 							try {
 								MySystemTray minimizeAppobj = new MySystemTray();
-								//start thread for folder watcher
-								new folderWatcher(sessionInfo.getInstance().getWorkFolder());
-								//initializae download queueu
+								// start thread for folder watcher
+								new folderWatcher(sessionInfo.getInstance()
+										.getWorkFolder());
+								// initializae download queueu
 								fopt.initialDownloadQueue();
-								System.out.println("download queue size is: " + OperationQueue.getInstance().getDownloadQueue().size());
-								/******** start download thread********/
+								System.out.println("download queue size is: "
+										+ OperationQueue.getInstance()
+												.getDownloadQueue().size());
+								/******** start download thread ********/
 								new DownloadFile();
-								/******** create initial upload queue********/
+								/******** create initial upload queue ********/
 								fopt.initilizeUploadQueue();
-								System.out.println("Upload queue size is: " + OperationQueue.getInstance().getUploadQueue().size());
-								/******** start upload thread********/
+								System.out.println("Upload queue size is: "
+										+ OperationQueue.getInstance()
+												.getUploadQueue().size());
+								/******** start upload thread ********/
 								new UploadFile();
-								
-								/**close login window **/
+
+								/** close login window **/
 								Container frame = btnSignin.getParent();
-								do{
+								do {
 									frame = frame.getParent();
-								}while (!(frame instanceof JFrame));
+								} while (!(frame instanceof JFrame));
 								((JFrame) frame).hide();
-								/////
-								HashMap<String, Integer>  res = uopt.getServerVersion(username);
-								System.out.println(res.size());
 							} catch (MalformedURLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -163,9 +187,9 @@ public class SignIn extends JFrame {
 					public void run() {
 						try {
 							Container frame = btnSignin.getParent();
-							do{
+							do {
 								frame = frame.getParent();
-							}while (!(frame instanceof JFrame));
+							} while (!(frame instanceof JFrame));
 							((JFrame) frame).hide();
 							SignUp signUpFrame = new SignUp();
 							signUpFrame.setVisible(true);

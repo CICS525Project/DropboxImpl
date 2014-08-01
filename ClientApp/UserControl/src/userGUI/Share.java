@@ -1,5 +1,6 @@
 package userGUI;
 
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -15,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
 
+import dataTransfer.UserOperate;
 import dataTransfer.sessionInfo;
 
 public class Share extends JFrame {
@@ -40,7 +42,6 @@ public class Share extends JFrame {
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(203, 110, 68, 14);
 		contentPane.add(lblUsername);
-		
 
 		userName = new JTextField();
 		userName.setBounds(272, 107, 86, 20);
@@ -57,39 +58,46 @@ public class Share extends JFrame {
 		final JList list = new JList(flist.toArray());
 		scrollPane.setViewportView(list);
 		scrollPane.setViewportView(list);
-		
-		JButton button = new JButton("Cancel");
-		button.addActionListener(new ActionListener() {
+
+		final JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/** close itself and nothing happened **/
+				Container frame = cancel.getParent();
+				do {
+					frame = frame.getParent();
+				} while (!(frame instanceof JFrame));
+				((JFrame) frame).hide();
 			}
 		});
-		button.setBounds(322, 184, 89, 23);
-		contentPane.add(button);
-		
+		cancel.setBounds(322, 184, 89, 23);
+		contentPane.add(cancel);
+
 		btnShare.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				if (userName == null || userName.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null,"Please enter the username to share the file");
+					JOptionPane.showMessageDialog(null,
+							"Please enter the username to share the file");
 				} else if (list.getSelectedValues() == null
 						|| list.getSelectionModel().isSelectionEmpty()) {
-					JOptionPane.showMessageDialog(null,"Please Select the file to be shared");
-				}
-				else{
-				list.setSelectionMode(
-		                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-				//ArrayList<String> sel = new ArrayList<String>(list.getSelectedValues());
-				Object[] selected = list.getSelectedValues();
-				ArrayList<String> sel = new ArrayList<String>(selected.length);
-				String[] selectedItems = new String[selected.length];
-
-				for(int i=0; i<selected.length;i++){
-
-				selectedItems[i] = selected[i].toString();
-				}
-				String name = userName.getText();
+					JOptionPane.showMessageDialog(null,
+							"Please Select the file to be shared");
+				} else {
+					UserOperate uopt = new UserOperate(sessionInfo
+							.getInstance().getRemoteDNS(), sessionInfo
+							.getInstance().getPortNum());
+					list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+					Object[] selected = list.getSelectedValues();
+					ArrayList<String> sel = new ArrayList<String>();
+					String[] selectedItems = new String[selected.length];
+					for (int i = 0; i < selected.length; i++) {
+						selectedItems[i] = selected[i].toString();
+					}
+					String name = userName.getText();
+					uopt.shareFile(selectedItems, name);
 				}
 			}
 		});
@@ -106,7 +114,9 @@ public class Share extends JFrame {
 			File file = new File(listoffiles[i].toString());
 			if (file.getName().startsWith(".")) {
 				continue;
-			} else {
+			} else if(file.getName().equals("file.xml")){
+				continue;
+			}else{
 				finalFilelist.add(file.getName());
 			}
 		}
