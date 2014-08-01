@@ -95,7 +95,6 @@ public class UploadFile implements Runnable {
 		}else{
 			fileRemoteDNS = uopt.getOneFileAddress(fileName);
 		}
-		//= uopt.getOneFileAddress(fileName);
 		System.out.println("Upload file DNS is : " + fileRemoteDNS);
 		FileOptHelper fopt = new FileOptHelper();
 		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, 12345);
@@ -122,7 +121,6 @@ public class UploadFile implements Runnable {
 			meta.put("version", localMeta.get(fileName));
 			blob.setMetadata(meta);
 			blob.uploadMetadata();
-			
 			System.out.println("File is been uploaded");
 		}
 		catch(Exception e){

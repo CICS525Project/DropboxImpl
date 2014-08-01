@@ -89,6 +89,7 @@ public class SignIn extends JFrame {
 					sessionInfo.getInstance().setUsername(username);
 					sessionInfo.getInstance().setUserPwd(password);
 					sessionInfo.getInstance().setRemoteDNS("cics525group6S3.cloudapp.net");
+					sessionInfo.getInstance().setPortNum(12345);
 					HashMap<String, String> fileDNS = uopt.getFileInFolderAddress();
 					String workpath = sessionInfo.getInstance().getWorkFolder();
 					sessionInfo.getInstance().setFileLocations(fileDNS);
@@ -115,9 +116,10 @@ public class SignIn extends JFrame {
 								fopt.initialDownloadQueue();
 								System.out.println("download queue size is: " + OperationQueue.getInstance().getDownloadQueue().size());
 								/******** start download thread********/
-								//new DownloadFile();
+								new DownloadFile();
 								/******** create initial upload queue********/
 								fopt.initilizeUploadQueue();
+								System.out.println("Upload queue size is: " + OperationQueue.getInstance().getUploadQueue().size());
 								/******** start upload thread********/
 								new UploadFile();
 								

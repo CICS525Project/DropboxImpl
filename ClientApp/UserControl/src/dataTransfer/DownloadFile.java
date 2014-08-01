@@ -144,7 +144,7 @@ public class DownloadFile implements Runnable {
 		downloadImpl();
 	}
 
-//	 public static void main(String[] args) {
-//	 new DownloadFile();
-//	 }
+	 public static void main(String[] args) {
+	 new DownloadFile();
+	 }
 }

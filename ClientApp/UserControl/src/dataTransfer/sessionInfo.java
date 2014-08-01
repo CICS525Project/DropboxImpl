@@ -9,6 +9,7 @@ public class sessionInfo {
 	private HashMap<String, String> fileLocations;
 	private String workFolder;
 	private String remoteDNS;
+	private int portNum;
 	private static sessionInfo singleton = null;
 	
 	public static sessionInfo getInstance(){
@@ -49,5 +50,11 @@ public class sessionInfo {
 	}
 	public void setRemoteDNS(String remoteDNS) {
 		this.remoteDNS = remoteDNS;
+	}
+	public int getPortNum() {
+		return portNum;
+	}
+	public void setPortNum(int portNum) {
+		this.portNum = portNum;
 	}
 }

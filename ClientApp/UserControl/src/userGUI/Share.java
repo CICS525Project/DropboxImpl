@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
 
+import dataTransfer.sessionInfo;
+
 public class Share extends JFrame {
 
 	private JPanel contentPane;
@@ -31,12 +33,12 @@ public class Share extends JFrame {
 		setContentPane(contentPane);
 
 		JLabel lblShareAFile = new JLabel("Share a File");
-		lblShareAFile.setBounds(189, 28, 82, 14);
+		lblShareAFile.setBounds(189, 16, 82, 14);
 		contentPane.add(lblShareAFile);
 
 		ArrayList<String> flist = getFileName();
 		JLabel lblUsername = new JLabel("Username");
-		lblUsername.setBounds(201, 110, 61, 14);
+		lblUsername.setBounds(203, 110, 68, 14);
 		contentPane.add(lblUsername);
 		
 
@@ -46,7 +48,7 @@ public class Share extends JFrame {
 		userName.setColumns(10);
 
 		JButton btnShare = new JButton("Share");
-		btnShare.setBounds(269, 148, 89, 23);
+		btnShare.setBounds(203, 184, 89, 23);
 		contentPane.add(btnShare);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -55,6 +57,14 @@ public class Share extends JFrame {
 		final JList list = new JList(flist.toArray());
 		scrollPane.setViewportView(list);
 		scrollPane.setViewportView(list);
+		
+		JButton button = new JButton("Cancel");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		button.setBounds(322, 184, 89, 23);
+		contentPane.add(button);
 		
 		btnShare.addActionListener(new ActionListener() {
 			
@@ -87,7 +97,7 @@ public class Share extends JFrame {
 	}
 
 	private ArrayList<String> getFileName() {
-		File folder = new File("C:\\Users\\Sashiraj\\Desktop\\download");
+		File folder = new File(sessionInfo.getInstance().getWorkFolder());
 		File[] listoffiles = folder.listFiles();
 		ArrayList<String> finalFilelist = new ArrayList<String>();
 		System.out.println(listoffiles);

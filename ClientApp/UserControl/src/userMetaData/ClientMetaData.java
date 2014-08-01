@@ -28,10 +28,15 @@ import org.w3c.dom.NodeList;
 
 import dataTransfer.FileOptHelper;
 import dataTransfer.UserOperate;
+import dataTransfer.sessionInfo;
 
 public class ClientMetaData {
-	FileOptHelper fopt = new FileOptHelper();
-
+	private FileOptHelper fopt;
+	private UserOperate uopt; 
+	
+	public ClientMetaData(){
+		fopt = new FileOptHelper();
+	}
 	/**
 	 * 
 	 * @param path
@@ -69,11 +74,6 @@ public class ClientMetaData {
 			throws DOMException, Exception {
 		try {
 			String XMLpath = path + File.separator + "file.xml";
-			// File f = new File(XMLpath);
-			// if(!f.exists()){
-			// PrintWriter writer = new PrintWriter(XMLpath, "UTF-8");
-			// writer.close();
-			// }
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -150,6 +150,43 @@ public class ClientMetaData {
 		return res;
 	}
 
+	/**
+	 * read the version number for one file
+	 * @param filename
+	 * @return
+	 */
+	public String readVersionForOne(String filename){
+		ArrayList<String> file = new ArrayList<String>();
+		file.add(filename);
+		HashMap<String, String> allVersion = readXML(sessionInfo.getInstance().getWorkFolder(), file);
+		return allVersion.get(filename);
+	}
+	
+	/**
+	 * 
+	 * @param fn
+	 * @return
+	 */
+	public int compareLcalandRmtVersion(String fn){
+	
+		uopt = new UserOperate(sessionInfo
+				.getInstance().getRemoteDNS(), sessionInfo
+				.getInstance().getPortNum());
+		HashMap<String, Integer> remoteFileAndVersion = uopt
+				.getServerVersion(sessionInfo.getInstance()
+						.getUsername());
+		String localVersion = readVersionForOne(fn);
+		int lv = Integer.parseInt(localVersion);
+		int rv = remoteFileAndVersion.get(fn);
+		if(lv == rv){
+			return 0;
+		}else if(lv > rv){
+			return 1;
+		}else{
+			return 2;
+		}
+	}
+	
 	/**
 	 * read hashcode in the xml file
 	 * 
@@ -249,7 +286,6 @@ public class ClientMetaData {
 			DocumentBuilder metaBuilder = metaFactory.newDocumentBuilder();
 			Document document = metaBuilder.parse(xmlFile);
 
-			// document.getDocumentElement().normalize();
 			Node root = document.getElementsByTagName("Files").item(0);
 			Element file = document.createElement("File");
 			root.appendChild(file);
@@ -275,6 +311,11 @@ public class ClientMetaData {
 		}
 	}
 
+	/**
+	 * remove record in the xml file
+	 * @param path
+	 * @param fileInfolder
+	 */
 	public void removeRecord(String path, ArrayList<String> fileInfolder) {
 		try {
 			path = path + File.separator + "file.xml";
@@ -308,4 +349,5 @@ public class ClientMetaData {
 			e.printStackTrace();
 		}
 	}
+	
 }
