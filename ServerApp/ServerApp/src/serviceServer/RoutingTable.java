@@ -12,6 +12,7 @@ public class RoutingTable implements Serializable {
 	private String fileName;
 	private String serverName;
 	private int version;
+	private String sharedUserName;
 	public String getUserName() {
 		return userName;
 	}
@@ -35,6 +36,18 @@ public class RoutingTable implements Serializable {
 	}
 	public void setVersion(int version) {
 		this.version = version;
+	}
+	/**
+	 * @return the sharedUserName
+	 */
+	public String getSharedUserName() {
+		return sharedUserName;
+	}
+	/**
+	 * @param sharedUserName the sharedUserName to set
+	 */
+	public void setSharedUserName(String sharedUserName) {
+		this.sharedUserName = sharedUserName;
 	}
 	
 }

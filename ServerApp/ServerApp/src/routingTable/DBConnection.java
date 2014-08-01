@@ -449,4 +449,43 @@ public class DBConnection {
 					}
 					return result;
 				}
+				/**
+				 * Method Name: getAllFromSharingTable
+				 * Used to retrieve the List of Files associated with a particular UserName
+				 * Includes both the Owned Files and Shared by files
+				 * @param userName
+				 * @return result
+				 * @throws SQLException
+				 */
+				public ArrayList<RoutingTable> getAllFromSharingTable()throws SQLException{
+					Connection con = null;
+					PreparedStatement ps=null;
+					ResultSet rs=null;
+					ArrayList<RoutingTable> result=new ArrayList<RoutingTable>();
+					try{
+						con=ConnectionFactory.getConnection();
+						String query="SELECT userName,fileName,sharedUserName FROM [sharedTable]";
+						ps=con.prepareStatement(query);
+						rs=ps.executeQuery();
+						while(rs.next()){
+							RoutingTable routingTable=new RoutingTable();
+							routingTable.setUserName(rs.getString(1));
+							routingTable.setFileName(rs.getString(2));
+							routingTable.setSharedUserName(rs.getString(3));
+							result.add(routingTable);
+						}
+					}
+					catch(Exception e){
+						e.printStackTrace();
+						throw new SQLException();
+					}
+					finally {
+
+						if (ps != null) try { ps.close(); } catch(Exception e) {}
+						if (con != null) try { con.close(); } catch(Exception e) {}
+						if (rs != null) try { rs.close(); } catch(Exception e) {}
+					}
+					return result;
+				}
+				
 }

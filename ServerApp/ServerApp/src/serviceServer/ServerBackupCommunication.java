@@ -54,8 +54,8 @@ public class ServerBackupCommunication {
 				
 				if (blob.getMetadata().get("name").equals(file.getUserName())
 						&& blob.getMetadata().get("version").equals(Integer.toString(file.getVersion()))) {
-					blob.download(new FileOutputStream("C:\\cloudboxTemp\\"
-							+ blob.getName()));
+					blob.download(new FileOutputStream("C:\\cloudboxTemp\\"	+ blob.getName()));
+					System.out.println("file " + blob.getName() + "downloaded to temp folder");
 				}
 				else {
 					System.out.println(blob.getName()+ " File fetch failed!");
@@ -111,7 +111,9 @@ public class ServerBackupCommunication {
 			    blob2.setMetadata(metadata);
 			    File source = new File(filePath);
 			    blob1.upload(new FileInputStream(source), source.length());
+			    System.out.println("file " + blob1.getName() + "uploaded to backup1");
 			    blob2.upload(new FileInputStream(source), source.length());
+			    System.out.println("file " + blob2.getName() + "uploaded to backup2");
 		    }
 
 		    
@@ -136,6 +138,7 @@ public class ServerBackupCommunication {
 		    	
 			    File source = new File(filePath);
 			    source.delete();
+			    System.out.println(filePath + "deleted");
 		    }
 		} catch (Exception e) {
 			System.out.println("Error removing files from temp folder");

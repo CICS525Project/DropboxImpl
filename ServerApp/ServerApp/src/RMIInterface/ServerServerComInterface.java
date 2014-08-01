@@ -26,5 +26,6 @@ public interface ServerServerComInterface extends Remote{
 	 */
 	ArrayList<RoutingTable> getRoutingDetails() throws RemoteException;
 	
+	ArrayList<RoutingTable> getSharedDetails() throws RemoteException;
 	
 }

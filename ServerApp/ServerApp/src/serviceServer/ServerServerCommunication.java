@@ -48,64 +48,70 @@ public class ServerServerCommunication implements ServerServerComInterface {
 	 * 
 	 * @return returns true when successful or false otherwise
 	 */
-	public void broadcastChanges(int port, ArrayList<RoutingTable> missMatch) {
+	public void broadcastChanges(ArrayList<RoutingTable> missMatch) {
 
-		// RMI methods are called inside this method
-		// Add code to establish communication and execute RMI with each service
-		// server
-		
+		ArrayList<BroadcastThread> bt = new ArrayList<BroadcastThread>();
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
-				Registry registry = LocateRegistry.getRegistry(address, port);
-				ServerServerComInterface server = (ServerServerComInterface) registry
-						.lookup("serverServerRMI");
-				server.updateTable(missMatch);
+//				Registry registry = LocateRegistry.getRegistry(address, port);
+//				//System.out.println("aftre registry");
+//				ServerServerComInterface server = (ServerServerComInterface) registry
+//						.lookup("serverServerRMI");
+				// server.updateTable(missMatch);
+				bt.add(new BroadcastThread(address,missMatch));
+				
+				// bt.broadcast.join();
 			} catch (Exception e) {
+				System.out.println("Error Broadcasting Changes...");
 				System.out.println("Error connecting to server " + address);
 				// System.err.println(e);
 				// I/O Error or bad URL
-			} 
-
+			}
+		}
+		try {
+			for (BroadcastThread t : bt) {
+				if (t != null) {
+					t.broadcast.join();
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * sync local routing table values with values of other remote routing tables
+	 * sync local routing table values with values of other remote routing
+	 * tables
 	 */
 	public void syncRT() {
-		ArrayList<RoutingTable> result = new ArrayList<RoutingTable>();
-		ArrayList<RoutingTable> selfRT = new ArrayList<RoutingTable>();
-		ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
-		DBConnection connection=new DBConnection();
-		try {
-			selfRT=connection.getAllFromRoutingTable();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+
+		ArrayList<SyncThread> st = new ArrayList<SyncThread>();
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
-				Registry registry = LocateRegistry.getRegistry(address, Constants.SPORT);
-				ServerServerComInterface server = (ServerServerComInterface) registry
-						.lookup("serverServerRMI");
-				result = server.getRoutingDetails();
-				ServiceContainer container=new ServiceContainer();
-				missMatch=container.compareRT(selfRT, result);
-				if(!missMatch.isEmpty()){
-					container.insertMissingInRoutingTable(missMatch);
-				}
+			st.add(new SyncThread(address));
+
 			} catch (Exception e) {
 				System.out.println("Error synchronizing RTs...");
 				System.out.println("Error connecting to server " + address);
-				// System.err.println(e);
-				// I/O Error or bad URL
-			} 
+
+			}
 
 		}
+		try {
+			for (SyncThread t : st) {
+				if (t != null) {
+					t.sync.join();
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
+
 	@Override
 	public ArrayList<RoutingTable> getRoutingDetails() throws RemoteException {
 		DBConnection connect = new DBConnection();
@@ -117,7 +123,18 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		}
 		return null;
 		// TODO Auto-generated method stub
-		
+
 	}
 
+	public ArrayList<RoutingTable> getSharedDetails() throws RemoteException {
+		DBConnection connect = new DBConnection();
+		try {
+			return connect.getAllFromSharingTable();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		// TODO Auto-generated method stub
+	}
 }

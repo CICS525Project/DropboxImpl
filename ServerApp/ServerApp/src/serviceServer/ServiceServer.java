@@ -127,16 +127,11 @@ public class ServiceServer implements ServiceServerInterface {
 			e.printStackTrace();
 		}
 
-		// Based on the results obtained from the poll method, execute the
-		// following methods:
-		// myServerServerCommunication.broadcastChanges();
-		// to notify other service servers
-		// myServerClientCommunication.sendNotification(user, message);
-		// to notify the user of recent changes.
 		if (!missMatch.isEmpty()){
 			// Update routing table
-			mySSCom.broadcastChanges(port, missMatch);
+			// mySSCom.broadcastChanges(missMatch);
 			// backing up files
+			System.out.println("New files added/midified in container " + Constants.CONTAINER);
 			mySBCom.downloadMissMatch(missMatch);
 			mySBCom.uploadBackup(missMatch);
 			mySBCom.cleanTemp(missMatch);
@@ -147,7 +142,7 @@ public class ServiceServer implements ServiceServerInterface {
 		mySSCom.syncRT();
 		// mySCCom.sendNotification("jitin", "upload,file1"); // repeat this
 		// notification for every user related to file1
-
+		
 	}
 
 }

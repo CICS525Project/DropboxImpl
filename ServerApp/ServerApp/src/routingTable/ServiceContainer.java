@@ -109,7 +109,7 @@ public class ServiceContainer {
 					routingTable.setServerName(serverName);
 					routingTable.setVersion(version);
 				}
-				System.out.println("File Details Service 3:"+filename+" "+userName+" "+version+" "+serverName);
+				//System.out.println("File Details Service 3:"+filename+" "+userName+" "+version+" "+serverName);
 
 				containerList.add(routingTable);
 			}
@@ -291,6 +291,63 @@ public class ServiceContainer {
 		}
 		return result;
 	}
-	
+	/**
+	 * Method Name: compareST
+	 * Used to compare the current Server SharedTable with the other SharedTable (Given)
+	 * It fetches the details of new data in the other Table
+	 * @param firstList
+	 * @param secondList
+	 * @return ArrayList<RoutingTable> result
+	 */
+	public ArrayList<RoutingTable> compareST(ArrayList<RoutingTable> firstList,ArrayList<RoutingTable> secondList){
+		ArrayList<RoutingTable> result=new ArrayList<RoutingTable>();
+		for(RoutingTable routingTable:secondList){
+			boolean flag=false;
+			for(RoutingTable routingTable2:firstList){
+				if(routingTable2.getFileName().equalsIgnoreCase(routingTable.getFileName()) && routingTable2.getSharedUserName().equalsIgnoreCase(routingTable.getSharedUserName()) 
+						&& routingTable2.getUserName().equalsIgnoreCase(routingTable.getUserName()) ){
+					flag=true;
+					break;
+				}
+
+			}
+			if(!flag){
+				result.add(routingTable);
+			}
+		}
+		return result;
+	}
+	/**
+	 * Method Name: insertMissingInSharedTable
+	 * This is used to insert the Missing Values in the Shared Table
+	 * @param missingList
+	 * @throws SQLException
+	 */
+	public void insertMissingInSharedTable(ArrayList<RoutingTable> missingList) throws SQLException{
+		Connection con = null;
+		PreparedStatement ps=null;
+		try{
+			con=ConnectionFactory.getConnection();
+			String query="INSERT INTO [sharedTable] VALUES (?,?,?,?)";
+			ps=con.prepareStatement(query);
+			for(RoutingTable i:missingList){
+				if(!(i.getFileName()==null || i.getSharedUserName()==null || i.getUserName()==null)){
+					ps.setString(1, i.getUserName());
+					ps.setString(2, i.getFileName());
+					ps.setString(3, i.getSharedUserName());
+					ps.addBatch();
+				}
+			}
+			ps.executeBatch();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
+		}
+		finally {
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+		}
+	}
 }
 
