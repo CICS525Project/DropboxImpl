@@ -6,10 +6,12 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.*;
+
 import utils.Constants;
 import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 import authentication.Authentication;
+import RMIInterface.ServerServerComInterface;
 import RMIInterface.ServiceServerInterface;
 
 /**
@@ -43,6 +45,32 @@ public class ServiceServer implements ServiceServerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// code that checks the availability of servers specified for each file
+		
+		for(String key: result.keySet()){
+            String address = result.get(key);
+            Registry registry = LocateRegistry.getRegistry(address, Constants.SPORT);
+            
+    		try {
+				registry.lookup("serverServerRMI");
+			} catch (NotBoundException e) {
+				System.out.println("Server " + address + " is down. File "+ key +" available on backup server 1");
+				// If service server is down, attempts to change value to backup 1
+	            Registry secondRegistry = LocateRegistry.getRegistry(Constants.B1HOST, Constants.SPORT);
+				try {
+					secondRegistry.lookup("serverServerRMI");
+					result.put(key,Constants.B1HOST);
+				} catch (NotBoundException backupex) {
+					// If backup 1 server is down, connect to backup 2
+					System.out.println("Server " + address + " is down. File "+ key +" available on backup server 2");
+					result.put(key,Constants.B2HOST);
+				}
+				// e.printStackTrace();
+			}
+			
+        }		
+		// returns final value
 		return result;
 
 	}
@@ -66,6 +94,7 @@ public class ServiceServer implements ServiceServerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return result;
 	}
 
@@ -142,6 +171,20 @@ public class ServiceServer implements ServiceServerInterface {
 		mySSCom.syncRT();
 		// mySCCom.sendNotification("jitin", "upload,file1"); // repeat this
 		// notification for every user related to file1
+		
+	}
+
+	@Override
+	public void deleteFile(String user, String file) throws RemoteException {
+		// TODO Auto-generated method stub
+		ServiceContainer serviceContainer = new ServiceContainer();
+		try {
+			serviceContainer.updateVersionForDelete(user,file);
+			System.out.println("Done updating RT with version to -1 in file " + file + " ,user " + user);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error deleting entry. Failed to update version as -1");
+		}
 		
 	}
 

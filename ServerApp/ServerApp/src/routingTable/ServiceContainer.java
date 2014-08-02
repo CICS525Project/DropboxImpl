@@ -328,7 +328,7 @@ public class ServiceContainer {
 		PreparedStatement ps=null;
 		try{
 			con=ConnectionFactory.getConnection();
-			String query="INSERT INTO [sharedTable] VALUES (?,?,?,?)";
+			String query="INSERT INTO [sharedTable] VALUES (?,?,?)";
 			ps=con.prepareStatement(query);
 			for(RoutingTable i:missingList){
 				if(!(i.getFileName()==null || i.getSharedUserName()==null || i.getUserName()==null)){
@@ -349,5 +349,80 @@ public class ServiceContainer {
 			if (con != null) try { con.close(); } catch(Exception e) {}
 		}
 	}
+	/**
+	 * Method Name: updateVersionForDelete
+	 * Method is used to when a delete operation happens. It actually makes the version 
+	 * of the fileName to -1
+	 * @param userName
+	 * @param fileName
+	 * @throws SQLException
+	 */
+		public void updateVersionForDelete(String userName,String fileName) throws SQLException {
+			Connection con = null;
+			Connection con1 = null;
+			Connection con2 = null;
+			Connection con3 = null;
+			PreparedStatement ps=null;
+			ResultSet rs=null;
+			PreparedStatement ps1=null;
+			ResultSet rs1=null;
+			PreparedStatement ps2=null;
+			ResultSet rs2=null;
+			PreparedStatement ps3=null;
+			ResultSet rs3=null;
+			try{
+				con=ConnectionFactory.getConnection();
+				String query="SELECT version FROM [routingTable] WHERE userName =? AND fileName=? ";
+				ps=con.prepareStatement(query);
+				ps.setString(1, userName);
+				ps.setString(2, fileName);
+				rs=ps.executeQuery();
+				if(rs.next()){
+					con1=ConnectionFactory.getConnection();
+					String query1="UPDATE [routingTable] SET version= ? WHERE userName =? AND fileName=?";
+					ps1=con1.prepareStatement(query1);
+					ps1.setInt(1, -1);
+					ps1.setString(2, userName);
+					ps1.setString(3, fileName);
+					ps1.executeUpdate();
+				}
+				else{
+					con2=ConnectionFactory.getConnection();
+					String query2="SELECT userName FROM [sharedTable] WHERE sharedUserName =? AND fileName=? ";
+					ps2=con2.prepareStatement(query2);
+					ps2.setString(1, userName);
+					ps2.setString(2, fileName);
+					rs2=ps2.executeQuery();
+					if(rs2.next()){
+						con3=ConnectionFactory.getConnection();
+						String query3="UPDATE [routingTable] SET version= ? WHERE userName =? AND fileName=?";
+						ps3=con3.prepareStatement(query3);
+						ps3.setInt(1, -1);
+						ps3.setString(2, rs2.getString("userName"));
+						ps3.setString(3, fileName);
+						ps3.executeUpdate();
+					}
+				}
+				
+			}
+			catch(Exception e){
+				throw new SQLException();
+			}
+			finally {
+
+				if (rs != null) try { rs.close(); } catch(Exception e) {}
+				if (ps != null) try { ps.close(); } catch(Exception e) {}
+				if (con != null) try { con.close(); } catch(Exception e) {}
+				if (rs1 != null) try { rs1.close(); } catch(Exception e) {}
+				if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+				if (con1 != null) try { con1.close(); } catch(Exception e) {}
+				if (rs2 != null) try { rs2.close(); } catch(Exception e) {}
+				if (ps2 != null) try { ps2.close(); } catch(Exception e) {}
+				if (con2 != null) try { con2.close(); } catch(Exception e) {}
+				if (rs3 != null) try { rs3.close(); } catch(Exception e) {}
+				if (ps3 != null) try { ps3.close(); } catch(Exception e) {}
+				if (con3 != null) try { con3.close(); } catch(Exception e) {}
+			}
+		}
 }
 

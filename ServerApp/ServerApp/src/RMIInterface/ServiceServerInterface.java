@@ -61,4 +61,11 @@ public interface ServiceServerInterface extends Remote {
 	 */
 	String shareFile(HashMap<String,String> fileList,String userName) throws RemoteException;
 	
+	/**
+	 * method that removes a file from the system by changing the version of the file to -1
+	 * @param user user name associated with the file
+	 * @param file name of the file to be deleted
+	 * @throws RemoteException
+	 */
+	void deleteFile(String user, String file) throws RemoteException;
 }
