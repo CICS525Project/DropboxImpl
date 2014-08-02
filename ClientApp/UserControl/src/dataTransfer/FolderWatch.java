@@ -93,17 +93,14 @@ public class FolderWatch implements Runnable {
 							int newVersion = Integer.parseInt(oldVersion) + 1;
 							String checkSum = fopt.getHashCode(fopt.hashFile(SessionInfo.getInstance().getWorkFolder()+File.separator+fn));
 							cmd.modifyInfo(fn, checkSum, String.valueOf(newVersion), SessionInfo.getInstance().getWorkFolder());
-							OperationQueue.getInstance().add(
-									fn,
-									OperationQueue.getInstance()
-											.getUploadQueue());
+							fopt.uploadFileControl(fn);
 						}
 						if (kind.name().equals("ENTRY_DELETE")) {
 							/**
 							 * change version number in the remote container to
 							 * -1, and delete file in the container
 							 **/
-							
+							fopt.deleteRemoteFile(fn);
 						}
 					}
 				}

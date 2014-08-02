@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import dataTransfer.DownloadFile;
 import dataTransfer.OperationQueue;
+import dataTransfer.UploadFile;
 
 public class ConflictPopUp extends JFrame {
 	private JPanel contentPane;
@@ -55,6 +56,7 @@ public class ConflictPopUp extends JFrame {
 					//discard upload 
 					OperationQueue.getInstance().remiveUploadAddUpload(filen);
 				}
+				new UploadFile();
 				for (Frame frame : Frame.getFrames()) {
 					if (frame.isActive()) {
 						WindowEvent windowClosing = new WindowEvent(frame,
@@ -86,8 +88,7 @@ public class ConflictPopUp extends JFrame {
 				if(choice == 2){
 					OperationQueue.getInstance().removeDownAddDown(filen);
 				}
-				DownloadFile downloader = new DownloadFile();
-				downloader.start();
+				new DownloadFile();
 				for (Frame frame : Frame.getFrames()) {
 					if (frame.isActive()) {
 						WindowEvent windowClosing = new WindowEvent(frame,
@@ -110,6 +111,7 @@ public class ConflictPopUp extends JFrame {
 				
 				for (Frame frame : Frame.getFrames()) {
 					if (frame.isActive()) {
+						/**need do something here**/
 						WindowEvent windowClosing = new WindowEvent(frame,
 								WindowEvent.WINDOW_CLOSING);
 						frame.dispatchEvent(windowClosing);

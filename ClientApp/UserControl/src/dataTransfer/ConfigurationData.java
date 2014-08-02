@@ -3,6 +3,7 @@ package dataTransfer;
 import java.io.File;
 
 public class ConfigurationData {
+	
 	public static final String WARN_IMG = "img"+File.separator+"warn.png";
 	public static final String UP_IMG = "img"+File.separator+"arrowup.png";
 	public static final String DOWN_IMG = "img"+File.separator+"arrowdown.jpeg";

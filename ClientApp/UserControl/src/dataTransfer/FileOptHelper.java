@@ -2,6 +2,7 @@ package dataTransfer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -13,10 +14,21 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
 
+import javax.swing.ImageIcon;
+
+import com.microsoft.windowsazure.services.blob.client.CloudBlob;
+import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
+import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
+import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
+import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
+
+import userGUI.ConflictPopUp;
+import userGUI.ToolTip;
 import userMetaData.ClientMetaData;
 
 public class FileOptHelper {
 
+	private ToolTip myTip;
 	/**
 	 * hashFile: used for calculating SHA-1 value for a file
 	 * 
@@ -118,6 +130,7 @@ public class FileOptHelper {
 				remoteFileAndVersion.keySet());
 		for (int i = 0; i < remoteFileList.size(); i++) {
 			String fname = remoteFileList.get(i);
+			System.out.println("remote file: " + fname);
 			// if file exists on both local and remote
 			if (localFileAndVersion.containsKey(fname)) {
 				// if local version is not same as remote version
@@ -227,9 +240,97 @@ public class FileOptHelper {
 				cmd.addToXML(fname, dir);
 			}
 		}
-	}
-
+	}	
+	
+	/**
+	 * 
+	 * @param filename
+	 */
 	public void deleteRemoteFile(String filename) {
 
+		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
+				.getRemoteDNS(), SessionInfo.getInstance().getPortNum());
+		String fileRemoteDNS = uopt.getOneFileAddress(filename);
+		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, SessionInfo.getInstance().getPortNum());
+		String fileContainerString = fileDNSOPT.fileContainer();
+		String[] part = fileContainerString.split(",");
+		CloudStorageAccount storageAccount;
+		try {
+			storageAccount = CloudStorageAccount.parse(part[0]);
+			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
+			String containerName = part[1];
+			CloudBlobContainer container = blobClient
+					.getContainerReference(containerName);
+			for (ListBlobItem blobItem : container.listBlobs()) {
+				if (blobItem instanceof CloudBlob) {
+					CloudBlob blob = (CloudBlob) blobItem;
+					if (filename.equals(blob.getName())) {
+						
+						blob.deleteIfExists();
+						//need to call remote function to change version number to -1 in RT table
+						
+						myTip.setToolTip(new ImageIcon(
+								ConfigurationData.WARN_IMG), "File " + filename
+								+ " is deleted secessfully!");
+						return;
+					}
+				}
+			}
+			System.out.println("Cannot find the file you selected.");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * when a file needs to be download, first check the download and upload
+	 * queues.
+	 * 
+	 * @param downloadQ
+	 */
+	public void downLoadFileControl(String fn) {
+
+		// operation already exists
+		// first needs to stop current thread first
+		if (OperationQueue.getInstance().containsObj(fn) != 0) {
+			DownloadFile.stop();
+			if (OperationQueue.getInstance().containsObj(fn) == 2) {
+				// operation exists in upload queue
+				new ConflictPopUp("Conflict detected. File " + fn
+						+ " is current in the Upload queue.", 1, fn);
+			} else {
+				// operation exists in download queue
+				new ConflictPopUp("Conflict detected. File " + fn
+						+ " is already in the Download queue.", 2, fn);
+			}
+		} else {
+			// add file name in to download queue if no conflicts
+			OperationQueue.getInstance().add(fn, OperationQueue.getInstance().getDownloadQueue());
+		}
+	}
+
+	/**
+	 * 
+	 * @param fn
+	 */
+	public void uploadFileControl(String fn) {
+		// operation already exists
+		// first needs to stop current thread first
+		if (OperationQueue.getInstance().containsObj(fn) != 0) {
+			UploadFile.stop();
+			if (OperationQueue.getInstance().containsObj(fn) == 1) {
+				// operation exists in download queue
+				new ConflictPopUp("Conflict detected. File " + fn + " is current in the download queue.", 3, fn);
+			} else {
+				// operation exists already in the Upload queue
+				new ConflictPopUp("Conflict detected. File " + fn + " is already in the Upload queue.", 1, fn);
+			}
+		}
+		else
+		{
+			//add file to the upload queue
+			OperationQueue.getInstance().add(fn, OperationQueue.getInstance().getUploadQueue());
+		}
 	}
 }

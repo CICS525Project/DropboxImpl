@@ -21,40 +21,14 @@ import userMetaData.ClientMetaData;
 public class DownloadFile implements Runnable {
 
 	private OperationQueue opt;
-	private volatile Thread downloader;
+	private volatile static Thread downloader;
 	private ToolTip myTip;
+
 	public DownloadFile() {
 		opt = OperationQueue.getInstance();
 		myTip = new ToolTip();
 		downloader = new Thread(this);
 		start();
-	}
-
-	/**
-	 * when a file needs to be download, first check the download and upload
-	 * queues.
-	 * 
-	 * @param downloadQ
-	 */
-	public void downLoadFileControl(String fn) {
-
-		// operation already exists
-		// first needs to stop current thread first
-		if (opt.containsObj(fn) != 0) {
-			stop();
-			if (opt.containsObj(fn) == 2) {
-				// operation exists in upload queue
-				new ConflictPopUp("Conflict detected. File " + fn
-						+ " is current in the Upload queue.", 1, fn);
-			} else {
-				// operation exists in download queue
-				new ConflictPopUp("Conflict detected. File " + fn
-						+ " is already in the Download queue.", 2, fn);
-			}
-		} else {
-			// add file name in to download queue if no conflicts
-			opt.add(fn, opt.getDownloadQueue());
-		}
 	}
 
 	/**
@@ -111,18 +85,31 @@ public class DownloadFile implements Runnable {
 					CloudBlob blob = (CloudBlob) blobItem;
 					blob.downloadAttributes();
 					if (fileName.equals(blob.getName())) {
-						ArrayList<String> originFileInfolder = fopt.getFileInFolder(SessionInfo.getInstance().getWorkFolder());
+						ArrayList<String> originFileInfolder = fopt
+								.getFileInFolder(SessionInfo.getInstance()
+										.getWorkFolder());
 						blob.download(new FileOutputStream(downPath));
-						/*****need to change version number of the file download as meta in container******/
+						/*****
+						 * need to change version number of the file download as
+						 * meta in container
+						 ******/
 						HashMap<String, String> res = blob.getMetadata();
 						String latestVersion = res.get("version");
-						String checkSum = fopt.getHashCode(fopt.hashFile(SessionInfo.getInstance().getWorkFolder()+File.separator+fileName));
-						if(originFileInfolder.contains(fileName)){
-							cmd.modifyInfo(fileName, checkSum, latestVersion, SessionInfo.getInstance().getWorkFolder());
-						}else{
-							cmd.addToXML(fileName, SessionInfo.getInstance().getWorkFolder());
+						String checkSum = fopt.getHashCode(fopt
+								.hashFile(SessionInfo.getInstance()
+										.getWorkFolder()
+										+ File.separator
+										+ fileName));
+						if (originFileInfolder.contains(fileName)) {
+							cmd.modifyInfo(fileName, checkSum, latestVersion,
+									SessionInfo.getInstance().getWorkFolder());
+						} else {
+							cmd.addToXML(fileName, SessionInfo.getInstance()
+									.getWorkFolder());
 						}
-						myTip.setToolTip(new ImageIcon(ConfigurationData.DOWN_IMG), "File " + fileName+" is download secessfully!");
+						myTip.setToolTip(new ImageIcon(
+								ConfigurationData.DOWN_IMG), "File " + fileName
+								+ " is download secessfully!");
 						return;
 					}
 				}
@@ -139,7 +126,7 @@ public class DownloadFile implements Runnable {
 		downloader.start();
 	}
 
-	public void stop() {
+	public static void stop() {
 		downloader = null;
 	}
 
@@ -148,8 +135,4 @@ public class DownloadFile implements Runnable {
 		// TODO Auto-generated method stub
 		downloadImpl();
 	}
-
-	 public static void main(String[] args) {
-	 new DownloadFile();
-	 }
 }

@@ -19,7 +19,7 @@ import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 public class UploadFile implements Runnable {
 
 	private OperationQueue optQ;
-	private Thread uploader;
+	private static Thread uploader;
 	private ToolTip myTip;
 	public UploadFile() {
 		optQ = OperationQueue.getInstance();
@@ -42,30 +42,6 @@ public class UploadFile implements Runnable {
 		}
 	}
 
-	/**
-	 * 
-	 * @param fn
-	 */
-	public void uploadFileControl(String fn) {
-		// operation already exists
-		// first needs to stop current thread first
-		if (optQ.containsObj(fn) != 0) {
-			stop();
-			if (optQ.containsObj(fn) == 1) {
-				// operation exists in download queue
-				new ConflictPopUp("Conflict detected. File " + fn + " is current in the download queue.", 3, fn);
-			} else {
-				// operation exists already in the Upload queue
-				new ConflictPopUp("Conflict detected. File " + fn + " is already in the Upload queue.", 1, fn);
-			}
-		}
-		else
-		{
-			//add file to the upload queue
-			optQ.add(fn, optQ.getUploadQueue());
-		}
-
-	}
 	
 	//start thread
 	public void start(){
@@ -74,7 +50,7 @@ public class UploadFile implements Runnable {
 	}
 
 	//Stop the thread
-	public void stop() {
+	public static void stop() {
 		uploader = null;
 	}
 
