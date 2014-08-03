@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import authentication.UserInfo;
+
 import com.microsoft.windowsazure.services.core.storage.Constants;
 
 import serviceServer.RoutingTable;
@@ -487,5 +489,42 @@ public class DBConnection {
 					}
 					return result;
 				}
+				
+				/**
+				 * Method Name: getUserInfo
+				 * Get the user credentials from the DB
+				 * @return result
+				 * @throws SQLException
+				 */
+				public ArrayList<UserInfo> getUserInfo()throws SQLException{
+					Connection con = null;
+					PreparedStatement ps=null;
+					ResultSet rs=null;
+					ArrayList<UserInfo> result=new ArrayList<UserInfo>();
+					try{
+						con=ConnectionFactory.getConnection();
+						String query="SELECT userName,password FROM [user]";
+						ps=con.prepareStatement(query);
+						rs=ps.executeQuery();
+						while(rs.next()){
+							UserInfo info=new UserInfo();
+							info.setUserName(rs.getString("userName"));
+							info.setPassword(rs.getString("password"));
+							result.add(info);
+						}
+					}
+					catch(Exception e){
+						e.printStackTrace();
+						throw new SQLException();
+					}
+					finally {
+
+						if (ps != null) try { ps.close(); } catch(Exception e) {}
+						if (con != null) try { con.close(); } catch(Exception e) {}
+						if (rs != null) try { rs.close(); } catch(Exception e) {}
+					}
+					return result;
+				}
+				
 				
 }

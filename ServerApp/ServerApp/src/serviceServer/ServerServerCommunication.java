@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import authentication.UserInfo;
 import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 import utils.Constants;
@@ -136,5 +137,18 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		}
 		return null;
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public ArrayList<UserInfo> getUserInfo() throws RemoteException {
+		DBConnection connect = new DBConnection();
+		try {
+			return connect.getUserInfo();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 }

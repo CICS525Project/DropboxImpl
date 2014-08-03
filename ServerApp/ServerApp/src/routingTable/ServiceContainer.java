@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import authentication.UserInfo;
+
 import com.microsoft.windowsazure.services.core.storage.*;
 import com.microsoft.windowsazure.services.blob.client.*;
 
@@ -510,6 +512,77 @@ public class ServiceContainer {
 				if (rs1 != null) try { rs1.close(); } catch(Exception e) {}
 			}
 			return finalResult;
+		}
+		
+		/**
+		 * Method Name: compareUserInfo
+		 * Compare if the UserNames are present in the Tables of two servers
+		 * @param firstList
+		 * @param secondList
+		 * @return
+		 */
+		public ArrayList<UserInfo> compareUserInfo(ArrayList<UserInfo> firstList,ArrayList<UserInfo> secondList){
+			ArrayList<UserInfo> result=new ArrayList<UserInfo>();
+			for(UserInfo info1:secondList){
+				boolean flag=false;
+				for(UserInfo info2:firstList){
+					if(info2.getUserName().equalsIgnoreCase(info1.getUserName())){
+						flag=true;
+						break;
+					}
+				}
+				if(!flag){
+					result.add(info1);
+				}
+			}
+			return result;
+		}
+		/**
+		 * Method Name: insertMissingInUserTable
+		 * This is used to insert the Missing Values in the User Table
+		 * @param missingList
+		 * @throws SQLException
+		 */
+		public void insertMissingInUserTable(ArrayList<UserInfo> missingList) throws SQLException{
+			Connection con = null;
+			PreparedStatement ps=null;
+			Connection con1 = null;
+			ResultSet rs=null;
+			PreparedStatement ps1=null;
+			try{
+				for(UserInfo i:missingList){
+					con=ConnectionFactory.getConnection();
+					String query="SELECT userName,password FROM [user] WHERE userName=?";
+					ps=con.prepareStatement(query);
+					if(!(i.getUserName()==null || i.getPassword()==null )){
+						ps.setString(1, i.getUserName());
+						rs=ps.executeQuery();
+						if(rs.next()){
+							continue;
+						}
+						else{
+							con1=ConnectionFactory.getConnection();
+							String query1="INSERT INTO [user] VALUES (?,?)";
+							ps1=con1.prepareStatement(query1);
+							ps1.setString(1, i.getUserName());
+							ps1.setString(2, i.getPassword());
+							ps1.addBatch();
+						}
+						ps1.executeBatch();
+					}
+				}
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				throw new SQLException();
+			}
+			finally {
+				if (rs != null) try { rs.close(); } catch(Exception e) {}
+				if (ps != null) try { ps.close(); } catch(Exception e) {}
+				if (con != null) try { con.close(); } catch(Exception e) {}
+				if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+				if (con1 != null) try { con1.close(); } catch(Exception e) {}
+			}
 		}
 }
 

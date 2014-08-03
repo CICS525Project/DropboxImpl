@@ -31,6 +31,9 @@ public class StartServer {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+//		Constants localConstants = new Constants();
+//		localConstants.setConstants();
+		
 		// cleaning temp dir before running the server again
 		File file = new File("C:\\cloudboxTemp");        
         String[] myFiles;      

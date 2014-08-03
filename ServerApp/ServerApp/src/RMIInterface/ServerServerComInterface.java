@@ -2,8 +2,10 @@ package RMIInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import authentication.UserInfo;
 import serviceServer.RoutingTable;
 /**
  * Interface for Server to Server communication
@@ -27,5 +29,7 @@ public interface ServerServerComInterface extends Remote{
 	ArrayList<RoutingTable> getRoutingDetails() throws RemoteException;
 	
 	ArrayList<RoutingTable> getSharedDetails() throws RemoteException;
+	
+	ArrayList<UserInfo> getUserInfo()throws RemoteException;
 	
 }

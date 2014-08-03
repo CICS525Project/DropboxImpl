@@ -158,6 +158,8 @@ public class ServiceServer implements ServiceServerInterface {
 
 		missMatch = serviceContainer.checkContainerWithRoutingTable(Constants.CONTAINER,
 				Constants.HOST);
+		
+		
 
 //		 temporary code to test update with the current routing table.
 		
@@ -225,9 +227,9 @@ public class ServiceServer implements ServiceServerInterface {
 			if (toRemove.getMetadata().get("name").equals(user))
 			{
 				toRemove.deleteIfExists();
-				toRemove = null;
 				System.out.println("File " + toRemove.getName() + " deleted from " + container1.getName());
 			}
+			toRemove = null;
 			// deleting blob2
 			toRemove = container2.getBlockBlobReference(file);
 			toRemove.downloadAttributes();
