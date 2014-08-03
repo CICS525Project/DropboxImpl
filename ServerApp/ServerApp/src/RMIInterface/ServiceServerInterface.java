@@ -76,5 +76,5 @@ public interface ServiceServerInterface extends Remote {
 	 * @return arraylist of files shared by that user
 	 * @throws RemoteException
 	 */
-	ArrayList<String> getAllSharedFilesForUser(String userName)throws RemoteException;
+	 HashMap<String, Integer> getAllSharedFilesForUser(String userName)throws RemoteException;
 }

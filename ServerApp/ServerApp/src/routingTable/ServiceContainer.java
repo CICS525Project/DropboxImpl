@@ -429,14 +429,18 @@ public class ServiceContainer {
 		 * Used to retrieve the List of Files associated with a particular UserName
 		 * Includes both the Owned Files and Shared by files
 		 * @param userName
-		 * @return result
+		 * @return finalResult
 		 * @throws SQLException
 		 */
-		public ArrayList<String> getAllSharedFilesForUser(String userName)throws SQLException{
+		public HashMap<String, Integer> getAllSharedFilesForUser(String userName)throws SQLException{
 			Connection con = null;
 			PreparedStatement ps=null;
 			ResultSet rs=null;
+			Connection con1 = null;
+			PreparedStatement ps1=null;
+			ResultSet rs1=null;
 			ArrayList<String> result=new ArrayList<String>();
+			HashMap<String, Integer> finalResult=new HashMap<>();
 			try{
 				con=ConnectionFactory.getConnection();
 				String query="SELECT fileName FROM [sharedTable] WHERE sharedUserName=? OR userName=?";
@@ -446,6 +450,17 @@ public class ServiceContainer {
 				rs=ps.executeQuery();
 				while(rs.next()){
 					result.add(rs.getString("fileName"));
+				}
+				for(String s:result){
+					con1=ConnectionFactory.getConnection();
+					String query1="SELECT version FROM [routingTable] WHERE fileName=? AND userName=?";
+					ps1=con.prepareStatement(query1);
+					ps1.setString(1, s);
+					ps1.setString(2, userName);
+					rs1=ps1.executeQuery();
+					while(rs1.next()){
+						finalResult.put(s, rs1.getInt("version"));
+					}
 				}
 			}
 			catch(Exception e){
@@ -457,8 +472,11 @@ public class ServiceContainer {
 				if (ps != null) try { ps.close(); } catch(Exception e) {}
 				if (con != null) try { con.close(); } catch(Exception e) {}
 				if (rs != null) try { rs.close(); } catch(Exception e) {}
+				if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+				if (con1 != null) try { con1.close(); } catch(Exception e) {}
+				if (rs1 != null) try { rs1.close(); } catch(Exception e) {}
 			}
-			return result;
+			return finalResult;
 		}
 }
 

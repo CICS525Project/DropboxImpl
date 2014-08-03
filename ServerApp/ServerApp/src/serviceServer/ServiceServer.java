@@ -189,7 +189,7 @@ public class ServiceServer implements ServiceServerInterface {
 	}
 
 	@Override
-	public ArrayList<String> getAllSharedFilesForUser(String userName)
+	public HashMap<String, Integer> getAllSharedFilesForUser(String userName)
 			throws RemoteException {
 		// TODO Auto-generated method stu
 		ServiceContainer serviceContainer = new ServiceContainer();
