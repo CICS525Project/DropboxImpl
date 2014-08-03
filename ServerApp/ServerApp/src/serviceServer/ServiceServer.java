@@ -50,18 +50,28 @@ public class ServiceServer implements ServiceServerInterface {
 		
 		for(String key: result.keySet()){
             String address = result.get(key);
-            Registry registry = LocateRegistry.getRegistry(address, Constants.SPORT);
-            
+            System.out.println("servers request " + address);
+            ServerServerComInterface server = null;
     		try {
-				registry.lookup("serverServerRMI");
-			} catch (NotBoundException e) {
+    			Registry registry = LocateRegistry.getRegistry(address, Constants.SPORT);
+    			server = (ServerServerComInterface) registry.lookup("serverServerRMI");
+    			if (server == null){
+    			//	System.out.println("null server");
+    				throw new Exception();
+    			}
+			} catch (Exception e) {
 				System.out.println("Server " + address + " is down. File "+ key +" available on backup server 1");
 				// If service server is down, attempts to change value to backup 1
-	            Registry secondRegistry = LocateRegistry.getRegistry(Constants.B1HOST, Constants.SPORT);
+	            
 				try {
-					secondRegistry.lookup("serverServerRMI");
+					Registry secondRegistry = LocateRegistry.getRegistry(Constants.B1HOST, Constants.SPORT);
+					server = (ServerServerComInterface) secondRegistry.lookup("serverServerRMI");
+					if (server == null){
+	    			//	System.out.println("null server");
+	    				throw new Exception();
+	    			}
 					result.put(key,Constants.B1HOST);
-				} catch (NotBoundException backupex) {
+				} catch (Exception backupex) {
 					// If backup 1 server is down, connect to backup 2
 					System.out.println("Server " + address + " is down. File "+ key +" available on backup server 2");
 					result.put(key,Constants.B2HOST);
