@@ -80,17 +80,13 @@ public class SignIn extends JFrame {
 					username = uName.getText();
 					password = pwd.getText();
 					// user authorization
-					String initialDNS = ConfigurationData.SERVICE_S1;
 					UserOperate uopt = new UserOperate(
-							initialDNS, ConfigurationData.PORT_NUM);
+							SessionInfo.getInstance().getRemoteDNS(), ConfigurationData.PORT_NUM);
 					ClientMetaData cmd = new ClientMetaData();
 					FileOptHelper fopt = new FileOptHelper();
 					// initilize session data
 					SessionInfo.getInstance().setUsername(username);
 					SessionInfo.getInstance().setUserPwd(password);
-					SessionInfo.getInstance().setRemoteDNS(
-							initialDNS);
-					SessionInfo.getInstance().setPortNum(ConfigurationData.PORT_NUM);
 					HashMap<String, String> fileDNS = uopt
 							.getFileInFolderAddress();
 					String workpath = SessionInfo.getInstance().getWorkFolder();

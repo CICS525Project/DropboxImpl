@@ -80,10 +80,15 @@ public class UserOperate {
 	 * @throws RemoteException
 	 */
 	public boolean signUp(String uname, String upass) throws RemoteException{
-		if(serviceProvider.signIn(uname, upass)){
-			return true;
+		boolean res = false;
+		try {
+			res = serviceProvider.signIn(uname, upass);
+			System.out.println(res);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return false;
+		return res;
 	}
 	/**
 	 * 

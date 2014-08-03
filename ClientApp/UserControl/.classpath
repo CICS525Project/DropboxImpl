@@ -3,25 +3,25 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jackson-core-asl-1.9.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jackson-jaxrs-1.9.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jackson-mapper-asl-1.9.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jackson-xc-1.9.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/javax.inject-1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jaxb-impl-2.2.3-1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jaxb-impl-2.2.3-1-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jersey-client-1.13.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jersey-client-1.13-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jersey-core-1.13.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jersey-core-1.13-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jersey-json-1.13.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jersey-json-1.13-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/jettison-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/mail-1.4.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/mail-1.4.5-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sashiraj/Desktop/jars_for_525/microsoft-windowsazure-api-0.4.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jackson-mapper-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/javax.inject-1.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jaxb-impl-2.2.3-1-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jaxb-impl-2.2.3-1.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-client-1.13-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-client-1.13.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-core-1.13-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-core-1.13.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-json-1.13-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jersey-json-1.13.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/mail-1.4.5-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/mail-1.4.5.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/microsoft-windowsazure-api-0.4.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

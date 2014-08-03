@@ -1,6 +1,13 @@
 package dataTransfer;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import RMIInterface.ServiceServerInterface;
 
 public class SessionInfo {
 	
@@ -18,9 +25,6 @@ public class SessionInfo {
 		}
 		return singleton;
 	}
-	
-	
-	
 	public String getUsername() {
 		return username;
 	}
@@ -47,6 +51,34 @@ public class SessionInfo {
 	}
 	public String getRemoteDNS() {
 		/**testing if current linked server is alive if not, change to another server**/
+		ArrayList<String> rDNS = new ArrayList<String>();
+		rDNS.add(ConfigurationData.SERVICE_S1);
+		rDNS.add(ConfigurationData.SERVICE_S2);
+		rDNS.add(ConfigurationData.SERVICE_S3);
+		rDNS.add(ConfigurationData.SERVICE_S4);
+		rDNS.add(ConfigurationData.SERVICE_B1);
+		rDNS.add(ConfigurationData.SERVICE_B2);
+		rDNS.remove(remoteDNS);
+		try {
+			Registry registry = LocateRegistry.getRegistry(remoteDNS, portNum);
+			ServiceServerInterface ssi = (ServiceServerInterface)registry.lookup("cloudboxRMI");
+			if(ssi == null){
+				for(String backUpDNS : rDNS){
+					registry = LocateRegistry.getRegistry(backUpDNS, portNum);
+					ssi = (ServiceServerInterface)registry.lookup("cloudboxRMI");
+					if(ssi != null){
+						remoteDNS = backUpDNS;
+						return remoteDNS;
+					}
+				}
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return remoteDNS;
 	}
 	public void setRemoteDNS(String remoteDNS) {

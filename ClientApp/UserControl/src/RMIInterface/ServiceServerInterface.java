@@ -1,5 +1,6 @@
 package RMIInterface;
 import java.rmi.*;
+import java.sql.SQLException;
 import java.util.*;
 /**
  * Interface to implement RMI between Client and Service Server

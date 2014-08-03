@@ -24,6 +24,10 @@ public class StartGUI {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		String initialDNS = ConfigurationData.SERVICE_S1;
+		SessionInfo.getInstance().setRemoteDNS(
+				initialDNS);
+		SessionInfo.getInstance().setPortNum(ConfigurationData.PORT_NUM);
 		SignIn frame = new SignIn();
 		frame.setVisible(true);
 		setUpWorkFolder();

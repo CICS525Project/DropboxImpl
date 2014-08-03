@@ -148,7 +148,7 @@ public class ConflictPopUp extends JFrame {
 		warnTx.setLocation(42, 124);
 		warnTx.setSize(300, 50);
 		warnTx.setText(warnMsg);
-		warnTx.setFont(new Font("STKaiti", Font.PLAIN, 24));
+		warnTx.setFont(new Font("STKaiti", Font.PLAIN, 20));
 		contentPane.add(warnTx);
 
 		titleJLabel = new JLabel();

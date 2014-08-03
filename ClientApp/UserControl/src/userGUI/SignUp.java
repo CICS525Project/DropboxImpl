@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
+import dataTransfer.SessionInfo;
 import dataTransfer.UserOperate;
 
 
@@ -82,10 +83,10 @@ public class SignUp extends JFrame {
 				}
 				else
 				{
-					UserOperate opt = new UserOperate("cics525group6S3.cloudapp.net",12345);
+					UserOperate opt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(),SessionInfo.getInstance().getPortNum());
 					System.out.println(userName.getText() + " " + nPassword.getText());
 					try {
-						if(opt.signIn(userName.getText(), nPassword.getText())){
+						if(opt.signUp(userName.getText(), nPassword.getText())){
 							JOptionPane.showMessageDialog(null,
 									"You have created your account.");
 						}else{
