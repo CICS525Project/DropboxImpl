@@ -175,12 +175,11 @@ public class ServiceContainer {
 		try{
 			for(RoutingTable i:missingList){
 				con=ConnectionFactory.getConnection();
-				String query="SELECT userName,fileName,serverName,version FROM [routingTable] WHERE fileName=? AND userName=? AND serverName=?";
+				String query="SELECT userName,fileName,serverName,version FROM [routingTable] WHERE fileName=? AND userName=? ";
 				ps=con.prepareStatement(query);
 				if(!(i.getUserName()==null || i.getFileName()==null || i.getServerName()==null ||i.getVersion()==0)){
 					ps.setString(1, i.getFileName());
 					ps.setString(2, i.getUserName());
-					ps.setString(3, i.getServerName());
 					rs=ps.executeQuery();
 					if(rs.next()){
 						updateRoutingTableVersion(i);
