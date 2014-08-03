@@ -22,6 +22,7 @@ public class FolderWatch implements Runnable {
 	private ClientMetaData cmd;
 	private UserOperate uopt;
 	private FileOptHelper fopt;
+
 	public FolderWatch(String path) {
 		this.dir = Paths.get(path);
 		cmd = new ClientMetaData();
@@ -33,7 +34,7 @@ public class FolderWatch implements Runnable {
 	 * watch operations on files in the folder
 	 * 
 	 * @param dir
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void watchFile(Path dir) throws Exception {
 		uopt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(),
@@ -90,17 +91,42 @@ public class FolderWatch implements Runnable {
 							// add into upload queue
 							/** modify local version number here **/
 							String oldVersion = cmd.readVersionForOne(fn);
-							int newVersion = Integer.parseInt(oldVersion) + 1;
-							String checkSum = fopt.getHashCode(fopt.hashFile(SessionInfo.getInstance().getWorkFolder()+File.separator+fn));
-							cmd.modifyInfo(fn, checkSum, String.valueOf(newVersion), SessionInfo.getInstance().getWorkFolder());
-							fopt.uploadFileControl(fn);
+							String checkSum = fopt.getHashCode(fopt
+									.hashFile(SessionInfo.getInstance()
+											.getWorkFolder()
+											+ File.separator
+											+ fn));
+							HashMap<String, String> originChecks = cmd
+									.readHashCode(SessionInfo.getInstance()
+											.getWorkFolder());
+							//if file is just modified
+							//not just download and overlapped
+							if(!originChecks.get(fn).equals(checkSum)){
+								int newVersion = Integer.parseInt(oldVersion) + 1;
+								cmd.modifyInfo(fn, checkSum, String
+										.valueOf(newVersion), SessionInfo
+										.getInstance().getWorkFolder());
+								fopt.uploadFileControl(fn);
+							}
+//							if (cmd.compareLcalandRmtVersion(fn) != 0) {				
+//							}
 						}
 						if (kind.name().equals("ENTRY_DELETE")) {
 							/**
 							 * change version number in the remote container to
 							 * -1, and delete file in the container
 							 **/
-							uopt.deleteRemoteFile(fn);
+							// check if local meta exists
+							// if exists, means deletion is initialized by this
+							// user
+							// if not exists, means deletion is operated by
+							// other shared user and sync her, discard
+							HashMap<String, String> localFileAndVersion = cmd
+									.readHashCode(SessionInfo.getInstance()
+											.getWorkFolder());
+							if (localFileAndVersion.containsKey(fn)) {
+								uopt.deleteRemoteFile(fn);
+							}
 						}
 					}
 				}

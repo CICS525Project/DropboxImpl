@@ -58,6 +58,10 @@ public class SyncWithRemote implements Runnable {
 					String filePath = SessionInfo.getInstance().getWorkFolder() + File.separator + fn;
 					if(remoteVersion == -1){
 						fopt.deleteFileInFoler(filePath);
+						ArrayList<String> f = new ArrayList<String>();
+						//according remote, deleting local and remove local meta data
+						f.add(fn);
+						cmd.removeRecord(filePath, f);
 					}
 					if(remoteVersion > localVersionInt){
 						//download if remote version is greater than the local version

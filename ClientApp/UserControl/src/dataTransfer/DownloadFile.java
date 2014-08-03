@@ -13,8 +13,6 @@ import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
 import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
-
-import userGUI.ConflictPopUp;
 import userGUI.ToolTip;
 import userMetaData.ClientMetaData;
 
@@ -68,9 +66,9 @@ public class DownloadFile implements Runnable {
 		String downPath = SessionInfo.getInstance().getWorkFolder() + spliter
 				+ fileName;
 		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
-				.getRemoteDNS(), 12345);
+				.getRemoteDNS(), SessionInfo.getInstance().getPortNum());
 		String fileRemoteDNS = uopt.getOneFileAddress(fileName);
-		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, 12345);
+		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, SessionInfo.getInstance().getPortNum());
 		String fileContainerString = fileDNSOPT.fileContainer();
 		String[] part = fileContainerString.split(",");
 		CloudStorageAccount storageAccount;

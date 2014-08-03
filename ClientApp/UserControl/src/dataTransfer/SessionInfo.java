@@ -46,6 +46,7 @@ public class SessionInfo {
 		this.workFolder = workFolder;
 	}
 	public String getRemoteDNS() {
+		/**testing if current linked server is alive if not, change to another server**/
 		return remoteDNS;
 	}
 	public void setRemoteDNS(String remoteDNS) {

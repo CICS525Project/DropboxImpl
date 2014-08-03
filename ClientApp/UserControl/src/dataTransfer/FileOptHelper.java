@@ -175,7 +175,7 @@ public class FileOptHelper {
 		ClientMetaData cmd = new ClientMetaData();
 		FileOptHelper fopt = new FileOptHelper();
 		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
-				.getRemoteDNS(), 12345);
+				.getRemoteDNS(), SessionInfo.getInstance().getPortNum());
 		ArrayList<String> filesInfolder = fopt.getFileInFolder(dir);
 		HashMap<String, Integer> remoteFileAndVersion = uopt
 				.getServerVersion(SessionInfo.getInstance().getUsername());
