@@ -87,7 +87,9 @@ public class UploadFile implements Runnable {
 			container.createIfNotExist();
 			CloudBlockBlob blob = container.getBlockBlobReference(fileName);
 			File source = new File(upPath);
-			blob.upload(new FileInputStream(source), source.length());
+			FileInputStream fin = new FileInputStream(source);
+			blob.upload(fin, source.length());
+			fin.close();
 			
 			/**change remote version number as well**/
 			ClientMetaData cmd = new ClientMetaData();

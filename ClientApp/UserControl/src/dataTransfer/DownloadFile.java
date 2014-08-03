@@ -88,7 +88,9 @@ public class DownloadFile implements Runnable {
 						ArrayList<String> originFileInfolder = fopt
 								.getFileInFolder(SessionInfo.getInstance()
 										.getWorkFolder());
-						blob.download(new FileOutputStream(downPath));
+						FileOutputStream fout = new FileOutputStream(downPath);
+						blob.download(fout);
+						fout.close();
 						/*****
 						 * need to change version number of the file download as
 						 * meta in container

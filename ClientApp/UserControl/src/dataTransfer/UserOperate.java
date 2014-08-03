@@ -10,12 +10,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import javax.swing.ImageIcon;
+
+import userGUI.ToolTip;
+
+import com.microsoft.windowsazure.services.blob.client.CloudBlob;
+import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
+import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
+import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
+import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
+
 import RMIInterface.ServiceServerInterface;
 public class UserOperate {
 
 	private ServiceServerInterface serviceProvider;
 	private static FileOptHelper helper;
-
+	private ToolTip myTip;
 	/**
 	 * constrctor
 	 * 
@@ -148,6 +158,51 @@ public class UserOperate {
 		return containerKey;
 	}
 	
+	/**
+	 * 
+	 * @param filename
+	 */
+	public void deleteRemoteFile(String filename) {
+
+		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
+				.getRemoteDNS(), SessionInfo.getInstance().getPortNum());
+		String fileRemoteDNS = uopt.getOneFileAddress(filename);
+		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, SessionInfo.getInstance().getPortNum());
+		String fileContainerString = fileDNSOPT.fileContainer();
+		String[] part = fileContainerString.split(",");
+		CloudStorageAccount storageAccount;
+		try {
+			storageAccount = CloudStorageAccount.parse(part[0]);
+			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
+			String containerName = part[1];
+			CloudBlobContainer container = blobClient
+					.getContainerReference(containerName);
+			for (ListBlobItem blobItem : container.listBlobs()) {
+				if (blobItem instanceof CloudBlob) {
+					CloudBlob blob = (CloudBlob) blobItem;
+					if (filename.equals(blob.getName())) {
+						//delete remote blob
+						blob.deleteIfExists();
+						//need to call remote function to change version number to -1 in RT table
+						serviceProvider.deleteFile(SessionInfo.getInstance().getUsername(), filename);
+						myTip.setToolTip(new ImageIcon(
+								ConfigurationData.WARN_IMG), "File " + filename
+								+ " is deleted secessfully!");
+						return;
+					}
+				}
+			}
+			System.out.println("Cannot find the file you selected.");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 
+	 * @param files
+	 * @param shareUser
+	 */
 	public void shareFile(String[] files, String shareUser){
 		HashMap<String, String> shareList = new HashMap<String,String>();
 		String username = SessionInfo.getInstance().getUsername();

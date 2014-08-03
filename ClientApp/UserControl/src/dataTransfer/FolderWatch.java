@@ -100,7 +100,7 @@ public class FolderWatch implements Runnable {
 							 * change version number in the remote container to
 							 * -1, and delete file in the container
 							 **/
-							fopt.deleteRemoteFile(fn);
+							uopt.deleteRemoteFile(fn);
 						}
 					}
 				}

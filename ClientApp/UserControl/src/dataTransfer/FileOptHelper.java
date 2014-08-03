@@ -29,6 +29,7 @@ import userMetaData.ClientMetaData;
 public class FileOptHelper {
 
 	private ToolTip myTip;
+
 	/**
 	 * hashFile: used for calculating SHA-1 value for a file
 	 * 
@@ -240,49 +241,8 @@ public class FileOptHelper {
 				cmd.addToXML(fname, dir);
 			}
 		}
-	}	
-	
-	/**
-	 * 
-	 * @param filename
-	 */
-	public void deleteRemoteFile(String filename) {
-
-		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
-				.getRemoteDNS(), SessionInfo.getInstance().getPortNum());
-		String fileRemoteDNS = uopt.getOneFileAddress(filename);
-		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, SessionInfo.getInstance().getPortNum());
-		String fileContainerString = fileDNSOPT.fileContainer();
-		String[] part = fileContainerString.split(",");
-		CloudStorageAccount storageAccount;
-		try {
-			storageAccount = CloudStorageAccount.parse(part[0]);
-			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
-			String containerName = part[1];
-			CloudBlobContainer container = blobClient
-					.getContainerReference(containerName);
-			for (ListBlobItem blobItem : container.listBlobs()) {
-				if (blobItem instanceof CloudBlob) {
-					CloudBlob blob = (CloudBlob) blobItem;
-					if (filename.equals(blob.getName())) {
-						
-						blob.deleteIfExists();
-						//need to call remote function to change version number to -1 in RT table
-						
-						myTip.setToolTip(new ImageIcon(
-								ConfigurationData.WARN_IMG), "File " + filename
-								+ " is deleted secessfully!");
-						return;
-					}
-				}
-			}
-			System.out.println("Cannot find the file you selected.");
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
 	}
-	
+
 	/**
 	 * when a file needs to be download, first check the download and upload
 	 * queues.
@@ -306,7 +266,8 @@ public class FileOptHelper {
 			}
 		} else {
 			// add file name in to download queue if no conflicts
-			OperationQueue.getInstance().add(fn, OperationQueue.getInstance().getDownloadQueue());
+			OperationQueue.getInstance().add(fn,
+					OperationQueue.getInstance().getDownloadQueue());
 		}
 	}
 
@@ -321,16 +282,17 @@ public class FileOptHelper {
 			UploadFile.stop();
 			if (OperationQueue.getInstance().containsObj(fn) == 1) {
 				// operation exists in download queue
-				new ConflictPopUp("Conflict detected. File " + fn + " is current in the download queue.", 3, fn);
+				new ConflictPopUp("Conflict detected. File " + fn
+						+ " is current in the download queue.", 3, fn);
 			} else {
 				// operation exists already in the Upload queue
-				new ConflictPopUp("Conflict detected. File " + fn + " is already in the Upload queue.", 1, fn);
+				new ConflictPopUp("Conflict detected. File " + fn
+						+ " is already in the Upload queue.", 1, fn);
 			}
-		}
-		else
-		{
-			//add file to the upload queue
-			OperationQueue.getInstance().add(fn, OperationQueue.getInstance().getUploadQueue());
+		} else {
+			// add file to the upload queue
+			OperationQueue.getInstance().add(fn,
+					OperationQueue.getInstance().getUploadQueue());
 		}
 	}
 }
