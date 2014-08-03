@@ -169,31 +169,48 @@ public class ServiceContainer {
 	public void insertMissingInRoutingTable(ArrayList<RoutingTable> missingList) throws SQLException{
 		Connection con = null;
 		PreparedStatement ps=null;
+		Connection con1 = null;
+		ResultSet rs=null;
+		PreparedStatement ps1=null;
 		try{
-			con=ConnectionFactory.getConnection();
-			String query="INSERT INTO [routingTable] VALUES (?,?,?,?)";
-			ps=con.prepareStatement(query);
 			for(RoutingTable i:missingList){
+				con=ConnectionFactory.getConnection();
+				String query="SELECT userName,fileName,serverName,version FROM [routingTable] WHERE fileName=? AND userName=? AND serverName=?";
+				ps=con.prepareStatement(query);
 				if(!(i.getUserName()==null || i.getFileName()==null || i.getServerName()==null ||i.getVersion()==0)){
-				ps.setString(1, i.getUserName());
-				ps.setString(2, i.getFileName());
-				ps.setString(3, i.getServerName());
-				ps.setInt(4, i.getVersion());
-				ps.addBatch();
+					ps.setString(1, i.getFileName());
+					ps.setString(2, i.getUserName());
+					ps.setString(3, i.getServerName());
+					rs=ps.executeQuery();
+					if(rs.next()){
+						updateRoutingTableVersion(i);
+					}
+					else{
+						con1=ConnectionFactory.getConnection();
+						String query1="INSERT INTO [routingTable] VALUES (?,?,?,?)";
+						ps1=con1.prepareStatement(query1);
+						ps1.setString(1, i.getUserName());
+						ps1.setString(2, i.getFileName());
+						ps1.setString(3, i.getServerName());
+						ps1.setInt(4, i.getVersion());
+						ps1.addBatch();
+					}
+					ps1.executeBatch();
 				}
 			}
-			ps.executeBatch();
 		}
 		catch(Exception e){
 			e.printStackTrace();
 			throw new SQLException();
 		}
 		finally {
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
 			if (ps != null) try { ps.close(); } catch(Exception e) {}
 			if (con != null) try { con.close(); } catch(Exception e) {}
+			if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+			if (con1 != null) try { con1.close(); } catch(Exception e) {}
 		}
 	}
-	
 	/**
 	 * Method Name: updateRoutingTableVersion
 	 * This is used to update the Version Number in the Routing Table
@@ -326,29 +343,48 @@ public class ServiceContainer {
 	public void insertMissingInSharedTable(ArrayList<RoutingTable> missingList) throws SQLException{
 		Connection con = null;
 		PreparedStatement ps=null;
+		Connection con1 = null;
+		ResultSet rs=null;
+		PreparedStatement ps1=null;
 		try{
-			con=ConnectionFactory.getConnection();
-			String query="INSERT INTO [sharedTable] VALUES (?,?,?)";
-			ps=con.prepareStatement(query);
 			for(RoutingTable i:missingList){
-				if(!(i.getFileName()==null || i.getSharedUserName()==null || i.getUserName()==null)){
-					ps.setString(1, i.getUserName());
-					ps.setString(2, i.getFileName());
+				con=ConnectionFactory.getConnection();
+				String query="SELECT userName,fileName,sharedUserName FROM [sharedTable] WHERE fileName=? AND userName=? AND sharedUserName=?";
+				ps=con.prepareStatement(query);
+				if(!(i.getUserName()==null || i.getFileName()==null || i.getSharedUserName()==null )){
+					ps.setString(1, i.getFileName());
+					ps.setString(2, i.getUserName());
 					ps.setString(3, i.getSharedUserName());
-					ps.addBatch();
+					rs=ps.executeQuery();
+					if(rs.next()){
+						continue;
+					}
+					else{
+						con1=ConnectionFactory.getConnection();
+						String query1="INSERT INTO [sharedTable] VALUES (?,?,?)";
+						ps1=con1.prepareStatement(query1);
+						ps1.setString(1, i.getUserName());
+						ps1.setString(2, i.getFileName());
+						ps1.setString(3, i.getSharedUserName());
+						ps1.addBatch();
+					}
+					ps1.executeBatch();
 				}
 			}
-			ps.executeBatch();
 		}
 		catch(Exception e){
 			e.printStackTrace();
 			throw new SQLException();
 		}
 		finally {
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
 			if (ps != null) try { ps.close(); } catch(Exception e) {}
 			if (con != null) try { con.close(); } catch(Exception e) {}
+			if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+			if (con1 != null) try { con1.close(); } catch(Exception e) {}
 		}
 	}
+
 	/**
 	 * Method Name: updateVersionForDelete
 	 * Method is used to when a delete operation happens. It actually makes the version 
