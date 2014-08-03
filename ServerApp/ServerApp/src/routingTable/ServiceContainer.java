@@ -141,8 +141,7 @@ public class ServiceContainer {
 			for(RoutingTable routingTable:containerList){
 				boolean flag=false;
 				for(RoutingTable routingTable2:completeListFromRoutingTable){
-					if(routingTable2.getFileName().equalsIgnoreCase(routingTable.getFileName()) && routingTable2.getServerName().equalsIgnoreCase(routingTable.getServerName()) 
-							&& routingTable2.getUserName().equalsIgnoreCase(routingTable.getUserName()) && routingTable2.getVersion()==routingTable.getVersion()){
+					if(routingTable2.getFileName().equalsIgnoreCase(routingTable.getFileName()) && routingTable2.getUserName().equalsIgnoreCase(routingTable.getUserName()) && routingTable2.getVersion()==routingTable.getVersion()){
 						flag=true;
 						break;
 					}
@@ -252,11 +251,10 @@ public class ServiceContainer {
 		try{
 			for(RoutingTable i:missingList){
 				con=ConnectionFactory.getConnection();
-				String query="SELECT userName,fileName,serverName,version FROM [routingTable] WHERE fileName=? AND userName=? AND serverName=?";
+				String query="SELECT userName,fileName,serverName,version FROM [routingTable] WHERE fileName=? AND userName=? ";
 				ps=con.prepareStatement(query);
 				ps.setString(1, i.getFileName());
 				ps.setString(2, i.getUserName());
-				ps.setString(3, i.getServerName());
 				rs=ps.executeQuery();
 				if(rs.next()){
 					updateRoutingTableVersion(i);
