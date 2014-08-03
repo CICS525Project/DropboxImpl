@@ -188,4 +188,19 @@ public class ServiceServer implements ServiceServerInterface {
 		
 	}
 
+	@Override
+	public ArrayList<String> getAllSharedFilesForUser(String userName)
+			throws RemoteException {
+		// TODO Auto-generated method stu
+		ServiceContainer serviceContainer = new ServiceContainer();
+		try {
+			return serviceContainer.getAllSharedFilesForUser(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
 }

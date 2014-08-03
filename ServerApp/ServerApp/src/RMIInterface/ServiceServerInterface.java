@@ -1,5 +1,6 @@
 package RMIInterface;
 import java.rmi.*;
+import java.sql.SQLException;
 import java.util.*;
 /**
  * Interface to implement RMI between Client and Service Server
@@ -68,4 +69,12 @@ public interface ServiceServerInterface extends Remote {
 	 * @throws RemoteException
 	 */
 	void deleteFile(String user, String file) throws RemoteException;
+	
+	/**
+	 * method to obtain shared filed of current user
+	 * @param userName caller login username
+	 * @return arraylist of files shared by that user
+	 * @throws RemoteException
+	 */
+	ArrayList<String> getAllSharedFilesForUser(String userName)throws RemoteException;
 }

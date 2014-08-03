@@ -424,5 +424,41 @@ public class ServiceContainer {
 				if (con3 != null) try { con3.close(); } catch(Exception e) {}
 			}
 		}
+		/**
+		 * Method Name: getAllSharedFilesForUser
+		 * Used to retrieve the List of Files associated with a particular UserName
+		 * Includes both the Owned Files and Shared by files
+		 * @param userName
+		 * @return result
+		 * @throws SQLException
+		 */
+		public ArrayList<String> getAllSharedFilesForUser(String userName)throws SQLException{
+			Connection con = null;
+			PreparedStatement ps=null;
+			ResultSet rs=null;
+			ArrayList<String> result=new ArrayList<String>();
+			try{
+				con=ConnectionFactory.getConnection();
+				String query="SELECT fileName FROM [sharedTable] WHERE sharedUserName=? OR userName=?";
+				ps=con.prepareStatement(query);
+				ps.setString(1, userName);
+				ps.setString(2, userName);
+				rs=ps.executeQuery();
+				while(rs.next()){
+					result.add(rs.getString("fileName"));
+				}
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				throw new SQLException();
+			}
+			finally {
+
+				if (ps != null) try { ps.close(); } catch(Exception e) {}
+				if (con != null) try { con.close(); } catch(Exception e) {}
+				if (rs != null) try { rs.close(); } catch(Exception e) {}
+			}
+			return result;
+		}
 }
 
