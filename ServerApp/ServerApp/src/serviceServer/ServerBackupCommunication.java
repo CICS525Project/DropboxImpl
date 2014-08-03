@@ -26,10 +26,10 @@ public class ServerBackupCommunication {
 
 	// ServiceContainer serviceContainer = new ServiceContainer();
 	// ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
-	public static final String backup1StorageConnectionString = "DefaultEndpointsProtocol=http;"
-			+ "AccountName=cics525group6;AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
-	public static final String backup2StorageConnectionString = "DefaultEndpointsProtocol=http;"
-			+ "AccountName=portalvhdsx4hlg0ss7c0mj;AccountKey=Jvwx3oWQ+vnJV+O88panubHMI72jgITFC2CqjSk1hCU32dvJeGvgEAEMTcicdgIbicqnn0aE7W9a5R7MWo0vgg==";
+//	public static final String backup1StorageConnectionString = "DefaultEndpointsProtocol=http;"
+//			+ "AccountName=cics525group6;AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
+//	public static final String backup2StorageConnectionString = "DefaultEndpointsProtocol=http;"
+//			+ "AccountName=portalvhdsx4hlg0ss7c0mj;AccountKey=Jvwx3oWQ+vnJV+O88panubHMI72jgITFC2CqjSk1hCU32dvJeGvgEAEMTcicdgIbicqnn0aE7W9a5R7MWo0vgg==";
 
 	/**
 	 * method that download files from the service container to the local virtual machine in order to upload them later
@@ -86,9 +86,9 @@ public class ServerBackupCommunication {
 		try {
 			// Retrieve service storage account
 			CloudStorageAccount storageAccount1 = CloudStorageAccount
-					.parse(backup1StorageConnectionString);
+					.parse(Constants.backup1StorageConnectionString);
 			CloudStorageAccount storageAccount2 = CloudStorageAccount
-					.parse(backup2StorageConnectionString);
+					.parse(Constants.backup2StorageConnectionString);
 
 			// Create the blob client.
 			CloudBlobClient blobClient1 = storageAccount1.createCloudBlobClient();

@@ -1,11 +1,17 @@
 package serviceServer;
 
+import java.awt.Container;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.*;
+
+import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
+import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
+import com.microsoft.windowsazure.services.blob.client.CloudBlockBlob;
+import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 
 import utils.Constants;
 import routingTable.DBConnection;
@@ -191,7 +197,47 @@ public class ServiceServer implements ServiceServerInterface {
 		try {
 			serviceContainer.updateVersionForDelete(user,file);
 			System.out.println("Done updating RT with version to -1 in file " + file + " ,user " + user);
-		} catch (SQLException e) {
+			
+			// delete file from backup containers
+			
+			// Retrieve service storage account
+			CloudStorageAccount storageAccount1 = CloudStorageAccount
+					.parse(Constants.backup1StorageConnectionString);
+			CloudStorageAccount storageAccount2 = CloudStorageAccount
+					.parse(Constants.backup2StorageConnectionString);
+
+			// Create the blob client.
+			CloudBlobClient blobClient1 = storageAccount1
+					.createCloudBlobClient();
+			CloudBlobClient blobClient2 = storageAccount2
+					.createCloudBlobClient();
+
+			// Get a reference to a container.
+			// The container name must be lower case
+			CloudBlobContainer container1 = blobClient1
+					.getContainerReference("backup1");
+			CloudBlobContainer container2 = blobClient2
+					.getContainerReference("backup2");
+			
+			// deleting blob1
+			CloudBlockBlob toRemove = container1.getBlockBlobReference(file);
+			toRemove.downloadAttributes();
+			if (toRemove.getMetadata().get("name").equals(user))
+			{
+				toRemove.deleteIfExists();
+				toRemove = null;
+				System.out.println("File " + toRemove.getName() + " deleted from " + container1.getName());
+			}
+			// deleting blob2
+			toRemove = container2.getBlockBlobReference(file);
+			toRemove.downloadAttributes();
+			if (toRemove.getMetadata().get("name").equals(user))
+			{
+				toRemove.deleteIfExists();
+				System.out.println("File " + toRemove.getName() + " deleted from " + container2.getName());
+			}
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error deleting entry. Failed to update version as -1");
 		}
