@@ -55,7 +55,8 @@ public class SyncThread implements Runnable {
 			
 			System.out.println("Comparing routing table with data from server " + address);
 			if(!missMatch.isEmpty()){
-				container.insertMissingInRoutingTable(missMatch);
+				//container.insertMissingInRoutingTable(missMatch);
+				container.updateRTComplete(missMatch);
 				System.out.println("RT updated with data from " + address);
 			}
 			if(!sharedmissMatch.isEmpty()){

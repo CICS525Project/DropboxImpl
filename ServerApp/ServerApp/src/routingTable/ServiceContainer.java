@@ -278,7 +278,7 @@ public class ServiceContainer {
 			for(RoutingTable routingTable2:firstList){
 				if(routingTable2.getFileName().equalsIgnoreCase(routingTable.getFileName()) && routingTable2.getServerName().equalsIgnoreCase(routingTable.getServerName()) 
 						&& routingTable2.getUserName().equalsIgnoreCase(routingTable.getUserName()) ){
-					if(routingTable2.getVersion()==routingTable.getVersion() || routingTable2.getVersion()>routingTable.getVersion()){
+					if(routingTable2.getVersion()==routingTable.getVersion() || (routingTable2.getVersion()==-1 && routingTable.getVersion()>0) ||(routingTable.getVersion()!=-1 && routingTable2.getVersion()>routingTable.getVersion())){
 					flag=true;
 					break;
 					}

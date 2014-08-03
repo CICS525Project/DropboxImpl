@@ -3,8 +3,11 @@ package serviceServer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,6 +36,10 @@ public class ServerBackupCommunication {
 	 * @param files receives an arraylist of files to be downloaded based on the mismatches found between container and routing table
 	 */
 	public void downloadMissMatch(ArrayList<RoutingTable> files) {
+		
+		// create temp folder
+		new File("C:\\cloudboxTemp").mkdir();
+		
 		try {
 			// Retrieve service storage account
 			CloudStorageAccount storageAccount = CloudStorageAccount
@@ -54,14 +61,13 @@ public class ServerBackupCommunication {
 				
 				if (blob.getMetadata().get("name").equals(file.getUserName())
 						&& blob.getMetadata().get("version").equals(Integer.toString(file.getVersion()))) {
-					blob.download(new FileOutputStream("C:\\cloudboxTemp\\"	+ blob.getName()));
+					FileOutputStream fos = new FileOutputStream("C:\\cloudboxTemp\\"	+ blob.getName());
+					blob.download(fos);
 					System.out.println("file " + blob.getName() + "downloaded to temp folder");
+					fos.close();
 				}
 				else {
 					System.out.println(blob.getName()+ " File fetch failed!");
-//					System.out.println(blob.getName());
-//					System.out.println("blob " +blob.getMetadata().get("name")+ " - file " + file.getUserName() );
-//					System.out.println("blob " +blob.getMetadata().get("version")+ " - file " + Integer.toString(file.getVersion()));
 				}
 			}
 
@@ -110,10 +116,12 @@ public class ServerBackupCommunication {
 			    blob1.setMetadata(metadata);
 			    blob2.setMetadata(metadata);
 			    File source = new File(filePath);
-			    blob1.upload(new FileInputStream(source), source.length());
+			    FileInputStream fis = new FileInputStream(source);
+			    blob1.upload(fis, source.length());
 			    System.out.println("file " + blob1.getName() + "uploaded to backup1");
-			    blob2.upload(new FileInputStream(source), source.length());
+			    blob2.upload(fis, source.length());
 			    System.out.println("file " + blob2.getName() + "uploaded to backup2");
+			    fis.close();
 		    }
 
 		    
@@ -135,17 +143,15 @@ public class ServerBackupCommunication {
 		try {
 			for (RoutingTable file : files) {
 		    	filePath = "C:\\cloudboxTemp\\" + file.getFileName();
-		    	
-			    File source = new File(filePath);
-			    source.delete();
-			    System.out.println(filePath + "deleted");
+
+			    Path tar=Paths.get(filePath);
+			    Files.delete(tar);
+			    System.out.println(filePath + " deleted");
 		    }
+			
 		} catch (Exception e) {
 			System.out.println("Error removing files from temp folder");
 			e.printStackTrace();
 		}
-		
-	    
-		
 	}
 }	
