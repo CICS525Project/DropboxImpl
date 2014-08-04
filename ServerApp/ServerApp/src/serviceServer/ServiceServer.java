@@ -180,6 +180,10 @@ public class ServiceServer implements ServiceServerInterface {
 		
 		try {
 			if (!missMatch.isEmpty()) {
+				
+				for (RoutingTable r : missMatch) {
+					System.out.println("************Missmatch element " + r.getFileName() + "version " + r.getVersion() + "owner " + r.getUserName());
+				}
 //				System.out.println("Miss Match "+missMatch.get(0).getVersion());
 				serviceContainer.updateRTComplete(missMatch);
 				System.out.println("New files added/modified in container " + Constants.CONTAINER);

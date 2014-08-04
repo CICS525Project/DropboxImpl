@@ -89,7 +89,7 @@ public class ServiceContainer {
 			 * and map them to Routing Table Objects and add to the completeListFromRoutingTable List
 			 */
 			DBConnection connection=new DBConnection();
-			completeListFromRoutingTable=connection.getAllFromRoutingTable(serverName);
+			completeListFromRoutingTable=connection.getAllFromRoutingTable();
 			/*
 			 * This loop is used to check with the List in the Container
 			 * and map them to Routing Table Objects and add to the Container List
