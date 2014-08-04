@@ -52,8 +52,8 @@ public class FolderWatch implements Runnable {
 					WatchEvent<Path> e = (WatchEvent<Path>) event;
 					Path fileName = e.context();
 					String fn = fileName.toString();
-					if (fn.startsWith(".DS")) {
-						System.out.println(".ds checked");
+					if (fn.startsWith(".DS") || fn.startsWith("~")) {
+						System.out.println(".ds and ~ checked");
 						continue;
 					} else if (fn.equals("file.xml")) {
 						System.out.println("xml checked");

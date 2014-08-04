@@ -100,6 +100,7 @@ public class UploadFile implements Runnable {
 				if (blobItem instanceof CloudBlob) {
 					CloudBlob blob = (CloudBlob) blobItem;
 					if (fileName.equals(blob.getName())) {
+						System.out.println("upload exist file: " + fileName + " version " + localMeta.get(fileName));
 						CloudBlockBlob blob1 = container.getBlockBlobReference(fileName);
 						blob.downloadAttributes();
 						HashMap<String, String> res = blob.getMetadata();
@@ -119,14 +120,15 @@ public class UploadFile implements Runnable {
 
 			// if blob not already exist
 			if (!blobExistFlag) {
+				System.out.println("upload not remote exist file: " + fileName + " version " + localMeta.get(fileName));
 				CloudBlockBlob blob = container.getBlockBlobReference(fileName);
+				meta.put("name", SessionInfo.getInstance().getUsername());
+				meta.put("version", localMeta.get(fileName));
+				blob.setMetadata(meta);
 				File source = new File(upPath);
 				FileInputStream fin = new FileInputStream(source);
 				blob.upload(fin, source.length());
 				fin.close();
-				meta.put("name", SessionInfo.getInstance().getUsername());
-				meta.put("version", localMeta.get(fileName));
-				blob.setMetadata(meta);
 				blob.uploadMetadata();
 			}
 			System.out.println("File is been uploaded");
