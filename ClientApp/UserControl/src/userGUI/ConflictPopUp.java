@@ -57,13 +57,11 @@ public class ConflictPopUp extends JFrame {
 					OperationQueue.getInstance().remiveUploadAddUpload(filen);
 				}
 				new UploadFile();
-				for (Frame frame : Frame.getFrames()) {
-					if (frame.isActive()) {
-						WindowEvent windowClosing = new WindowEvent(frame,
-								WindowEvent.WINDOW_CLOSING);
-						frame.dispatchEvent(windowClosing);
-					}
-				}
+				Container frame = upDate.getParent();
+				do {
+					frame = frame.getParent();
+				} while (!(frame instanceof JFrame));
+				((JFrame) frame).hide();
 			}
 		});
 		
@@ -89,13 +87,11 @@ public class ConflictPopUp extends JFrame {
 					OperationQueue.getInstance().removeDownAddDown(filen);
 				}
 				new DownloadFile();
-				for (Frame frame : Frame.getFrames()) {
-					if (frame.isActive()) {
-						WindowEvent windowClosing = new WindowEvent(frame,
-								WindowEvent.WINDOW_CLOSING);
-						frame.dispatchEvent(windowClosing);
-					}
-				}
+				Container frame = downLoad.getParent();
+				do {
+					frame = frame.getParent();
+				} while (!(frame instanceof JFrame));
+				((JFrame) frame).hide();
 			}
 		});
 		
@@ -109,14 +105,17 @@ public class ConflictPopUp extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				
-				for (Frame frame : Frame.getFrames()) {
-					if (frame.isActive()) {
-						/**need do something here**/
-						WindowEvent windowClosing = new WindowEvent(frame,
-								WindowEvent.WINDOW_CLOSING);
-						frame.dispatchEvent(windowClosing);
-					}
+				if(UploadFile.uploader == null){
+					new UploadFile();
 				}
+				if(DownloadFile.downloader == null){
+					new DownloadFile();
+				}
+				Container frame = cancel.getParent();
+				do {
+					frame = frame.getParent();
+				} while (!(frame instanceof JFrame));
+				((JFrame) frame).hide();
 			}
 		});
 		
@@ -130,25 +129,21 @@ public class ConflictPopUp extends JFrame {
 		if(i == 2){
 			warnMsg = "The file is already in the download task queue.";
 			cancel.setText("OK");
-//			downLoad.setLocation(50, 237);
 			cancel.setLocation(150, 237);
-//			contentPane.add(downLoad);
 			contentPane.add(cancel);
 		}
 		//if upload conflict with a existing upload action
 		if(i == 3){
 			warnMsg = "the file is already in the upload task queue.";
 			cancel.setText("OK");
-//			upDate.setLocation(50, 237);
 			cancel.setLocation(150, 237);
-//			contentPane.add(upDate);
 			contentPane.add(cancel);
 		}
 		warnTx = new JLabel();
 		warnTx.setLocation(42, 124);
 		warnTx.setSize(300, 50);
 		warnTx.setText(warnMsg);
-		warnTx.setFont(new Font("STKaiti", Font.PLAIN, 20));
+		warnTx.setFont(new Font("STKaiti", Font.PLAIN, 15));
 		contentPane.add(warnTx);
 
 		titleJLabel = new JLabel();
@@ -165,7 +160,7 @@ public class ConflictPopUp extends JFrame {
 		setResizable(true);
 
 	}
-	public static void main(String args[]) {
-		new ConflictPopUp("Test",3, "1");
-	}
+//	public static void main(String args[]) {
+//		new ConflictPopUp("Test",3, "1");
+//	}
 }

@@ -22,7 +22,7 @@ import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 public class UploadFile implements Runnable {
 
 	private OperationQueue optQ;
-	private static Thread uploader;
+	public static Thread uploader;
 	private ToolTip myTip;
 
 	public UploadFile() {

@@ -19,7 +19,7 @@ import userMetaData.ClientMetaData;
 public class DownloadFile implements Runnable {
 
 	private OperationQueue opt;
-	private volatile static Thread downloader;
+	public volatile static Thread downloader;
 	private ToolTip myTip;
 
 	public DownloadFile() {

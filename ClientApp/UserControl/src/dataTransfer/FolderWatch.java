@@ -68,22 +68,18 @@ public class FolderWatch implements Runnable {
 									.getServerVersion(SessionInfo.getInstance()
 											.getUsername());
 							if (!remoteFiles.containsKey(fn)) {
+								System.out.println("On create remote does not have file: " + fn);
 								cmd.addToXML(fn, SessionInfo.getInstance()
 										.getWorkFolder());
-								OperationQueue.getInstance().add(
-										fn,
-										OperationQueue.getInstance()
-												.getUploadQueue());
+								fopt.uploadFileControl(fn);
 							} else {
 								// if file is deleted and user uploads it again,
 								// need to set version as 1
 								if (cmd.compareLcalandRmtVersion(fn) == 1) {
+									System.out.println("On create remote have smaller version");
 									cmd.addToXML(fn, SessionInfo.getInstance()
 											.getWorkFolder());
-									OperationQueue.getInstance().add(
-											fn,
-											OperationQueue.getInstance()
-													.getUploadQueue());
+									fopt.uploadFileControl(fn);
 								}
 							}
 						}
@@ -108,8 +104,6 @@ public class FolderWatch implements Runnable {
 										.getInstance().getWorkFolder());
 								fopt.uploadFileControl(fn);
 							}
-//							if (cmd.compareLcalandRmtVersion(fn) != 0) {				
-//							}
 						}
 						if (kind.name().equals("ENTRY_DELETE")) {
 							/**

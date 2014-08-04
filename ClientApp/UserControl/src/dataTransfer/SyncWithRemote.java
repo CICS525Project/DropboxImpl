@@ -40,7 +40,10 @@ public class SyncWithRemote implements Runnable {
 			{
 				if (!localFile.contains(key)) {
 					System.out.println("File: " + key + " is shared to me.");
-					OperationQueue.getInstance().add(key, OperationQueue.getInstance().getDownloadQueue());
+					if (!OperationQueue.getInstance().getDownloadQueue().contains(key)) {
+						fopt.downLoadFileControl(key);
+					}
+//					OperationQueue.getInstance().add(key, OperationQueue.getInstance().getDownloadQueue());
 				}
 			}
 		} catch (RemoteException e) {
@@ -77,6 +80,12 @@ public class SyncWithRemote implements Runnable {
 					String filePath = SessionInfo.getInstance().getWorkFolder() + File.separator + fn;
 					if(remoteVersion == -1){
 						System.out.println("Detect file deleted.");
+						if(OperationQueue.getInstance().getDownloadQueue().contains(fn)){
+							OperationQueue.getInstance().getDownloadQueue().remove(fn);
+						}
+						if(OperationQueue.getInstance().getUploadQueue().contains(fn)){
+							OperationQueue.getInstance().getUploadQueue().remove(fn);
+						}
 						fopt.deleteFileInFoler(filePath);
 						ArrayList<String> f = new ArrayList<String>();
 						//according remote, deleting local and remove local meta data
@@ -84,9 +93,13 @@ public class SyncWithRemote implements Runnable {
 						cmd.removeRecord(filePath, f);
 					}
 					if(remoteVersion > localVersionInt){
-						System.out.println("Detect file changed.");
+						System.out.println("Detect file with higher version in remote --- download it.");
 						//download if remote version is greater than the local version
-						OperationQueue.getInstance().add(fn, OperationQueue.getInstance().getDownloadQueue());
+						if(!OperationQueue.getInstance().getDownloadQueue().contains(fn))
+						{
+							fopt.downLoadFileControl(fn);
+						}
+//						OperationQueue.getInstance().add(fn, OperationQueue.getInstance().getDownloadQueue());
 					}
 					//upload will be operated on file creating
 				}

@@ -153,17 +153,19 @@ public class FileOptHelper {
 								.get(fname));
 						if (remoteFileAndVersion.get(fname) > localVersion) {
 							System.out.println("detect file " + fname + "has higher version.");
-							OperationQueue.getInstance().add(
-									fname,
-									OperationQueue.getInstance()
-											.getDownloadQueue());
+//							OperationQueue.getInstance().add(
+//									fname,
+//									OperationQueue.getInstance()
+//											.getDownloadQueue());
+							downLoadFileControl(fname);
 						}
 					}
 				}
 			} else {
 				// new added just download
-				OperationQueue.getInstance().add(fname,
-						OperationQueue.getInstance().getDownloadQueue());
+//				OperationQueue.getInstance().add(fname,
+//						OperationQueue.getInstance().getDownloadQueue());
+				downLoadFileControl(fname);
 			}
 		}
 	}
@@ -230,14 +232,16 @@ public class FileOptHelper {
 					// add file in upload queue
 					// else do nothing
 					if (remoteFileAndVersion.get(fname) < localVersion) {
-						OperationQueue.getInstance().add(fname,
-								OperationQueue.getInstance().getUploadQueue());
+						uploadFileControl(fname);
+//						OperationQueue.getInstance().add(fname,
+//								OperationQueue.getInstance().getUploadQueue());
 					}
 				}
 			} else {
 				// just upload file
-				OperationQueue.getInstance().add(fname,
-						OperationQueue.getInstance().getUploadQueue());
+				uploadFileControl(fname);
+//				OperationQueue.getInstance().add(fname,
+//						OperationQueue.getInstance().getUploadQueue());
 				// should be files add when client is off line
 				// create meta data in xml file
 				cmd.addToXML(fname, dir);
