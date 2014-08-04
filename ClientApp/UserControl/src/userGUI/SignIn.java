@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import org.w3c.dom.DOMException;
 
 import userMetaData.ClientMetaData;
-
 import dataTransfer.*;
 
 import java.awt.event.ActionListener;
@@ -143,7 +142,8 @@ public class SignIn extends JFrame {
 												.getUploadQueue().size());
 								/******** start upload thread ********/
 								new UploadFile();
-
+								/**start polling information from server side**/
+								new SyncWithRemote();
 								/** close login window **/
 								Container frame = btnSignin.getParent();
 								do {
@@ -165,11 +165,11 @@ public class SignIn extends JFrame {
 				}
 			}
 		});
-		btnSignin.setBounds(181, 173, 92, 23);
+		btnSignin.setBounds(110, 173, 92, 28);
 		contentPane.add(btnSignin);
 
 		JButton btnSignup = new JButton("SignUp");
-		btnSignup.setBounds(283, 173, 92, 23);
+		btnSignup.setBounds(250, 173, 92, 28);
 		contentPane.add(btnSignup);
 
 		btnSignup.addActionListener(new ActionListener() {

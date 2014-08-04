@@ -22,7 +22,7 @@ public class SyncWithRemote implements Runnable {
 	public SyncWithRemote() {
 		try {
 			fopt = new FileOptHelper();
-			uopt = new UserOperate(SessionInfo.getInstance().getUsername(), SessionInfo.getInstance().getPortNum());
+			uopt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(), SessionInfo.getInstance().getPortNum());
 			cmd = new ClientMetaData();
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
