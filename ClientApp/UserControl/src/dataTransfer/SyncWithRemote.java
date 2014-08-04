@@ -35,17 +35,14 @@ public class SyncWithRemote implements Runnable {
 			this.serviceProvider = (ServiceServerInterface) registry
 					.lookup("cloudboxRMI");
 			HashMap<String, Integer> remoteFileAccess = serviceProvider.getCurrentFiles(SessionInfo.getInstance().getUsername());
-			ArrayList<String> remoteFile = (ArrayList<String>) remoteFileAccess.keySet();
 			ArrayList<String> localFile = fopt.getFileInFolder(SessionInfo.getInstance().getWorkFolder());
-			for(String file : remoteFile){
-				//if local file does not have file in remote
-				//means this file is just shared from others
-				System.out.println("File: " + file + " is shared to me.");
-				if(!localFile.contains(file)){
-					OperationQueue.getInstance().add(file, OperationQueue.getInstance().getDownloadQueue());
+			for(String key : remoteFileAccess.keySet())
+			{
+				if (!localFile.contains(key)) {
+					System.out.println("File: " + key + " is shared to me.");
+					OperationQueue.getInstance().add(key, OperationQueue.getInstance().getDownloadQueue());
 				}
 			}
-			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
