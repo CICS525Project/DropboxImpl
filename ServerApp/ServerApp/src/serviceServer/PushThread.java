@@ -41,7 +41,7 @@ public class PushThread implements Runnable {
 			server = (ServerServerComInterface) registry
 					.lookup("serverServerRMI");
 
-			System.out.println("Updating RT/ST on server " + address);
+			System.out.println("Updating RT on server " + address);
 			server.updateTable(missMatch);
 
 //			System.out.println("Updating UT on server " + address);

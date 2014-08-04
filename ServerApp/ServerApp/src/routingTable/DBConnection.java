@@ -135,10 +135,13 @@ public class DBConnection {
 			Iterator i=set.iterator();
 			while(i.hasNext()){
 				Map.Entry me = (Map.Entry)i.next();
+				ServiceContainer container=new ServiceContainer();
+				if(!container.checkIfFileAlreadyShared(userName, (String)me.getKey(), (String)me.getValue())){
 				ps.setString(1, userName);
 				ps.setString(2, (String)me.getKey());
 				ps.setString(3, (String)me.getValue());
 				ps.addBatch();
+				}
 			}
 			if(ps!=null){
 				ps.executeBatch();
@@ -262,7 +265,7 @@ public class DBConnection {
 		ArrayList<String> result=new ArrayList<String>();
 		try{
 				con=ConnectionFactory.getConnection();
-				String query="SELECT userName FROM [sharedTable] WHERE sharedUserName=?";
+				String query="SELECT fileName FROM [sharedTable] WHERE sharedUserName=?";
 				ps=con.prepareStatement(query);
 				ps.setString(1, userName);
 				rs=ps.executeQuery();
@@ -334,7 +337,7 @@ public class DBConnection {
 			ResultSet rs=null;
 			ResultSet rs1=null;
 			HashMap<String, Integer> result =new HashMap<String, Integer>();
-			ArrayList<String> userShareList=new ArrayList<String>();
+			ArrayList<String> fileShareList=new ArrayList<String>();
 			try{
 				con=ConnectionFactory.getConnection();
 					String query="SELECT fileName,version FROM [routingTable] WHERE userName=?";
@@ -344,12 +347,12 @@ public class DBConnection {
 					while(rs.next()){
 						result.put(rs.getString(1), rs.getInt(2));
 					}
-				userShareList=searchForFileinSharedTable(userName);
+				fileShareList=searchForFileinSharedTable(userName);
 				con1=ConnectionFactory.getConnection();
-				for(String user:userShareList){
-						String query1="SELECT fileName,version FROM [routingTable] WHERE userName=?";
+				for(String fileName:fileShareList){
+						String query1="SELECT fileName,version FROM [routingTable] WHERE fileName=?";
 						ps1=con1.prepareStatement(query1);
-						ps1.setString(1, user);
+						ps1.setString(1, fileName);
 						rs1=ps1.executeQuery();
 						while(rs1.next()){
 							result.put(rs1.getString(1), rs1.getInt(2));

@@ -195,7 +195,9 @@ public class ServiceContainer {
 						ps1.setInt(4, i.getVersion());
 						ps1.addBatch();
 					}
-					ps1.executeBatch();
+					if(ps1 !=null){
+						ps1.executeBatch();
+					}
 				}
 			}
 		}
@@ -363,7 +365,9 @@ public class ServiceContainer {
 						ps1.setString(3, i.getSharedUserName());
 						ps1.addBatch();
 					}
-					ps1.executeBatch();
+					if(ps1 !=null){
+						ps1.executeBatch();
+					}
 				}
 			}
 		}
@@ -595,7 +599,7 @@ public class ServiceContainer {
 		try{
 			for(RoutingTable i:missingList){
 				if(i.getUserName()!=null && i.getFileName()!=null && i.getSharedUserName()!=null  ){
-					if(checkIfFileAlreadyShared(i.getUserName(),i.getFileName(),i.getSharedUserName())){
+					if(!checkIfFileAlreadyShared(i.getUserName(),i.getFileName(),i.getSharedUserName())){
 						con=ConnectionFactory.getConnection();
 						String query="INSERT INTO [sharedTable] VALUES(?,?,?)";
 						ps=con.prepareStatement(query);
@@ -630,7 +634,7 @@ public class ServiceContainer {
 	 * @return result
 	 * @throws SQLException
 	 */
-	private boolean checkIfFileAlreadyShared(String userName,String fileName, String sharedUserName) throws SQLException {
+	public boolean checkIfFileAlreadyShared(String userName,String fileName, String sharedUserName) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps=null;
 		ResultSet rs=null;

@@ -3,11 +3,13 @@
  */
 package authentication;
 
+import java.io.Serializable;
+
 /**
  * @author Jitin
  *
  */
-public class UserInfo {
+public class UserInfo implements Serializable {
 private String userName;
 private String password;
 public String getUserName() {

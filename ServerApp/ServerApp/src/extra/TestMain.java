@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 
 /**
@@ -59,10 +60,14 @@ public class TestMain {
 			
 			// this code will manually upload a file to the container
 			
-			ServiceContainer container=new ServiceContainer();
+			/*ServiceContainer container=new ServiceContainer();
 
 			String filePath="C:\\Users\\DBAdmin\\Desktop\\test\\sample7.txt";
-			container.uploadBlobIntoContainer(filePath, "service1");
+			container.uploadBlobIntoContainer(filePath, "service1");*/
+			HashMap<String, Integer> result=new HashMap<String, Integer>();
+			DBConnection connection=new DBConnection();
+			result=connection.searchForFiles("test");
+			System.out.println(result.toString());
 		}
 		catch(Exception e){
 			e.printStackTrace();

@@ -259,6 +259,9 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
+				/*for(RoutingTable r:sharedMatch){
+					System.out.println("Sharing the file by PUSHING INSIDE PUSH ST  ----"+r.getFileName());
+				}*/
 			st.add(new PushShareThread(address, sharedMatch));
 
 			} catch (Exception e) {

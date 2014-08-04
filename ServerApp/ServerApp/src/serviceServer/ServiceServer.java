@@ -38,6 +38,7 @@ public class ServiceServer implements ServiceServerInterface {
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		Authentication auth = new Authentication();
+		System.out.println("User "+ username + " attemping to log in");
 		return auth.validUser(username, password);
 	}
 
@@ -97,7 +98,7 @@ public class ServiceServer implements ServiceServerInterface {
 		// TODO Auto-generated method stub
 		Authentication auth = new Authentication();
 		auth.createUser(username, password);
-		
+		System.out.println("Account for user: "+ username + " created");
 		mySSCom.pushUT(username, password);
 		return true;
 	}
@@ -147,6 +148,9 @@ public class ServiceServer implements ServiceServerInterface {
 				routingTable.setSharedUserName(fileList.get(key));
 				shared.add(routingTable);
 			}
+			/*for(RoutingTable r:shared){
+				System.out.println("Sharing the file by PUSHING ----"+r.getFileName());
+			}*/
 			mySSCom.pushST(shared);
 			
 		} catch (Exception e) {
@@ -201,9 +205,8 @@ public class ServiceServer implements ServiceServerInterface {
 		ServiceContainer serviceContainer = new ServiceContainer();
 		try {
 			serviceContainer.updateVersionForDelete(user,file);
+			System.out.println("User " + user + " deleted file: " + file);
 			System.out.println("Done updating RT with version to -1 in file " + file + " ,user " + user);
-			
-			
 			// broadcasiting -1 version
 			
 			ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
