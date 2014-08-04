@@ -6,6 +6,8 @@ import java.rmi.registry.Registry;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import authentication.UserInfo;
@@ -29,13 +31,19 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		ss.put("BS2", "cics525group6b2.cloudapp.net");
 
 		// remove itself
-		for(String key : ss.keySet())
+		/*for(String key : ss.keySet())
 		{
 			if (ss.get(key).equals(Constants.HOST)) {
 				ss.remove(key);
 			}
-		}
+		}*/
 		
+	    for(Iterator<Map.Entry<String, String>> it = ss.entrySet().iterator(); it.hasNext(); ) {
+	      Map.Entry<String, String> entry = it.next();
+	      if(entry.getKey().equals(Constants.HOST)) {
+	        it.remove();
+	      }
+	    }
 	}
 
 	// update RT 
