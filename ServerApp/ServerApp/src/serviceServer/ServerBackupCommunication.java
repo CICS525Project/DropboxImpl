@@ -37,6 +37,7 @@ public class ServerBackupCommunication {
 	 */
 	public void downloadMissMatch(ArrayList<RoutingTable> files) {
 		
+		
 		// create temp folder
 		new File("C:\\cloudboxTemp").mkdir();
 		
@@ -83,6 +84,9 @@ public class ServerBackupCommunication {
 	 * @param files
 	 */
 	public void uploadBackup(ArrayList<RoutingTable> files) {
+		
+
+		
 		try {
 			// Retrieve service storage account
 			CloudStorageAccount storageAccount1 = CloudStorageAccount
@@ -137,6 +141,8 @@ public class ServerBackupCommunication {
 	 * @param files routing table array list with list of files to be deleted from local disk
 	 */
 	public void cleanTemp(ArrayList<RoutingTable> files) {
+		
+
 		
 		String filePath = null;
 	    

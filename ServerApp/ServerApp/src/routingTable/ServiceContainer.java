@@ -564,7 +564,9 @@ public class ServiceContainer {
 						ps1.setString(2, i.getPassword());
 						ps1.addBatch();
 					}
-					ps1.executeBatch();
+					if(ps1!=null){
+						ps1.executeBatch();
+					}
 				}
 			}
 		}
@@ -604,7 +606,9 @@ public class ServiceContainer {
 					}
 				}
 			}
-			ps.executeBatch();
+			if(ps!=null){
+				ps.executeBatch();
+			}
 			result=true;
 		}
 		catch(Exception e){
@@ -666,7 +670,7 @@ public class ServiceContainer {
 		PreparedStatement ps=null;
 		try{
 			if((user!=null && pass!=null  ) && 
-					checkUserIfAlreadyExist(user,pass))	{
+					!checkUserIfAlreadyExist(user,pass))	{
 				con=ConnectionFactory.getConnection();
 				String query="INSERT INTO [user] VALUES(?,?)";
 				ps=con.prepareStatement(query);

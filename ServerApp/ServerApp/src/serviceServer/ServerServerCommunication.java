@@ -6,6 +6,7 @@ import java.rmi.registry.Registry;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import authentication.UserInfo;
 import routingTable.DBConnection;
@@ -26,6 +27,15 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		ss.put("SS4", "cics525group6s4.cloudapp.net");
 		ss.put("BS1", "cics525group6.cloudapp.net");
 		ss.put("BS2", "cics525group6b2.cloudapp.net");
+
+		// remove itself
+		for(String key : ss.keySet())
+		{
+			if (ss.get(key).equals(Constants.HOST)) {
+				ss.remove(key);
+			}
+		}
+		
 	}
 
 	// update RT 

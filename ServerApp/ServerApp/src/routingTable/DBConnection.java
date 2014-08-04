@@ -55,7 +55,9 @@ public class DBConnection {
 				ps.setInt(4, (int)me.getValue());
 				ps.addBatch();
 			}
-			ps.executeBatch();
+			if(ps!=null){
+				ps.executeBatch();
+			}
 			result="success";
 		}
 		catch(Exception e){
@@ -96,7 +98,9 @@ public class DBConnection {
 				ps.setString(4, serverName);
 				ps.addBatch();
 			}
-			ps.executeBatch();
+			if(ps!=null){
+				ps.executeBatch();
+			}
 			result="success";
 		}
 		catch(Exception e){
@@ -136,7 +140,9 @@ public class DBConnection {
 				ps.setString(3, (String)me.getValue());
 				ps.addBatch();
 			}
-			ps.executeBatch();
+			if(ps!=null){
+				ps.executeBatch();
+			}
 			result="success";
 		}
 		catch(Exception e){

@@ -174,7 +174,7 @@ public class ServiceServer implements ServiceServerInterface {
 				Constants.HOST);
 		try {
 			if (!missMatch.isEmpty()) {
-				System.out.println("Miss Match "+missMatch.toString());
+//				System.out.println("Miss Match "+missMatch.get(0).getVersion());
 				serviceContainer.updateRTComplete(missMatch);
 				System.out.println("New files added/modified in container " + Constants.CONTAINER);
 				mySSCom.pushRT(missMatch);
