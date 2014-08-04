@@ -24,6 +24,7 @@ public class UploadFile implements Runnable {
 	private OperationQueue optQ;
 	private static Thread uploader;
 	private ToolTip myTip;
+
 	public UploadFile() {
 		optQ = OperationQueue.getInstance();
 		myTip = new ToolTip();
@@ -35,7 +36,7 @@ public class UploadFile implements Runnable {
 	 * Upload file to the queue
 	 * 
 	 */
-	public void uploadImpl() throws IOException{
+	public void uploadImpl() throws IOException {
 		Thread thisThread = Thread.currentThread();
 		while (uploader == thisThread) {
 			if (optQ.peekUp() != null) {
@@ -45,14 +46,13 @@ public class UploadFile implements Runnable {
 		}
 	}
 
-	
-	//start thread
-	public void start(){
+	// start thread
+	public void start() {
 		System.out.println("Uploader  running....");
 		uploader.start();
 	}
 
-	//Stop the thread
+	// Stop the thread
 	public static void stop() {
 		uploader = null;
 	}
@@ -61,61 +61,64 @@ public class UploadFile implements Runnable {
 	 * 
 	 * @param fileName
 	 */
-	public void uploadFile(String fileName){
+	public void uploadFile(String fileName) {
 		boolean blobExistFlag = false;
-		//System.out.println("upload queue size is: " + OperationQueue.getInstance().getUploadQueue().size());
+		// System.out.println("upload queue size is: " +
+		// OperationQueue.getInstance().getUploadQueue().size());
 		String spliter = File.separator;
 		String workSpace = SessionInfo.getInstance().getWorkFolder();
-		String upPath  = workSpace + File.separator + fileName;
+		String upPath = workSpace + File.separator + fileName;
 		String fileRemoteDNS;
-		//System.out.println("uploading filename is " + upPath);
+		// System.out.println("uploading filename is " + upPath);
 		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
-					.getRemoteDNS(), 12345);
-		if(uopt.getOneFileAddress(fileName)==null){
+				.getRemoteDNS(), 12345);
+		if (uopt.getOneFileAddress(fileName) == null) {
 			fileRemoteDNS = SessionInfo.getInstance().getRemoteDNS();
-		}else{
+		} else {
 			fileRemoteDNS = uopt.getOneFileAddress(fileName);
 		}
-		//System.out.println("Upload file DNS is : " + fileRemoteDNS);
+		// System.out.println("Upload file DNS is : " + fileRemoteDNS);
 		FileOptHelper fopt = new FileOptHelper();
 		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, 12345);
 		String fileContainerString = fileDNSOPT.fileContainer();
 		String[] part = fileContainerString.split(",");
 		CloudStorageAccount storageAccount;
-		try{
+		try {
 			ClientMetaData cmd = new ClientMetaData();
-			HashMap<String, String> localMeta = cmd.readXML(workSpace, fopt.getFileInFolder(workSpace));
+			HashMap<String, String> localMeta = cmd.readXML(workSpace,
+					fopt.getFileInFolder(workSpace));
 			HashMap<String, String> meta = new HashMap<String, String>();
-			
+
 			storageAccount = CloudStorageAccount.parse(part[0]);
 			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
 			String containerName = part[1];
-			//System.out.println("Container name is: " + containerName);
-			CloudBlobContainer container = blobClient.getContainerReference(containerName);
+			// System.out.println("Container name is: " + containerName);
+			CloudBlobContainer container = blobClient
+					.getContainerReference(containerName);
 			container.createIfNotExist();
 			for (ListBlobItem blobItem : container.listBlobs()) {
 				if (blobItem instanceof CloudBlob) {
 					CloudBlob blob = (CloudBlob) blobItem;
-					if(fileName.equals(blob.getName())){
+					if (fileName.equals(blob.getName())) {
+						CloudBlockBlob blob1 = container.getBlockBlobReference(fileName);
 						blob.downloadAttributes();
 						HashMap<String, String> res = blob.getMetadata();
 						meta.put("name", res.get("name"));
 						meta.put("version", localMeta.get(fileName));
-						blob.setMetadata(meta);
-						blob.uploadMetadata();
+						blob1.setMetadata(meta);
 						File source = new File(upPath);
 						FileInputStream fin = new FileInputStream(source);
-						blob.upload(fin, source.length());
+						blob1.upload(fin, source.length());
 						fin.close();
 						blobExistFlag = true;
 						break;
 					}
 				}
 			}
-			/**change remote version number as well**/
+			/** change remote version number as well **/
 
-			//if blob not already exist
-			if(!blobExistFlag){
+			// if blob not already exist
+			if (!blobExistFlag) {
 				CloudBlockBlob blob = container.getBlockBlobReference(fileName);
 				File source = new File(upPath);
 				FileInputStream fin = new FileInputStream(source);
@@ -126,11 +129,10 @@ public class UploadFile implements Runnable {
 				blob.setMetadata(meta);
 				blob.uploadMetadata();
 			}
-			//System.out.println("The metadata for the file: " + fileName +" is " + localMeta.get(fileName));
 			System.out.println("File is been uploaded");
-			myTip.setToolTip(new ImageIcon(ConfigurationData.UP_IMG), "File "+fileName+" is uploaded successfully!");
-		}
-		catch(Exception e){
+			myTip.setToolTip(new ImageIcon(ConfigurationData.UP_IMG), "File "
+					+ fileName + " is uploaded successfully!");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -146,4 +148,3 @@ public class UploadFile implements Runnable {
 		}
 	}
 }
-
