@@ -72,6 +72,12 @@ public class StartServer {
 
 			ServiceServer updateInstance = new ServiceServer();
 			System.out.println("Entering infinite refresh loop... ");
+			
+			// initially synchronize tables
+			ServerServerCommunication mySSCom = new ServerServerCommunication();
+			mySSCom.syncAllTables();
+			
+			// monitor the container permanently
 			while (true) {
 				updateInstance.refreshRT(9999);
 			}

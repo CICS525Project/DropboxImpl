@@ -17,6 +17,7 @@ import utils.Constants;
 import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 import authentication.Authentication;
+import authentication.UserInfo;
 import RMIInterface.ServerServerComInterface;
 import RMIInterface.ServiceServerInterface;
 
@@ -95,7 +96,10 @@ public class ServiceServer implements ServiceServerInterface {
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		Authentication auth = new Authentication();
-		return auth.createUser(username, password);
+		auth.createUser(username, password);
+		
+		mySSCom.pushUT(username, password);
+		return true;
 	}
 
 	@Override
@@ -135,7 +139,17 @@ public class ServiceServer implements ServiceServerInterface {
 		String result=null;
 		try {
 			result = connection.insertRecordforShare(fileList, userName);
-		} catch (SQLException e) {
+			ArrayList<RoutingTable> shared = new ArrayList<RoutingTable>();
+			for (String key : fileList.keySet()) {
+				RoutingTable routingTable=new RoutingTable();
+				routingTable.setUserName(userName);
+				routingTable.setFileName(key);
+				routingTable.setSharedUserName(fileList.get(key));
+				shared.add(routingTable);
+			}
+			mySSCom.pushST(shared);
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -158,15 +172,15 @@ public class ServiceServer implements ServiceServerInterface {
 
 		missMatch = serviceContainer.checkContainerWithRoutingTable(Constants.CONTAINER,
 				Constants.HOST);
-		
-		
-
-//		 temporary code to test update with the current routing table.
-		
 		try {
 			if (!missMatch.isEmpty()) {
 				System.out.println("Miss Match "+missMatch.toString());
 				serviceContainer.updateRTComplete(missMatch);
+				System.out.println("New files added/modified in container " + Constants.CONTAINER);
+				mySSCom.pushRT(missMatch);
+				mySBCom.downloadMissMatch(missMatch);
+				mySBCom.uploadBackup(missMatch);
+				mySBCom.cleanTemp(missMatch);
 			}
 			
 		} catch (SQLException e) {
@@ -174,19 +188,8 @@ public class ServiceServer implements ServiceServerInterface {
 			e.printStackTrace();
 		}
 
-		if (!missMatch.isEmpty()){
-			// Update routing table
-			// mySSCom.broadcastChanges(missMatch);
-			// backing up files
-			System.out.println("New files added/midified in container " + Constants.CONTAINER);
-			mySBCom.downloadMissMatch(missMatch);
-			mySBCom.uploadBackup(missMatch);
-			mySBCom.cleanTemp(missMatch);
-			
-		}
-		
 		// sync local routing table values with values of other remote routing tables
-		mySSCom.syncRT();
+		// mySSCom.syncRT();
 		// mySCCom.sendNotification("jitin", "upload,file1"); // repeat this
 		// notification for every user related to file1
 		
@@ -199,6 +202,18 @@ public class ServiceServer implements ServiceServerInterface {
 		try {
 			serviceContainer.updateVersionForDelete(user,file);
 			System.out.println("Done updating RT with version to -1 in file " + file + " ,user " + user);
+			
+			
+			// broadcasiting -1 version
+			
+			ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
+			RoutingTable routingTable = new RoutingTable();
+			
+			routingTable.setFileName(file);
+			routingTable.setUserName(user);
+			routingTable.setVersion(-1);
+			missMatch.add(routingTable);
+			mySSCom.pushRT(missMatch);
 			
 			// delete file from backup containers
 			

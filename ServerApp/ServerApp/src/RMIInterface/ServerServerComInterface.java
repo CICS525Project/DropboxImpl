@@ -15,11 +15,20 @@ import serviceServer.RoutingTable;
 public interface ServerServerComInterface extends Remote{
 
 	/**
-	 * This method is used to modify the routing table the service server. Is called as RMI from another service server
+	 * This method is used to modify the routing table of other service server. Is called as RMI and invoked remotely on other servers
 	 * @return returns true if successful or false in case of errors
 	 * @throws RemoteException
 	 */
 	boolean updateTable(ArrayList<RoutingTable> missMatch) throws RemoteException;
+	/**
+	 * Method that modifies remotely the contents of user info table
+	 * @param missMatch parameter containing the user information entries to be updated remotely
+	 * @return returns true or false depending on the result of the operation
+	 * @throws RemoteException
+	 */
+	boolean updateUserTable(String user, String pass) throws RemoteException;
+	
+	boolean updateShareTable(ArrayList<RoutingTable> missMatch) throws RemoteException;
 	
 	/**
 	 * Method to obtain routing table values of the current machine
@@ -27,9 +36,17 @@ public interface ServerServerComInterface extends Remote{
 	 * @throws RemoteException
 	 */
 	ArrayList<RoutingTable> getRoutingDetails() throws RemoteException;
-	
+	/**
+	 * 
+	 * @return
+	 * @throws RemoteException
+	 */
 	ArrayList<RoutingTable> getSharedDetails() throws RemoteException;
-	
+	/**
+	 * 
+	 * @return
+	 * @throws RemoteException
+	 */
 	ArrayList<UserInfo> getUserInfo()throws RemoteException;
 	
 }

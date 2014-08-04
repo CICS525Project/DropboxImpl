@@ -115,7 +115,7 @@ public class ServiceContainer {
 
 				containerList.add(routingTable);
 			}
-			
+
 			/*
 			 * This is used to Compare the List in the Routing Table with the Container list
 			 * The FileNames which are not present in the Container and which is
@@ -266,7 +266,7 @@ public class ServiceContainer {
 				}
 			}
 			if(!missingInRoutingTable.isEmpty()){
-			insertMissingInRoutingTable(missingInRoutingTable);
+				insertMissingInRoutingTable(missingInRoutingTable);
 			}
 		}
 		catch(Exception e){
@@ -292,14 +292,10 @@ public class ServiceContainer {
 		for(RoutingTable routingTable:secondList){
 			boolean flag=false;
 			for(RoutingTable routingTable2:firstList){
-				if(routingTable2.getFileName().equalsIgnoreCase(routingTable.getFileName()) && routingTable2.getServerName().equalsIgnoreCase(routingTable.getServerName()) 
-						&& routingTable2.getUserName().equalsIgnoreCase(routingTable.getUserName()) ){
-					if(routingTable2.getVersion()==routingTable.getVersion() || (routingTable2.getVersion()==-1 && routingTable.getVersion()>0) ||(routingTable.getVersion()!=-1 && routingTable2.getVersion()>routingTable.getVersion())){
-					flag=true;
-					break;
-					}
+				if(routingTable2.getFileName().equalsIgnoreCase(routingTable.getFileName()) && routingTable2.getUserName().equalsIgnoreCase(routingTable.getUserName())&& routingTable2.getVersion()==routingTable.getVersion() ){
+						flag=true;
+						break;
 				}
-
 			}
 			if(!flag){
 				result.add(routingTable);
@@ -392,197 +388,337 @@ public class ServiceContainer {
 	 * @param fileName
 	 * @throws SQLException
 	 */
-		public void updateVersionForDelete(String userName,String fileName) throws SQLException {
-			Connection con = null;
-			Connection con1 = null;
-			Connection con2 = null;
-			Connection con3 = null;
-			PreparedStatement ps=null;
-			ResultSet rs=null;
-			PreparedStatement ps1=null;
-			ResultSet rs1=null;
-			PreparedStatement ps2=null;
-			ResultSet rs2=null;
-			PreparedStatement ps3=null;
-			ResultSet rs3=null;
-			try{
-				con=ConnectionFactory.getConnection();
-				String query="SELECT version FROM [routingTable] WHERE userName =? AND fileName=? ";
-				ps=con.prepareStatement(query);
-				ps.setString(1, userName);
-				ps.setString(2, fileName);
-				rs=ps.executeQuery();
-				if(rs.next()){
-					con1=ConnectionFactory.getConnection();
-					String query1="UPDATE [routingTable] SET version= ? WHERE userName =? AND fileName=?";
-					ps1=con1.prepareStatement(query1);
-					ps1.setInt(1, -1);
-					ps1.setString(2, userName);
-					ps1.setString(3, fileName);
-					ps1.executeUpdate();
-				}
-				else{
-					con2=ConnectionFactory.getConnection();
-					String query2="SELECT userName FROM [sharedTable] WHERE sharedUserName =? AND fileName=? ";
-					ps2=con2.prepareStatement(query2);
-					ps2.setString(1, userName);
-					ps2.setString(2, fileName);
-					rs2=ps2.executeQuery();
-					if(rs2.next()){
-						con3=ConnectionFactory.getConnection();
-						String query3="UPDATE [routingTable] SET version= ? WHERE userName =? AND fileName=?";
-						ps3=con3.prepareStatement(query3);
-						ps3.setInt(1, -1);
-						ps3.setString(2, rs2.getString("userName"));
-						ps3.setString(3, fileName);
-						ps3.executeUpdate();
-					}
-				}
-				
+	public void updateVersionForDelete(String userName,String fileName) throws SQLException {
+		Connection con = null;
+		Connection con1 = null;
+		Connection con2 = null;
+		Connection con3 = null;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		PreparedStatement ps1=null;
+		ResultSet rs1=null;
+		PreparedStatement ps2=null;
+		ResultSet rs2=null;
+		PreparedStatement ps3=null;
+		ResultSet rs3=null;
+		try{
+			con=ConnectionFactory.getConnection();
+			String query="SELECT version FROM [routingTable] WHERE userName =? AND fileName=? ";
+			ps=con.prepareStatement(query);
+			ps.setString(1, userName);
+			ps.setString(2, fileName);
+			rs=ps.executeQuery();
+			if(rs.next()){
+				con1=ConnectionFactory.getConnection();
+				String query1="UPDATE [routingTable] SET version= ? WHERE userName =? AND fileName=?";
+				ps1=con1.prepareStatement(query1);
+				ps1.setInt(1, -1);
+				ps1.setString(2, userName);
+				ps1.setString(3, fileName);
+				ps1.executeUpdate();
 			}
-			catch(Exception e){
-				throw new SQLException();
+			else{
+				con2=ConnectionFactory.getConnection();
+				String query2="SELECT userName FROM [sharedTable] WHERE sharedUserName =? AND fileName=? ";
+				ps2=con2.prepareStatement(query2);
+				ps2.setString(1, userName);
+				ps2.setString(2, fileName);
+				rs2=ps2.executeQuery();
+				if(rs2.next()){
+					con3=ConnectionFactory.getConnection();
+					String query3="UPDATE [routingTable] SET version= ? WHERE userName =? AND fileName=?";
+					ps3=con3.prepareStatement(query3);
+					ps3.setInt(1, -1);
+					ps3.setString(2, rs2.getString("userName"));
+					ps3.setString(3, fileName);
+					ps3.executeUpdate();
+				}
 			}
-			finally {
 
-				if (rs != null) try { rs.close(); } catch(Exception e) {}
-				if (ps != null) try { ps.close(); } catch(Exception e) {}
-				if (con != null) try { con.close(); } catch(Exception e) {}
-				if (rs1 != null) try { rs1.close(); } catch(Exception e) {}
-				if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
-				if (con1 != null) try { con1.close(); } catch(Exception e) {}
-				if (rs2 != null) try { rs2.close(); } catch(Exception e) {}
-				if (ps2 != null) try { ps2.close(); } catch(Exception e) {}
-				if (con2 != null) try { con2.close(); } catch(Exception e) {}
-				if (rs3 != null) try { rs3.close(); } catch(Exception e) {}
-				if (ps3 != null) try { ps3.close(); } catch(Exception e) {}
-				if (con3 != null) try { con3.close(); } catch(Exception e) {}
-			}
 		}
-		/**
-		 * Method Name: getAllSharedFilesForUser
-		 * Used to retrieve the List of Files associated with a particular UserName
-		 * Includes both the Owned Files and Shared by files
-		 * @param userName
-		 * @return finalResult
-		 * @throws SQLException
-		 */
-		public HashMap<String, Integer> getAllSharedFilesForUser(String userName)throws SQLException{
-			Connection con = null;
-			PreparedStatement ps=null;
-			ResultSet rs=null;
-			Connection con1 = null;
-			PreparedStatement ps1=null;
-			ResultSet rs1=null;
-			ArrayList<String> result=new ArrayList<String>();
-			HashMap<String, Integer> finalResult=new HashMap<>();
-			try{
-				con=ConnectionFactory.getConnection();
-				String query="SELECT fileName FROM [sharedTable] WHERE sharedUserName=? OR userName=?";
-				ps=con.prepareStatement(query);
-				ps.setString(1, userName);
-				ps.setString(2, userName);
-				rs=ps.executeQuery();
-				while(rs.next()){
-					result.add(rs.getString("fileName"));
-				}
-				for(String s:result){
-					con1=ConnectionFactory.getConnection();
-					String query1="SELECT version FROM [routingTable] WHERE fileName=? AND userName=?";
-					ps1=con.prepareStatement(query1);
-					ps1.setString(1, s);
-					ps1.setString(2, userName);
-					rs1=ps1.executeQuery();
-					while(rs1.next()){
-						finalResult.put(s, rs1.getInt("version"));
-					}
-				}
-			}
-			catch(Exception e){
-				e.printStackTrace();
-				throw new SQLException();
-			}
-			finally {
+		catch(Exception e){
+			throw new SQLException();
+		}
+		finally {
 
-				if (ps != null) try { ps.close(); } catch(Exception e) {}
-				if (con != null) try { con.close(); } catch(Exception e) {}
-				if (rs != null) try { rs.close(); } catch(Exception e) {}
-				if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
-				if (con1 != null) try { con1.close(); } catch(Exception e) {}
-				if (rs1 != null) try { rs1.close(); } catch(Exception e) {}
-			}
-			return finalResult;
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+			if (rs1 != null) try { rs1.close(); } catch(Exception e) {}
+			if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+			if (con1 != null) try { con1.close(); } catch(Exception e) {}
+			if (rs2 != null) try { rs2.close(); } catch(Exception e) {}
+			if (ps2 != null) try { ps2.close(); } catch(Exception e) {}
+			if (con2 != null) try { con2.close(); } catch(Exception e) {}
+			if (rs3 != null) try { rs3.close(); } catch(Exception e) {}
+			if (ps3 != null) try { ps3.close(); } catch(Exception e) {}
+			if (con3 != null) try { con3.close(); } catch(Exception e) {}
 		}
-		
-		/**
-		 * Method Name: compareUserInfo
-		 * Compare if the UserNames are present in the Tables of two servers
-		 * @param firstList
-		 * @param secondList
-		 * @return
-		 */
-		public ArrayList<UserInfo> compareUserInfo(ArrayList<UserInfo> firstList,ArrayList<UserInfo> secondList){
-			ArrayList<UserInfo> result=new ArrayList<UserInfo>();
-			for(UserInfo info1:secondList){
-				boolean flag=false;
-				for(UserInfo info2:firstList){
-					if(info2.getUserName().equalsIgnoreCase(info1.getUserName())){
-						flag=true;
-						break;
+	}
+	/**
+	 * Method Name: getAllSharedFilesForUser
+	 * Used to retrieve the List of Files associated with a particular UserName
+	 * Includes both the Owned Files and Shared by files
+	 * @param userName
+	 * @return finalResult
+	 * @throws SQLException
+	 */
+	public HashMap<String, Integer> getAllSharedFilesForUser(String userName)throws SQLException{
+		Connection con = null;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		Connection con1 = null;
+		PreparedStatement ps1=null;
+		ResultSet rs1=null;
+		ArrayList<String> result=new ArrayList<String>();
+		HashMap<String, Integer> finalResult=new HashMap<>();
+		try{
+			con=ConnectionFactory.getConnection();
+			String query="SELECT fileName FROM [sharedTable] WHERE sharedUserName=? OR userName=?";
+			ps=con.prepareStatement(query);
+			ps.setString(1, userName);
+			ps.setString(2, userName);
+			rs=ps.executeQuery();
+			while(rs.next()){
+				result.add(rs.getString("fileName"));
+			}
+			for(String s:result){
+				con1=ConnectionFactory.getConnection();
+				String query1="SELECT version FROM [routingTable] WHERE fileName=? AND userName=?";
+				ps1=con.prepareStatement(query1);
+				ps1.setString(1, s);
+				ps1.setString(2, userName);
+				rs1=ps1.executeQuery();
+				while(rs1.next()){
+					finalResult.put(s, rs1.getInt("version"));
+				}
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
+		}
+		finally {
+
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
+			if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+			if (con1 != null) try { con1.close(); } catch(Exception e) {}
+			if (rs1 != null) try { rs1.close(); } catch(Exception e) {}
+		}
+		return finalResult;
+	}
+
+	/**
+	 * Method Name: compareUserInfo
+	 * Compare if the UserNames are present in the Tables of two servers
+	 * @param firstList
+	 * @param secondList
+	 * @return
+	 */
+	public ArrayList<UserInfo> compareUserInfo(ArrayList<UserInfo> firstList,ArrayList<UserInfo> secondList){
+		ArrayList<UserInfo> result=new ArrayList<UserInfo>();
+		for(UserInfo info1:secondList){
+			boolean flag=false;
+			for(UserInfo info2:firstList){
+				if(info2.getUserName().equalsIgnoreCase(info1.getUserName())){
+					flag=true;
+					break;
+				}
+			}
+			if(!flag){
+				result.add(info1);
+			}
+		}
+		return result;
+	}
+	/**
+	 * Method Name: insertMissingInUserTable
+	 * This is used to insert the Missing Values in the User Table
+	 * @param missingList
+	 * @throws SQLException
+	 */
+	public void insertMissingInUserTable(ArrayList<UserInfo> missingList) throws SQLException{
+		Connection con = null;
+		PreparedStatement ps=null;
+		Connection con1 = null;
+		ResultSet rs=null;
+		PreparedStatement ps1=null;
+		try{
+			for(UserInfo i:missingList){
+				con=ConnectionFactory.getConnection();
+				String query="SELECT userName,password FROM [user] WHERE userName=?";
+				ps=con.prepareStatement(query);
+				if(!(i.getUserName()==null || i.getPassword()==null )){
+					ps.setString(1, i.getUserName());
+					rs=ps.executeQuery();
+					if(rs.next()){
+						continue;
 					}
-				}
-				if(!flag){
-					result.add(info1);
+					else{
+						con1=ConnectionFactory.getConnection();
+						String query1="INSERT INTO [user] VALUES (?,?)";
+						ps1=con1.prepareStatement(query1);
+						ps1.setString(1, i.getUserName());
+						ps1.setString(2, i.getPassword());
+						ps1.addBatch();
+					}
+					ps1.executeBatch();
 				}
 			}
-			return result;
 		}
-		/**
-		 * Method Name: insertMissingInUserTable
-		 * This is used to insert the Missing Values in the User Table
-		 * @param missingList
-		 * @throws SQLException
-		 */
-		public void insertMissingInUserTable(ArrayList<UserInfo> missingList) throws SQLException{
-			Connection con = null;
-			PreparedStatement ps=null;
-			Connection con1 = null;
-			ResultSet rs=null;
-			PreparedStatement ps1=null;
-			try{
-				for(UserInfo i:missingList){
-					con=ConnectionFactory.getConnection();
-					String query="SELECT userName,password FROM [user] WHERE userName=?";
-					ps=con.prepareStatement(query);
-					if(!(i.getUserName()==null || i.getPassword()==null )){
+		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
+		}
+		finally {
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+			if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
+			if (con1 != null) try { con1.close(); } catch(Exception e) {}
+		}
+	}
+	/**
+	 * Method Name: updateSTComplete
+	 * Used to Update the Shared Table completely with both Insertion of new Records 
+	 * @param missingList
+	 * @throws SQLException
+	 */
+	public boolean updateSTComplete(ArrayList<RoutingTable> missingList) throws SQLException{
+		Connection con = null;
+		PreparedStatement ps=null;
+		boolean result=false;
+		try{
+			for(RoutingTable i:missingList){
+				if(i.getUserName()!=null && i.getFileName()!=null && i.getSharedUserName()!=null  ){
+					if(checkIfFileAlreadyShared(i.getUserName(),i.getFileName(),i.getSharedUserName())){
+						con=ConnectionFactory.getConnection();
+						String query="INSERT INTO [sharedTable] VALUES(?,?,?)";
+						ps=con.prepareStatement(query);
 						ps.setString(1, i.getUserName());
-						rs=ps.executeQuery();
-						if(rs.next()){
-							continue;
-						}
-						else{
-							con1=ConnectionFactory.getConnection();
-							String query1="INSERT INTO [user] VALUES (?,?)";
-							ps1=con1.prepareStatement(query1);
-							ps1.setString(1, i.getUserName());
-							ps1.setString(2, i.getPassword());
-							ps1.addBatch();
-						}
-						ps1.executeBatch();
+						ps.setString(2, i.getFileName());
+						ps.setString(3, i.getSharedUserName());
+						ps.addBatch();
 					}
 				}
 			}
-			catch(Exception e){
-				e.printStackTrace();
-				throw new SQLException();
-			}
-			finally {
-				if (rs != null) try { rs.close(); } catch(Exception e) {}
-				if (ps != null) try { ps.close(); } catch(Exception e) {}
-				if (con != null) try { con.close(); } catch(Exception e) {}
-				if (ps1 != null) try { ps1.close(); } catch(Exception e) {}
-				if (con1 != null) try { con1.close(); } catch(Exception e) {}
+			ps.executeBatch();
+			result=true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
+		}
+		finally {
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+		}
+		return result;
+	}
+	/**
+	 * Method Name: checkIfFileAlreadyShared
+	 * Used to check if the File has already been shared
+	 * @param userName
+	 * @param fileName
+	 * @param sharedUserName
+	 * @return result
+	 * @throws SQLException
+	 */
+	private boolean checkIfFileAlreadyShared(String userName,String fileName, String sharedUserName) throws SQLException {
+		Connection con = null;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		boolean result=false;
+		try{
+			con=ConnectionFactory.getConnection();
+			String query="SELECT * FROM [sharedTable] WHERE userName=? AND fileName=? AND sharedUserName=?";
+			ps=con.prepareStatement(query);
+			ps.setString(1, userName);
+			ps.setString(2, fileName);
+			ps.setString(3, fileName);
+			rs=ps.executeQuery();
+			if(rs.next()){
+				result=true;
 			}
 		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
+		}
+		finally {
+
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
+		}
+		return result;
+	}
+	/**
+	 * Method Name: updateUTComplete
+	 * Used to Update the Shared Table completely with both Insertion of new Records 
+	 * @param missingList
+	 * @throws SQLException
+	 */
+	public void updateUTComplete(String user, String pass) throws SQLException{
+		Connection con = null;
+		PreparedStatement ps=null;
+		try{
+			if((user!=null && pass!=null  ) && 
+					checkUserIfAlreadyExist(user,pass))	{
+				con=ConnectionFactory.getConnection();
+				String query="INSERT INTO [user] VALUES(?,?)";
+				ps=con.prepareStatement(query);
+				ps.setString(1,user);
+				ps.setString(2, pass);
+				ps.executeUpdate();
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
+		}
+		finally {
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+		}
+	}
+	/**
+	 * Method Name: checkUserIfAlreadyExist
+	 * Used to check if the User Already Exist in the DB
+	 * @param userName
+	 * @param password
+	 * @return result
+	 * @throws SQLException
+	 */
+	public boolean checkUserIfAlreadyExist(String userName, String password) throws SQLException {
+		Connection con = null;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		boolean result=false;
+		try{
+			con=ConnectionFactory.getConnection();
+			String query="SELECT * FROM [user] WHERE userName=? AND password=?";
+			ps=con.prepareStatement(query);
+			ps.setString(1, userName);
+			ps.setString(2, password);
+			rs=ps.executeQuery();
+			if(rs.next()){
+				result=true;
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new SQLException();
+		}
+		finally {
+
+			if (ps != null) try { ps.close(); } catch(Exception e) {}
+			if (con != null) try { con.close(); } catch(Exception e) {}
+			if (rs != null) try { rs.close(); } catch(Exception e) {}
+		}
+		return result;
+	}
 }
 

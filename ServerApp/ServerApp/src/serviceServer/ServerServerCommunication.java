@@ -28,14 +28,45 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		ss.put("BS2", "cics525group6b2.cloudapp.net");
 	}
 
-	// Method implementation to update information of other service servers
-	// routing table
+	// update RT 
 	public boolean updateTable(ArrayList<RoutingTable> missMatch)
 			throws RemoteException {
 
 		ServiceContainer serviceContainer = new ServiceContainer();
 		try {
 			serviceContainer.updateRTComplete(missMatch);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	// update  ST
+	@Override
+	public boolean updateShareTable(ArrayList<RoutingTable> missMatch)
+			throws RemoteException {
+		ServiceContainer serviceContainer = new ServiceContainer();
+		
+		try {
+			serviceContainer.updateSTComplete(missMatch);
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+	
+	
+	// update UT
+	@Override
+	public boolean updateUserTable(String user, String pass)
+			throws RemoteException {
+		ServiceContainer serviceContainer = new ServiceContainer();
+		try {
+			serviceContainer.updateUTComplete(user,pass);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,7 +117,7 @@ public class ServerServerCommunication implements ServerServerComInterface {
 	 * sync local routing table values with values of other remote routing
 	 * tables
 	 */
-	public void syncRT() {
+	public void syncAllTables() {
 
 		ArrayList<SyncThread> st = new ArrayList<SyncThread>();
 		for (String key : ss.keySet()) {
@@ -151,4 +182,86 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		return null;
 
 	}
+
+	public void pushRT(ArrayList<RoutingTable> missMatch) {
+		// TODO Auto-generated method stub
+		ArrayList<PushThread> pt = new ArrayList<PushThread>();
+		for (String key : ss.keySet()) {
+			String address = ss.get(key);
+			try {
+			pt.add(new PushThread(address, missMatch));
+
+			} catch (Exception e) {
+				System.out.println("Error pushing RT to server " + address);
+
+			}
+
+		}
+		try {
+			for (PushThread t : pt) {
+				if (t != null) {
+					t.push.join();
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void pushUT(String user, String pass ) {
+		// TODO Auto-generated method stub
+		ArrayList<PushUserThread> put = new ArrayList<PushUserThread>();
+		for (String key : ss.keySet()) {
+			String address = ss.get(key);
+			try {
+			put.add(new PushUserThread(address, user, pass));
+
+			} catch (Exception e) {
+				System.out.println("Error pushing UT to server " + address);
+
+			}
+
+		}
+		try {
+			for (PushUserThread t : put) {
+				if (t != null) {
+					t.pushUser.join();
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void pushST(ArrayList<RoutingTable> sharedMatch ) {
+		// TODO Auto-generated method stub
+		ArrayList<PushShareThread> st = new ArrayList<PushShareThread>();
+		for (String key : ss.keySet()) {
+			String address = ss.get(key);
+			try {
+			st.add(new PushShareThread(address, sharedMatch));
+
+			} catch (Exception e) {
+				System.out.println("Error pushing UT to server " + address);
+
+			}
+
+		}
+		try {
+			for (PushShareThread t : st) {
+				if (t != null) {
+					t.sharedUser.join();
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	
+	
+
 }
