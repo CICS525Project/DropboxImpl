@@ -11,9 +11,12 @@ import javafx.scene.control.Tooltip;
 import userGUI.ConflictPopUp;
 import userMetaData.ClientMetaData;
 import userGUI.ToolTip;
+
+import com.microsoft.windowsazure.services.blob.client.CloudBlob;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
 import com.microsoft.windowsazure.services.blob.client.CloudBlockBlob;
+import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 
 public class UploadFile implements Runnable {
@@ -59,6 +62,7 @@ public class UploadFile implements Runnable {
 	 * @param fileName
 	 */
 	public void uploadFile(String fileName){
+		boolean blobExistFlag = false;
 		//System.out.println("upload queue size is: " + OperationQueue.getInstance().getUploadQueue().size());
 		String spliter = File.separator;
 		String workSpace = SessionInfo.getInstance().getWorkFolder();
@@ -85,6 +89,15 @@ public class UploadFile implements Runnable {
 			//System.out.println("Container name is: " + containerName);
 			CloudBlobContainer container = blobClient.getContainerReference(containerName);
 			container.createIfNotExist();
+			for (ListBlobItem blobItem : container.listBlobs()) {
+				if (blobItem instanceof CloudBlob) {
+					CloudBlob blob = (CloudBlob) blobItem;
+					if(fileName.equals(blob.getName())){
+						blobExistFlag = true;
+						break;
+					}
+				}
+			}
 			CloudBlockBlob blob = container.getBlockBlobReference(fileName);
 			File source = new File(upPath);
 			FileInputStream fin = new FileInputStream(source);
@@ -95,8 +108,16 @@ public class UploadFile implements Runnable {
 			ClientMetaData cmd = new ClientMetaData();
 			HashMap<String, String> localMeta = cmd.readXML(workSpace, fopt.getFileInFolder(workSpace));
 			HashMap<String, String> meta = new HashMap<String, String>();
+			//if blob already exist
+			if(blobExistFlag){
+				blob.downloadAttributes();
+				HashMap<String, String> res = blob.getMetadata();
+				meta.put("name", res.get("name"));
+			}
+			else {
+				meta.put("name", SessionInfo.getInstance().getUsername());
+			}
 			//System.out.println("The metadata for the file: " + fileName +" is " + localMeta.get(fileName));
-			meta.put("name", SessionInfo.getInstance().getUsername());
 			meta.put("version", localMeta.get(fileName));
 			blob.setMetadata(meta);
 			blob.uploadMetadata();
