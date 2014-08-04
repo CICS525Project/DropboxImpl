@@ -4,7 +4,7 @@ import java.io.File;
 
 public class ConfigurationData {
 	
-	public static final String WARN_IMG = File.separator+"img"+File.separator+"warn.png";
+	public static final String WARN_IMG = "img"+File.separator+"warn.png";
 	public static final String UP_IMG = "img"+File.separator+"arrowup.png";
 	public static final String DOWN_IMG = "img"+File.separator+"arrowdown.jpeg";
 	public static final String BOX_IMG = File.separator+"img"+File.separator+"box.png";

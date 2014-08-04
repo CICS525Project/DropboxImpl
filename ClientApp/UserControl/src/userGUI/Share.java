@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
 
+import dataTransfer.ConfigurationData;
 import dataTransfer.UserOperate;
 import dataTransfer.SessionInfo;
 
@@ -23,7 +25,7 @@ public class Share extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField userName;
-
+	private ToolTip myTip;
 	/**
 	 * Create the frame.
 	 */
@@ -48,7 +50,7 @@ public class Share extends JFrame {
 		contentPane.add(userName);
 		userName.setColumns(10);
 
-		JButton btnShare = new JButton("Share");
+		final JButton btnShare = new JButton("Share");
 		btnShare.setBounds(203, 184, 89, 23);
 		contentPane.add(btnShare);
 
@@ -98,6 +100,13 @@ public class Share extends JFrame {
 					}
 					String name = userName.getText();
 					uopt.shareFile(selectedItems, name);
+					myTip = new ToolTip();
+					myTip.setToolTip(new ImageIcon(ConfigurationData.WARN_IMG), "File is shared successfully!");
+					Container frame = btnShare.getParent();
+					do {
+						frame = frame.getParent();
+					} while (!(frame instanceof JFrame));
+					((JFrame) frame).hide();
 					//pop up here
 				}
 			}

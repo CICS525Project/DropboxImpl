@@ -48,6 +48,7 @@ public class ClientMetaData {
 			String XMLpath = path + File.separator + "file.xml";
 			File f = new File(XMLpath);
 			if (!f.exists()) {
+				System.out.println("file.xml does not exist.");
 				PrintWriter writer;
 				writer = new PrintWriter(XMLpath, "UTF-8");
 				writer.close();

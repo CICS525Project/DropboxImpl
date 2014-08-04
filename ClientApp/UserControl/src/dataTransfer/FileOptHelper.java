@@ -107,6 +107,7 @@ public class FileOptHelper {
 		Path path = Paths.get(dir);
 		try {
 			Files.deleteIfExists(path);
+			System.out.println("delete file: " + dir);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,7 +121,7 @@ public class FileOptHelper {
 	public void initialDownloadQueue() {
 		String dir = SessionInfo.getInstance().getWorkFolder();
 		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
-				.getRemoteDNS(), 12345);
+				.getRemoteDNS(), SessionInfo.getInstance().getPortNum());
 		ClientMetaData cmd = new ClientMetaData();
 		cmd.removeRecord(dir, getFileInFolder(dir));
 		HashMap<String, String> localFileAndVersion = cmd.readXML(dir,
@@ -131,7 +132,7 @@ public class FileOptHelper {
 				remoteFileAndVersion.keySet());
 		for (int i = 0; i < remoteFileList.size(); i++) {
 			String fname = remoteFileList.get(i);
-			System.out.println("remote file: " + fname);
+			System.out.println("remote file: " + fname + " version " + remoteFileAndVersion.get(fname) + " local version " + localFileAndVersion.get(fname));
 			// if file exists on both local and remote
 			if (localFileAndVersion.containsKey(fname)) {
 				// if local version is not same as remote version
@@ -151,6 +152,7 @@ public class FileOptHelper {
 						int localVersion = Integer.parseInt(localFileAndVersion
 								.get(fname));
 						if (remoteFileAndVersion.get(fname) > localVersion) {
+							System.out.println("detect file " + fname + "has higher version.");
 							OperationQueue.getInstance().add(
 									fname,
 									OperationQueue.getInstance()

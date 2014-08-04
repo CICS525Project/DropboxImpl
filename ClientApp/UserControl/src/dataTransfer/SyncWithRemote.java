@@ -20,24 +20,10 @@ public class SyncWithRemote implements Runnable {
 	private UserOperate uopt;
 	private ClientMetaData cmd;
 	public SyncWithRemote() {
-		try {
-			fopt = new FileOptHelper();
-			uopt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(), SessionInfo.getInstance().getPortNum());
-			cmd = new ClientMetaData();
-			Registry registry = LocateRegistry.getRegistry(SessionInfo
-					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
-					.getPortNum());
-			this.serviceProvider = (ServiceServerInterface) registry
-					.lookup("cloudboxRMI");
-			
-			start();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		fopt = new FileOptHelper();
+		uopt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(), SessionInfo.getInstance().getPortNum());
+		cmd = new ClientMetaData();
+		start();
 	}
 
 	private void pollInfo(){
@@ -45,6 +31,11 @@ public class SyncWithRemote implements Runnable {
 		//get corresponding files in local
 		//check if the version number is different
 		try {
+			Registry registry = LocateRegistry.getRegistry(SessionInfo
+					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
+					.getPortNum());
+			this.serviceProvider = (ServiceServerInterface) registry
+					.lookup("cloudboxRMI");
 			HashMap<String, Integer> filesAndVersionShared = serviceProvider
 					.getAllSharedFilesForUser(SessionInfo.getInstance()
 							.getUsername());
@@ -72,6 +63,9 @@ public class SyncWithRemote implements Runnable {
 			}
 			
 		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

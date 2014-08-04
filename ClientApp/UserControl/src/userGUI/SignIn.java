@@ -79,8 +79,9 @@ public class SignIn extends JFrame {
 					username = uName.getText();
 					password = pwd.getText();
 					// user authorization
-					UserOperate uopt = new UserOperate(
-							SessionInfo.getInstance().getRemoteDNS(), ConfigurationData.PORT_NUM);
+					UserOperate uopt = new UserOperate(SessionInfo
+							.getInstance().getRemoteDNS(),
+							ConfigurationData.PORT_NUM);
 					ClientMetaData cmd = new ClientMetaData();
 					FileOptHelper fopt = new FileOptHelper();
 					// initilize session data
@@ -107,18 +108,22 @@ public class SignIn extends JFrame {
 						/** Check if is the same user login to the application **/
 						// if not, delete all the files in folder
 						if (!cmd.checkXMLOwner(username, workpath)) {
+							System.out.println("user changed.");
 							File folder = new File(workpath);
 							File[] fileList = folder.listFiles();
 							for (int i = 0; i < fileList.length; i++) {
-								fopt.deleteFileInFoler(workpath + File.separator + fileList[i].getName());
+								fopt.deleteFileInFoler(workpath
+										+ File.separator
+										+ fileList[i].getName());
 							}
-						}
-						try {
-							cmd.createXML(fopt.getFileInFolder(workpath),
-									workpath);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+
+							try {
+								cmd.createXML(fopt.getFileInFolder(workpath),
+										workpath);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 					try {
@@ -142,7 +147,7 @@ public class SignIn extends JFrame {
 												.getUploadQueue().size());
 								/******** start upload thread ********/
 								new UploadFile();
-								/**start polling information from server side**/
+								/** start polling information from server side **/
 								new SyncWithRemote();
 								/** close login window **/
 								Container frame = btnSignin.getParent();

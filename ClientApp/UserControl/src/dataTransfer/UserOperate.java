@@ -101,7 +101,6 @@ public class UserOperate {
 		ArrayList<String> files = helper.getFileInFolder(SessionInfo.getInstance().getWorkFolder());
 		try {
 			res = serviceProvider.getAddress(files, SessionInfo.getInstance().getUsername());
-//			System.out.println("get loacal hashmap length : " + res.size());
 			for (int i = 0; i < res.size() ; i++) {
 				System.out.println(res.get(files.get(i)));
 			}

@@ -256,9 +256,9 @@ public class ToolTip {
 		this.width = width;
 	}
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		ToolTip tip = new ToolTip();
-        tip.setToolTip(new ImageIcon(ConfigurationData.DOWN_IMG),"warning warning warning!!!");
-	}
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		ToolTip tip = new ToolTip();
+//        tip.setToolTip(new ImageIcon(ConfigurationData.WARN_IMG),"warning warning warning!!!");
+//	}
 }
