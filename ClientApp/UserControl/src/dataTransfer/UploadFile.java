@@ -83,6 +83,10 @@ public class UploadFile implements Runnable {
 		String[] part = fileContainerString.split(",");
 		CloudStorageAccount storageAccount;
 		try{
+			ClientMetaData cmd = new ClientMetaData();
+			HashMap<String, String> localMeta = cmd.readXML(workSpace, fopt.getFileInFolder(workSpace));
+			HashMap<String, String> meta = new HashMap<String, String>();
+			
 			storageAccount = CloudStorageAccount.parse(part[0]);
 			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
 			String containerName = part[1];
@@ -93,34 +97,36 @@ public class UploadFile implements Runnable {
 				if (blobItem instanceof CloudBlob) {
 					CloudBlob blob = (CloudBlob) blobItem;
 					if(fileName.equals(blob.getName())){
+						blob.downloadAttributes();
+						HashMap<String, String> res = blob.getMetadata();
+						meta.put("name", res.get("name"));
+						meta.put("version", localMeta.get(fileName));
+						blob.setMetadata(meta);
+						blob.uploadMetadata();
+						File source = new File(upPath);
+						FileInputStream fin = new FileInputStream(source);
+						blob.upload(fin, source.length());
+						fin.close();
 						blobExistFlag = true;
 						break;
 					}
 				}
 			}
-			CloudBlockBlob blob = container.getBlockBlobReference(fileName);
-			File source = new File(upPath);
-			FileInputStream fin = new FileInputStream(source);
-			blob.upload(fin, source.length());
-			fin.close();
-			
 			/**change remote version number as well**/
-			ClientMetaData cmd = new ClientMetaData();
-			HashMap<String, String> localMeta = cmd.readXML(workSpace, fopt.getFileInFolder(workSpace));
-			HashMap<String, String> meta = new HashMap<String, String>();
-			//if blob already exist
-			if(blobExistFlag){
-				blob.downloadAttributes();
-				HashMap<String, String> res = blob.getMetadata();
-				meta.put("name", res.get("name"));
-			}
-			else {
+
+			//if blob not already exist
+			if(!blobExistFlag){
+				CloudBlockBlob blob = container.getBlockBlobReference(fileName);
+				File source = new File(upPath);
+				FileInputStream fin = new FileInputStream(source);
+				blob.upload(fin, source.length());
+				fin.close();
 				meta.put("name", SessionInfo.getInstance().getUsername());
+				meta.put("version", localMeta.get(fileName));
+				blob.setMetadata(meta);
+				blob.uploadMetadata();
 			}
 			//System.out.println("The metadata for the file: " + fileName +" is " + localMeta.get(fileName));
-			meta.put("version", localMeta.get(fileName));
-			blob.setMetadata(meta);
-			blob.uploadMetadata();
 			System.out.println("File is been uploaded");
 			myTip.setToolTip(new ImageIcon(ConfigurationData.UP_IMG), "File "+fileName+" is uploaded successfully!");
 		}
