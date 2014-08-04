@@ -121,10 +121,19 @@ public class ServerBackupCommunication {
 			    blob2.setMetadata(metadata);
 			    File source = new File(filePath);
 			    FileInputStream fis = new FileInputStream(source);
-			    blob1.upload(fis, source.length());
-			    System.out.println("file " + blob1.getName() + "uploaded to backup1");
-			    blob2.upload(fis, source.length());
-			    System.out.println("file " + blob2.getName() + "uploaded to backup2");
+			    // check if the current machine is not the backup server 1 !!!
+			    if (!Constants.CONTAINER.equals("backup1"))
+			    {
+			    	blob1.upload(fis, source.length());
+				    System.out.println("file " + blob1.getName() + "uploaded to backup1");
+			    }
+			    
+			    // check if current machine is not backup 2 
+			    if (!Constants.CONTAINER.equals("backup2"))
+			    {
+			    	blob2.upload(fis, source.length());
+			    	System.out.println("file " + blob2.getName() + "uploaded to backup2");
+			    }
 			    fis.close();
 		    }
 

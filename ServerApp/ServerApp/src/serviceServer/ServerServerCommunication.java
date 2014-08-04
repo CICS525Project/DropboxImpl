@@ -31,19 +31,14 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		ss.put("BS2", "cics525group6b2.cloudapp.net");
 
 		// remove itself
-		/*for(String key : ss.keySet())
+		String myself = null;
+		for(String key : ss.keySet())
 		{
 			if (ss.get(key).equals(Constants.HOST)) {
-				ss.remove(key);
+				myself = key;
 			}
-		}*/
-		
-	    for(Iterator<Map.Entry<String, String>> it = ss.entrySet().iterator(); it.hasNext(); ) {
-	      Map.Entry<String, String> entry = it.next();
-	      if(entry.getKey().equals(Constants.HOST)) {
-	        it.remove();
-	      }
-	    }
+		}
+		ss.remove(myself);
 	}
 
 	// update RT 

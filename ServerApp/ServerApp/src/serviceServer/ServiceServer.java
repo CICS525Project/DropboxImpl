@@ -170,12 +170,14 @@ public class ServiceServer implements ServiceServerInterface {
 	 */
 	public void refreshRT(int port) {
 		// Call Jitin's method to obtain information from the container
-
+		
 		ServiceContainer serviceContainer = new ServiceContainer();
 		ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
 
 		missMatch = serviceContainer.checkContainerWithRoutingTable(Constants.CONTAINER,
 				Constants.HOST);
+
+		
 		try {
 			if (!missMatch.isEmpty()) {
 //				System.out.println("Miss Match "+missMatch.get(0).getVersion());
@@ -191,7 +193,6 @@ public class ServiceServer implements ServiceServerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		// sync local routing table values with values of other remote routing tables
 		// mySSCom.syncRT();
 		// mySCCom.sendNotification("jitin", "upload,file1"); // repeat this
