@@ -7,11 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.mail.Session;
-
 import userUtil.ClientMetaData;
-import userUtil.ServerConnectionTest;
 import RMIInterface.ServiceServerInterface;
 
 public class SyncWithRemote implements Runnable {
@@ -86,8 +82,11 @@ public class SyncWithRemote implements Runnable {
 							.getUsername());
 			ArrayList<String> filesLocal = fopt.getFileInFolder(SessionInfo
 					.getInstance().getWorkFolder());
+			System.out.println("Size of shared Version hashmap is " + filesAndVersionShared.size());
 			for (String fn : filesLocal) {
+				
 				// if the local file is a shared file
+				System.out.println("File " + fn + " have remote version " + filesAndVersionShared.get(fn));
 				if (filesAndVersionShared.containsKey(fn)) {
 					System.out.println("Detect in polling, shared file " + fn);
 					String localVersion = cmd.readVersionForOne(fn);

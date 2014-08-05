@@ -75,7 +75,7 @@ public class FileOptHelper {
 		File[] fileList = folder.listFiles();
 		ArrayList<String> files = new ArrayList<String>();
 		for (int i = 0; i < fileList.length; i++) {
-			if (fileList[i].isFile() && !fileList[i].getName().startsWith(".")
+			if (fileList[i].isFile() && !fileList[i].getName().startsWith(".") && !fileList[i].getName().startsWith("~")
 					&& !fileList[i].getName().endsWith("xml")) {
 				files.add(fileList[i].getName());
 			}
