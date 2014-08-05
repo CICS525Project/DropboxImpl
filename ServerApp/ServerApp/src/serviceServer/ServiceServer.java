@@ -206,27 +206,13 @@ public class ServiceServer implements ServiceServerInterface {
 
 	@Override
 	public void deleteFile(String user, String file) throws RemoteException {
+		
 		// TODO Auto-generated method stub
 		ServiceContainer serviceContainer = new ServiceContainer();
 		try {
-			serviceContainer.updateVersionForDelete(user,file);
-			System.out.println("User " + user + " deleted file: " + file);
-			System.out.println("Done updating RT with version to -1 in file " + file + " ,user " + user);
-			// broadcasiting -1 version
-			
-			ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
-			RoutingTable routingTable = new RoutingTable();
-			
-			routingTable.setFileName(file);
-			routingTable.setUserName(user);
-			routingTable.setVersion(-1);
-			missMatch.add(routingTable);
-			
-
-			mySSCom.pushRT(missMatch);
 			
 			// delete file from backup containers
-			
+
 			// Retrieve service storage account
 			CloudStorageAccount storageAccount1 = CloudStorageAccount
 					.parse(Constants.backup1StorageConnectionString);
@@ -245,24 +231,43 @@ public class ServiceServer implements ServiceServerInterface {
 					.getContainerReference("backup1");
 			CloudBlobContainer container2 = blobClient2
 					.getContainerReference("backup2");
-			
+
 			// deleting blob1
 			CloudBlockBlob toRemove = container1.getBlockBlobReference(file);
 			toRemove.downloadAttributes();
-			if (toRemove.getMetadata().get("name").equals(user))
-			{
+			if (toRemove.getMetadata().get("name").equals(user)) {
 				toRemove.deleteIfExists();
-				System.out.println("File " + toRemove.getName() + " deleted from " + container1.getName());
+				System.out.println("File " + toRemove.getName()
+						+ " deleted from " + container1.getName());
 			}
 			toRemove = null;
 			// deleting blob2
 			toRemove = container2.getBlockBlobReference(file);
 			toRemove.downloadAttributes();
-			if (toRemove.getMetadata().get("name").equals(user))
-			{
+			if (toRemove.getMetadata().get("name").equals(user)) {
 				toRemove.deleteIfExists();
-				System.out.println("File " + toRemove.getName() + " deleted from " + container2.getName());
+				System.out.println("File " + toRemove.getName()
+						+ " deleted from " + container2.getName());
 			}
+			
+			
+			serviceContainer.updateVersionForDelete(user,file);
+			System.out.println("User " + user + " deleted file: " + file);
+			System.out.println("Done updating RT with version to -1 in file " + file + " ,user " + user);
+			// broadcasiting -1 version
+			
+			ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
+			RoutingTable routingTable = new RoutingTable();
+			
+			routingTable.setFileName(file);
+			routingTable.setUserName(user);
+			routingTable.setVersion(-1);
+			missMatch.add(routingTable);
+			
+
+			mySSCom.pushRT(missMatch);
+			
+			
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
