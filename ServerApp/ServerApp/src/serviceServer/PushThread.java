@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import authentication.UserInfo;
 import RMIInterface.ServerServerComInterface;
 import routingTable.DBConnection;
-
 import utils.Constants;
+import utils.ServerConnection;
 
 public class PushThread implements Runnable {
 
@@ -34,7 +34,13 @@ public class PushThread implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+				
+		// test connection to given dns address
+		ServerConnection myTestConnection = new ServerConnection();
+		if ( !myTestConnection.testConnection(address) ) {
+			System.out.println("Could not update RT. Server " + address + " is offline");
+			return;
+		}
 
 		try {
 			registry = LocateRegistry.getRegistry(address, Constants.SPORT);

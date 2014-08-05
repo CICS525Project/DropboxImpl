@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import authentication.UserInfo;
 import RMIInterface.ServerServerComInterface;
 import routingTable.DBConnection;
-
 import utils.Constants;
+import utils.ServerConnection;
 
 public class PushShareThread implements Runnable {
 
@@ -32,7 +32,13 @@ public class PushShareThread implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		// test connection to given dns address
+		ServerConnection myTestConnection = new ServerConnection();
+		if (!myTestConnection.testConnection(address)) {
+			System.out.println("Could not update ST. Server " + address
+					+ " is offline");
+			return;
+		}
 
 		try {
 			registry = LocateRegistry.getRegistry(address, Constants.SPORT);
@@ -46,7 +52,7 @@ public class PushShareThread implements Runnable {
 //			server.updateUserTable(userMissMatch);
 
 		} catch (Exception e) {
-			System.out.println("Error Updating tables on server " + address);
+			System.out.println("Error Updating ST on server " + address);
 			// System.err.println(e);
 			// I/O Error or bad URL
 		}

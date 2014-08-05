@@ -14,6 +14,7 @@ import com.microsoft.windowsazure.services.blob.client.CloudBlockBlob;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 
 import utils.Constants;
+import utils.ServerConnection;
 import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 import authentication.Authentication;
@@ -47,6 +48,7 @@ public class ServiceServer implements ServiceServerInterface {
 		// TODO Auto-generated method stub
 		DBConnection connection = new DBConnection();
 		HashMap<String, String> result = new HashMap<String, String>();
+		ServerConnection myTest = new ServerConnection();
 		try {
 			result = connection.searchForServerName(files, user);
 		} catch (SQLException e) {
@@ -58,34 +60,50 @@ public class ServiceServer implements ServiceServerInterface {
 		
 		for(String key: result.keySet()){
             String address = result.get(key);
-            System.out.println("servers request " + address);
-            ServerServerComInterface server = null;
-    		try {
-    			Registry registry = LocateRegistry.getRegistry(address, Constants.SPORT);
-    			server = (ServerServerComInterface) registry.lookup("serverServerRMI");
-    			if (server == null){
-    			//	System.out.println("null server");
-    				throw new Exception();
-    			}
-			} catch (Exception e) {
-				System.out.println("Server " + address + " is down. File "+ key +" available on backup server 1");
-				// If service server is down, attempts to change value to backup 1
-	            
-				try {
-					Registry secondRegistry = LocateRegistry.getRegistry(Constants.B1HOST, Constants.SPORT);
-					server = (ServerServerComInterface) secondRegistry.lookup("serverServerRMI");
-					if (server == null){
-	    			//	System.out.println("null server");
-	    				throw new Exception();
-	    			}
-					result.put(key,Constants.B1HOST);
-				} catch (Exception backupex) {
-					// If backup 1 server is down, connect to backup 2
-					System.out.println("Server " + address + " is down. File "+ key +" available on backup server 2");
-					result.put(key,Constants.B2HOST);
-				}
-				// e.printStackTrace();
-			}
+            if (!myTest.testConnection(address)) {
+            	System.out.println("File: " + key + " - Server " + address + " is down");
+            	
+            	if (myTest.testConnection(Constants.B1HOST)) {
+            		System.out.println("File "+ key +" available on backup server 1");
+            		result.put(key,Constants.B1HOST);
+             	}
+            	else if (myTest.testConnection(Constants.B2HOST)) {
+            		System.out.println("File "+ key +" available on backup server 2");
+            		result.put(key,Constants.B2HOST);
+            	}
+            	else {
+            		System.out.println("File " + key + " not available. All servers down.");
+            	}
+            	
+            }
+//            System.out.println("servers request " + address);
+//            ServerServerComInterface server = null;
+//    		try {
+//    			Registry registry = LocateRegistry.getRegistry(address, Constants.SPORT);
+//    			server = (ServerServerComInterface) registry.lookup("serverServerRMI");
+//    			if (server == null){
+//    			//	System.out.println("null server");
+//    				throw new Exception();
+//    			}
+//			} catch (Exception e) {
+//				System.out.println("Server " + address + " is down. File "+ key +" available on backup server 1");
+//				// If service server is down, attempts to change value to backup 1
+//	            
+//				try {
+//					Registry secondRegistry = LocateRegistry.getRegistry(Constants.B1HOST, Constants.SPORT);
+//					server = (ServerServerComInterface) secondRegistry.lookup("serverServerRMI");
+//					if (server == null){
+//	    			//	System.out.println("null server");
+//	    				throw new Exception();
+//	    			}
+//					result.put(key,Constants.B1HOST);
+//				} catch (Exception backupex) {
+//					// If backup 1 server is down, connect to backup 2
+//					System.out.println("Server " + address + " is down. File "+ key +" available on backup server 2");
+//					result.put(key,Constants.B2HOST);
+//				}
+//				// e.printStackTrace();
+//			}
 			
         }		
 		// returns final value

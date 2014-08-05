@@ -10,6 +10,7 @@ import RMIInterface.ServerServerComInterface;
 import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 import utils.Constants;
+import utils.ServerConnection;
 
 public class SyncThread implements Runnable {
 
@@ -36,7 +37,15 @@ public class SyncThread implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		
+		// test connection to given dns address
+		ServerConnection myTestConnection = new ServerConnection();
+		if (!myTestConnection.testConnection(address)) {
+			System.out.println("Could not perform initial synchronization whit Server " + address
+					+ ". Server is offline");
+			return;
+		}
+		
 		ArrayList<RoutingTable> result = new ArrayList<RoutingTable>();
 		ArrayList<RoutingTable> sharedresult = new ArrayList<RoutingTable>();
 		ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
