@@ -20,19 +20,18 @@ public class SyncWithRemote implements Runnable {
 	private UserOperate uopt;
 	private ClientMetaData cmd;
 	public volatile static Thread syncer;
-	private Thread thisThread;
 	
 	public SyncWithRemote() {
 		fopt = new FileOptHelper();
 		uopt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(),
 				SessionInfo.getInstance().getPortNum());
 		cmd = new ClientMetaData();
-		thisThread = Thread.currentThread();
+		syncer = new Thread(this);
 		start();
 	}
-
+	
 	private void pollSharedFileInit() {
-//		System.out.println("Function polling shared called");
+		System.out.println("Function polling shared called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
@@ -68,7 +67,7 @@ public class SyncWithRemote implements Runnable {
 		// get shared file from remote
 		// get corresponding files in local
 		// check if the version number is different
-//		System.out.println("Function polling modify called");
+		System.out.println("Function polling modify called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
@@ -137,6 +136,8 @@ public class SyncWithRemote implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+
+		Thread thisThread = Thread.currentThread();
 		while (syncer == thisThread) {
 			try {
 				pollSharedFileInit();
@@ -151,7 +152,6 @@ public class SyncWithRemote implements Runnable {
 
 	public void start() {
 		System.out.println("Polling thread start...");
-		syncer = new Thread(this);
 		syncer.start();
 	}
 	
