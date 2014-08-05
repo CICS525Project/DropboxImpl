@@ -185,10 +185,15 @@ public class UserOperate {
 				if (blobItem instanceof CloudBlob) {
 					CloudBlob blob = (CloudBlob) blobItem;
 					if (filename.equals(blob.getName())) {
+						blob.downloadAttributes();
+						HashMap<String, String> res = blob.getMetadata();
+						String originUserName = res.get("name");
+						System.out.println("Deleting file: " + filename + " origin user name is " + originUserName);
 						//delete remote blob
 						blob.deleteIfExists();
 						//need to call remote function to change version number to -1 in RT table
-						serviceProvider.deleteFile(SessionInfo.getInstance().getUsername(), filename);
+						serviceProvider.deleteFile(originUserName, filename);
+						myTip = new ToolTip();
 						myTip.setToolTip(new ImageIcon(
 								ConfigurationData.WARN_IMG), "File " + filename
 								+ " is deleted secessfully!");

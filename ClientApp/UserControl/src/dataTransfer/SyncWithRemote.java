@@ -29,7 +29,7 @@ public class SyncWithRemote implements Runnable {
 	}
 
 	private void pollSharedFileInit() {
-		System.out.println("Function polling shared called");
+//		System.out.println("Function polling shared called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
@@ -65,7 +65,7 @@ public class SyncWithRemote implements Runnable {
 		// get shared file from remote
 		// get corresponding files in local
 		// check if the version number is different
-		System.out.println("Function polling modify called");
+//		System.out.println("Function polling modify called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()

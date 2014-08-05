@@ -114,7 +114,7 @@ public class DownloadFile implements Runnable {
 					}
 				}
 			}
-			System.out.println("Cannot find the file you selected.");
+			System.out.println("Cannot find the file "+fileName+" you selected on DNS " + fileRemoteDNS);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
