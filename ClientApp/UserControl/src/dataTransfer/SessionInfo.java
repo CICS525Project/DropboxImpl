@@ -7,6 +7,9 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
+import userMetaData.ServerConnectionTest;
 import RMIInterface.ServiceServerInterface;
 
 public class SessionInfo {
@@ -50,34 +53,12 @@ public class SessionInfo {
 		this.workFolder = workFolder;
 	}
 	public String getRemoteDNS() {
-		/**testing if current linked server is alive if not, change to another server**/
-		ArrayList<String> rDNS = new ArrayList<String>();
-		rDNS.add(ConfigurationData.SERVICE_S1);
-		rDNS.add(ConfigurationData.SERVICE_S2);
-		rDNS.add(ConfigurationData.SERVICE_S3);
-		rDNS.add(ConfigurationData.SERVICE_S4);
-		rDNS.add(ConfigurationData.SERVICE_B1);
-		rDNS.add(ConfigurationData.SERVICE_B2);
-		rDNS.remove(remoteDNS);
-		try {
-			Registry registry = LocateRegistry.getRegistry(remoteDNS, portNum);
-			ServiceServerInterface ssi = (ServiceServerInterface)registry.lookup("cloudboxRMI");
-			if(ssi == null){
-				for(String backUpDNS : rDNS){
-					registry = LocateRegistry.getRegistry(backUpDNS, portNum);
-					ssi = (ServiceServerInterface)registry.lookup("cloudboxRMI");
-					if(ssi != null){
-						remoteDNS = backUpDNS;
-						return remoteDNS;
-					}
-				}
-			}
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ServerConnectionTest scTest = new ServerConnectionTest();
+		if(!scTest.testConnection(remoteDNS)){
+			String originDNS = remoteDNS;
+			remoteDNS = scTest.testDNSCtrl();
+			JOptionPane.showMessageDialog(null,
+					"Server" +originDNS +" is down!! Now change to " + remoteDNS + " for service!!");
 		}
 		return remoteDNS;
 	}

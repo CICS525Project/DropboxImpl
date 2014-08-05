@@ -68,6 +68,9 @@ public class FolderWatch implements Runnable {
 							HashMap<String, Integer> remoteFiles = uopt
 									.getServerVersion(SessionInfo.getInstance()
 											.getUsername());
+							if(remoteFiles == null){
+								System.out.println("remote is null");
+							}
 							if (!remoteFiles.containsKey(fn)) {
 								System.out.println("On create remote does not have file: " + fn);
 								cmd.addToXML(fn, SessionInfo.getInstance()
@@ -76,7 +79,12 @@ public class FolderWatch implements Runnable {
 							} else {
 								// if file is deleted and user uploads it again,
 								// need to set version as 1
-								if (cmd.compareLcalandRmtVersion(fn) == 1) {
+								if(remoteFiles.get(fn) == -1){
+									cmd.addToXML(fn, SessionInfo.getInstance()
+											.getWorkFolder());
+									fopt.uploadFileControl(fn);
+								}
+								else if (cmd.compareLcalandRmtVersion(fn) == 1) {
 									System.out.println("On create remote have smaller version");
 									cmd.addToXML(fn, SessionInfo.getInstance()
 											.getWorkFolder());

@@ -142,7 +142,7 @@ public class UserOperate {
 			res = serviceProvider.getCurrentFiles(uname); 
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Get remote version, the remote VM is failed.");
 		}
 		return res;
 	}
@@ -157,7 +157,7 @@ public class UserOperate {
 			containerKey = serviceProvider.getContainer();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Get remote container, the remote VM is failed.");
 		}
 		return containerKey;
 	}
@@ -226,7 +226,7 @@ public class UserOperate {
 			serviceProvider.shareFile(shareList, username);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Shared files, the remote VM is failed.");
 		}
 	}
 }

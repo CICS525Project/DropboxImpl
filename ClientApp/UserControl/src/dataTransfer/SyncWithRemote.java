@@ -11,6 +11,7 @@ import java.util.HashMap;
 import javax.mail.Session;
 
 import userMetaData.ClientMetaData;
+import userMetaData.ServerConnectionTest;
 import RMIInterface.ServiceServerInterface;
 
 public class SyncWithRemote implements Runnable {
@@ -20,7 +21,7 @@ public class SyncWithRemote implements Runnable {
 	private UserOperate uopt;
 	private ClientMetaData cmd;
 	public volatile static Thread syncer;
-	
+
 	public SyncWithRemote() {
 		fopt = new FileOptHelper();
 		uopt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(),
@@ -29,9 +30,9 @@ public class SyncWithRemote implements Runnable {
 		syncer = new Thread(this);
 		start();
 	}
-	
+
 	private void pollSharedFileInit() {
-//		System.out.println("Function polling shared called");
+		// System.out.println("Function polling shared called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
@@ -45,8 +46,8 @@ public class SyncWithRemote implements Runnable {
 			for (String key : remoteFileAccess.keySet()) {
 				if (!localFile.contains(key)) {
 					if (remoteFileAccess.get(key) != -1) {
-						System.out
-								.println("File: " + key + " is shared to me.");
+						System.out.println("File: " + key
+								+ " is accessable to me.");
 						if (!OperationQueue.getInstance().getDownloadQueue()
 								.contains(key)) {
 							fopt.downLoadFileControl(key);
@@ -56,7 +57,13 @@ public class SyncWithRemote implements Runnable {
 			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SessionInfo.getInstance().getRemoteDNS();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -67,7 +74,7 @@ public class SyncWithRemote implements Runnable {
 		// get shared file from remote
 		// get corresponding files in local
 		// check if the version number is different
-//		System.out.println("Function polling modify called");
+		// System.out.println("Function polling modify called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
@@ -100,10 +107,15 @@ public class SyncWithRemote implements Runnable {
 							OperationQueue.getInstance().getUploadQueue()
 									.remove(fn);
 						}
+						/**
+						 * check if local has file, if yes , delete, if not
+						 * nothing
+						 **/
 						fopt.deleteFileInFoler(filePath);
 						// according remote, deleting local and remove local
 						// meta data
-						cmd.removeOneRecord(SessionInfo.getInstance().getRemoteDNS(), fn);
+						cmd.removeOneRecord(SessionInfo.getInstance()
+								.getWorkFolder(), fn);
 					}
 					if (remoteVersion > localVersionInt) {
 						System.out
@@ -118,10 +130,15 @@ public class SyncWithRemote implements Runnable {
 					// upload will be operated on file creating
 				}
 			}
-
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SessionInfo.getInstance().getRemoteDNS();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -150,7 +167,7 @@ public class SyncWithRemote implements Runnable {
 		System.out.println("Polling thread start...");
 		syncer.start();
 	}
-	
+
 	public static void stop() {
 		System.out.println("Stop syncer...");
 		syncer = null;

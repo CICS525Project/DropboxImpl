@@ -1,6 +1,7 @@
 package dataTransfer;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class ConfigurationData {
 	
@@ -15,4 +16,5 @@ public class ConfigurationData {
 	public static final String SERVICE_B1 = "cics525group6.cloudapp.net";
 	public static final String SERVICE_B2 = "cics525group6b2.cloudapp.net";
 	public static final int PORT_NUM = 12345;
+	
 }

@@ -24,7 +24,7 @@ public class ToolTip {
 	private int height = 100;
 	private int step = 30;
 	private int stepTime = 30;
-	private int displayTime = 6000;
+	private int displayTime = 2000;
 	private int countOfToolTip = 0;
 	private int maxToolTip = 0;
 	private int maxToolTipScreen;
