@@ -224,12 +224,11 @@ public class ServiceContainer {
 		PreparedStatement ps=null;
 		try{
 			con=ConnectionFactory.getConnection();
-			String query="UPDATE [routingTable] SET version=? WHERE fileName=? AND userName=? AND serverName=?";
+			String query="UPDATE [routingTable] SET version=? WHERE fileName=? AND userName=?";
 			ps=con.prepareStatement(query);
 			ps.setInt(1, missingList.getVersion());
 			ps.setString(2, missingList.getFileName());
 			ps.setString(3, missingList.getUserName());
-			ps.setString(4, missingList.getServerName());
 			ps.executeUpdate();
 		}
 		catch(Exception e){

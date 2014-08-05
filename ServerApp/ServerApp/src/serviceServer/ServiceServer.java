@@ -221,6 +221,8 @@ public class ServiceServer implements ServiceServerInterface {
 			routingTable.setUserName(user);
 			routingTable.setVersion(-1);
 			missMatch.add(routingTable);
+			
+
 			mySSCom.pushRT(missMatch);
 			
 			// delete file from backup containers
