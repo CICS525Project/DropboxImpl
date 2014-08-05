@@ -2,14 +2,13 @@ package RMIInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import authentication.UserInfo;
 import serviceServer.RoutingTable;
 /**
  * Interface for Server to Server communication
- * @author cics525
+ * @author Ignacio
  *
  */
 public interface ServerServerComInterface extends Remote{
@@ -28,6 +27,12 @@ public interface ServerServerComInterface extends Remote{
 	 */
 	boolean updateUserTable(String user, String pass) throws RemoteException;
 	
+	/**
+	 * Used to updateShare Table when the User is sharing the files
+	 * @param missMatch
+	 * @return
+	 * @throws RemoteException
+	 */
 	boolean updateShareTable(ArrayList<RoutingTable> missMatch) throws RemoteException;
 	
 	/**

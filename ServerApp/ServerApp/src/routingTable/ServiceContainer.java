@@ -473,24 +473,24 @@ public class ServiceContainer {
 		Connection con1 = null;
 		PreparedStatement ps1=null;
 		ResultSet rs1=null;
-		ArrayList<String> result=new ArrayList<String>();
+		HashMap<String, String> result=new HashMap<>();
 		HashMap<String, Integer> finalResult=new HashMap<>();
 		try{
 			con=ConnectionFactory.getConnection();
-			String query="SELECT fileName FROM [sharedTable] WHERE sharedUserName=? OR userName=?";
+			String query="SELECT fileName,userName FROM [sharedTable] WHERE sharedUserName=? OR userName=?";
 			ps=con.prepareStatement(query);
 			ps.setString(1, userName);
 			ps.setString(2, userName);
 			rs=ps.executeQuery();
 			while(rs.next()){
-				result.add(rs.getString("fileName"));
+				result.put(rs.getString("fileName"),rs.getString("userName"));
 			}
-			for(String s:result){
+			for(String s:result.keySet()){
 				con1=ConnectionFactory.getConnection();
 				String query1="SELECT version FROM [routingTable] WHERE fileName=? AND userName=?";
 				ps1=con.prepareStatement(query1);
 				ps1.setString(1, s);
-				ps1.setString(2, userName);
+				ps1.setString(2, result.get(s));
 				rs1=ps1.executeQuery();
 				while(rs1.next()){
 					finalResult.put(s, rs1.getInt("version"));

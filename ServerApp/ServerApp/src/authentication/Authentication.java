@@ -7,10 +7,21 @@ import java.sql.SQLException;
 
 import utils.ConnectionFactory;
 
+/**
+ * Class Name: Authentication
+ * Used to Validate the User Login and Create New Account
+ * @author Jitin
+ *
+ */
 
 public class Authentication {
 
-
+/**
+ * To check for Valid User
+ * @param userName
+ * @param password
+ * @return result 
+ */
 	public boolean validUser(String userName, String password){
 		boolean result=false;
 		Connection con = null;
@@ -42,7 +53,12 @@ public class Authentication {
 		}
 		return result;
 	}
-
+	/**
+	 * Used to create a new account for User
+	 * @param userName
+	 * @param password
+	 * @return result
+	 */
 
 	public boolean createUser(String userName, String password){
 		boolean result=false;
