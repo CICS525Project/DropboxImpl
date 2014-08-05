@@ -24,7 +24,7 @@ public class StartGUI {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String initialDNS = ConfigurationData.SERVICE_S1;
+		String initialDNS = ConfigurationData.SERVICE_S3;
 		SessionInfo.getInstance().setRemoteDNS(
 				initialDNS);
 		SessionInfo.getInstance().setPortNum(ConfigurationData.PORT_NUM);

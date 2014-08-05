@@ -314,7 +314,45 @@ public class ClientMetaData {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param path
+	 * @param filename
+	 */
+	public void removeOneRecord(String path, String filename){
+		try {
+			path = path + File.separator + "file.xml";
+			File xmlFile = new File(path);
+			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder metaBuilder = metaFactory.newDocumentBuilder();
+			Document document = metaBuilder.parse(xmlFile);
+			document.getDocumentElement().normalize();
+			NodeList nodeList = document.getElementsByTagName("File");
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node nNode = nodeList.item(i);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					String fname = eElement.getElementsByTagName("Filename")
+							.item(0).getTextContent();
+					if (fname.contains(filename)) {
+						eElement.getParentNode().removeChild(eElement);
+					}
+				}
+			}
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource domSource = new DOMSource(document);
+			StreamResult streamResult = new StreamResult(new File(path));
+			transformer.transform(domSource, streamResult);
+			System.out.println("xml record deleted.");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * remove record in the xml file
 	 * @param path
@@ -327,7 +365,6 @@ public class ClientMetaData {
 			DocumentBuilderFactory metaFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder metaBuilder = metaFactory.newDocumentBuilder();
-
 			Document document = metaBuilder.parse(xmlFile);
 			document.getDocumentElement().normalize();
 			NodeList nodeList = document.getElementsByTagName("File");
@@ -348,6 +385,7 @@ public class ClientMetaData {
 			DOMSource domSource = new DOMSource(document);
 			StreamResult streamResult = new StreamResult(new File(path));
 			transformer.transform(domSource, streamResult);
+			System.out.println("xml record deleted.");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

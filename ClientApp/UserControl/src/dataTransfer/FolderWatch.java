@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import userMetaData.ClientMetaData;
@@ -120,6 +121,7 @@ public class FolderWatch implements Runnable {
 									.readHashCode(SessionInfo.getInstance()
 											.getWorkFolder());
 							if (localFileAndVersion.containsKey(fn)) {
+								cmd.removeOneRecord(SessionInfo.getInstance().getWorkFolder(), fn);
 								uopt.deleteRemoteFile(fn);
 							}
 						}

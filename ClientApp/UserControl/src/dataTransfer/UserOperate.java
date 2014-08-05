@@ -168,9 +168,12 @@ public class UserOperate {
 	 */
 	public void deleteRemoteFile(String filename) {
 
+		System.out.println("Delete file DNS is ************* " + 1);
 		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
 				.getRemoteDNS(), SessionInfo.getInstance().getPortNum());
+		System.out.println("Delete file DNS is ************* " + 2);
 		String fileRemoteDNS = uopt.getOneFileAddress(filename);
+		System.out.println("Delete file DNS is ************* " + fileRemoteDNS);
 		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, SessionInfo.getInstance().getPortNum());
 		String fileContainerString = fileDNSOPT.fileContainer();
 		String[] part = fileContainerString.split(",");
@@ -202,7 +205,7 @@ public class UserOperate {
 					}
 				}
 			}
-			System.out.println("Cannot find the file you selected.");
+			System.out.println("Cannot find|deleting the file you selected.");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
