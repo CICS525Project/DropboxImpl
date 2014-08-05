@@ -75,13 +75,14 @@ public class OperationQueue {
 		if (inDown && inUp) {
 			return 3;
 		}
-		if (inDown) {
+		else if (inDown) {
 			return 1;
 		}
-		if (inUp) {
+		else if (inUp) {
 			return 2;
+		}else{
+			return 0;
 		}
-		return 0;
 	}
 
 	public synchronized void removeUpAddDown(String fn) {

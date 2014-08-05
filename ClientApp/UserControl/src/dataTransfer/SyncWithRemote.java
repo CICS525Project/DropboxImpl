@@ -31,7 +31,7 @@ public class SyncWithRemote implements Runnable {
 	}
 	
 	private void pollSharedFileInit() {
-		System.out.println("Function polling shared called");
+//		System.out.println("Function polling shared called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
@@ -67,7 +67,7 @@ public class SyncWithRemote implements Runnable {
 		// get shared file from remote
 		// get corresponding files in local
 		// check if the version number is different
-		System.out.println("Function polling modify called");
+//		System.out.println("Function polling modify called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
@@ -101,11 +101,9 @@ public class SyncWithRemote implements Runnable {
 									.remove(fn);
 						}
 						fopt.deleteFileInFoler(filePath);
-						ArrayList<String> f = new ArrayList<String>();
 						// according remote, deleting local and remove local
 						// meta data
-						f.add(fn);
-						cmd.removeRecord(filePath, f);
+						cmd.removeOneRecord(SessionInfo.getInstance().getRemoteDNS(), fn);
 					}
 					if (remoteVersion > localVersionInt) {
 						System.out
@@ -116,8 +114,6 @@ public class SyncWithRemote implements Runnable {
 								.contains(fn)) {
 							fopt.downLoadFileControl(fn);
 						}
-						// OperationQueue.getInstance().add(fn,
-						// OperationQueue.getInstance().getDownloadQueue());
 					}
 					// upload will be operated on file creating
 				}

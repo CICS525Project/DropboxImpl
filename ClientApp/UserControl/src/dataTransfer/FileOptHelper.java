@@ -153,19 +153,15 @@ public class FileOptHelper {
 								.get(fname));
 						if (remoteFileAndVersion.get(fname) > localVersion) {
 							System.out.println("detect file " + fname + "has higher version.");
-//							OperationQueue.getInstance().add(
-//									fname,
-//									OperationQueue.getInstance()
-//											.getDownloadQueue());
 							downLoadFileControl(fname);
 						}
 					}
 				}
 			} else {
 				// new added just download
-//				OperationQueue.getInstance().add(fname,
-//						OperationQueue.getInstance().getDownloadQueue());
-				downLoadFileControl(fname);
+				if (!remoteFileAndVersion.get(fname).equals(-1)) {
+					downLoadFileControl(fname);
+				}
 			}
 		}
 	}
@@ -289,11 +285,11 @@ public class FileOptHelper {
 			if (OperationQueue.getInstance().containsObj(fn) == 1) {
 				// operation exists in download queue
 				new ConflictPopUp("Conflict detected. File " + fn
-						+ " is current in the download queue.", 3, fn);
+						+ " is current in the download queue.", 1, fn);
 			} else {
 				// operation exists already in the Upload queue
 				new ConflictPopUp("Conflict detected. File " + fn
-						+ " is already in the Upload queue.", 1, fn);
+						+ " is already in the Upload queue.", 3, fn);
 			}
 		} else {
 			// add file to the upload queue

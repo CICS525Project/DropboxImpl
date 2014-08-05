@@ -101,7 +101,7 @@ public class UserOperate {
 		ArrayList<String> files = helper.getFileInFolder(SessionInfo.getInstance().getWorkFolder());
 		try {
 			res = serviceProvider.getAddress(files, SessionInfo.getInstance().getUsername());
-			for (int i = 0; i < res.size() ; i++) {
+			for (int i = 0; i < files.size() ; i++) {
 				System.out.println(res.get(files.get(i)));
 			}
 		} catch (RemoteException e) {

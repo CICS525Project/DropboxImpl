@@ -127,14 +127,12 @@ public class ConflictPopUp extends JFrame {
 		}
 		//if download conflict with an existing download action
 		if(i == 2){
-			warnMsg = "The file is already in the download task queue.";
 			cancel.setText("OK");
 			cancel.setLocation(150, 237);
 			contentPane.add(cancel);
 		}
 		//if upload conflict with a existing upload action
 		if(i == 3){
-			warnMsg = "the file is already in the upload task queue.";
 			cancel.setText("OK");
 			cancel.setLocation(150, 237);
 			contentPane.add(cancel);
