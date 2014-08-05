@@ -16,7 +16,7 @@ import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import userMetaData.ClientMetaData;
+import userUtil.ClientMetaData;
 
 public class FolderWatch implements Runnable {
 	private Path dir;

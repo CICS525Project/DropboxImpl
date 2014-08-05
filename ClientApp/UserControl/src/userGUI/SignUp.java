@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
+import userUtil.PasswordUtility;
 import dataTransfer.SessionInfo;
 import dataTransfer.UserOperate;
 
@@ -86,7 +87,8 @@ public class SignUp extends JFrame {
 					UserOperate opt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(),SessionInfo.getInstance().getPortNum());
 					System.out.println(userName.getText() + " " + nPassword.getText());
 					try {
-						if(opt.signUp(userName.getText(), nPassword.getText())){
+						String encryptPWD = PasswordUtility.encrypt(nPassword.getText());
+						if(opt.signUp(userName.getText(), encryptPWD)){
 							JOptionPane.showMessageDialog(null,
 									"You have created your account.");
 						}else{

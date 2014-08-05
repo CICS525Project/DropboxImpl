@@ -13,8 +13,9 @@ import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
 import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
+
 import userGUI.ToolTip;
-import userMetaData.ClientMetaData;
+import userUtil.ClientMetaData;
 
 public class DownloadFile implements Runnable {
 

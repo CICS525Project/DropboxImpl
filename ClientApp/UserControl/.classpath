@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/mail-1.4.5-sources.jar"/>
 	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/mail-1.4.5.jar"/>
 	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/PackageForAzureLibrariesForJava/microsoft-windowsazure-api-0.4.6.jar"/>
+	<classpathentry kind="lib" path="/Users/haonanxu/Desktop/Encryption Jar/sun.misc.BASE64Decoder.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

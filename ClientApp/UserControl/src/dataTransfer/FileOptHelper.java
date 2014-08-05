@@ -24,7 +24,7 @@ import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
 
 import userGUI.ConflictPopUp;
 import userGUI.ToolTip;
-import userMetaData.ClientMetaData;
+import userUtil.ClientMetaData;
 
 public class FileOptHelper {
 

@@ -1,4 +1,4 @@
-package userMetaData;
+package userUtil;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

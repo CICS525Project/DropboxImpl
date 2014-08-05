@@ -1,4 +1,4 @@
-package userMetaData;
+package userUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -62,6 +62,7 @@ public class ServerConnectionTest {
 		while(index > 0){
 			Random rand = new Random();
 			int accessInt = rand.nextInt(index);
+			System.out.println("accessInt is " + accessInt);
 			if(!testConnection(address.get(accessInt))){
 				address.remove(accessInt);
 				index = address.size();

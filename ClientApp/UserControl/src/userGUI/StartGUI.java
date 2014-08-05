@@ -4,7 +4,7 @@ import java.io.File;
 
 import javax.swing.JOptionPane;
 
-import userMetaData.ServerConnectionTest;
+import userUtil.ServerConnectionTest;
 import dataTransfer.*;
 
 public class StartGUI {

@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 import javax.mail.Session;
 
-import userMetaData.ClientMetaData;
-import userMetaData.ServerConnectionTest;
+import userUtil.ClientMetaData;
+import userUtil.ServerConnectionTest;
 import RMIInterface.ServiceServerInterface;
 
 public class SyncWithRemote implements Runnable {

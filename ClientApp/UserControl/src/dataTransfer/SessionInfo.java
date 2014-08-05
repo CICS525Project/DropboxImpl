@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
-import userMetaData.ServerConnectionTest;
+import userUtil.ServerConnectionTest;
 import RMIInterface.ServiceServerInterface;
 
 public class SessionInfo {

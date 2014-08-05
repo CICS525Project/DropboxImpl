@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 
 import javafx.scene.control.Tooltip;
 import userGUI.ConflictPopUp;
-import userMetaData.ClientMetaData;
+import userUtil.ClientMetaData;
 import userGUI.ToolTip;
 
 import com.microsoft.windowsazure.services.blob.client.CloudBlob;

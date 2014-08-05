@@ -14,7 +14,8 @@ import javax.swing.JButton;
 
 import org.w3c.dom.DOMException;
 
-import userMetaData.ClientMetaData;
+import userUtil.ClientMetaData;
+import userUtil.PasswordUtility;
 import dataTransfer.*;
 
 import java.awt.event.ActionListener;
@@ -127,7 +128,8 @@ public class SignIn extends JFrame {
 						}
 					}
 					try {
-						if (uopt.signIn(username, password)) {
+						String encryptPWD = PasswordUtility.encrypt(password);
+						if (uopt.signIn(username, encryptPWD)) {
 							try {
 								MySystemTray minimizeAppobj = new MySystemTray();
 								// start thread for folder watcher
