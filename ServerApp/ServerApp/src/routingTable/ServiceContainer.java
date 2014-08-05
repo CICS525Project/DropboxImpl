@@ -605,12 +605,9 @@ public class ServiceContainer {
 						ps.setString(1, i.getUserName());
 						ps.setString(2, i.getFileName());
 						ps.setString(3, i.getSharedUserName());
-						ps.addBatch();
+						ps.executeUpdate();
 					}
 				}
-			}
-			if(ps!=null){
-				ps.executeBatch();
 			}
 			result=true;
 		}
