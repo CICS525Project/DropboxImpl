@@ -19,12 +19,15 @@ public class SyncWithRemote implements Runnable {
 	private FileOptHelper fopt;
 	private UserOperate uopt;
 	private ClientMetaData cmd;
-
+	public volatile static Thread syncer;
+	private Thread thisThread;
+	
 	public SyncWithRemote() {
 		fopt = new FileOptHelper();
 		uopt = new UserOperate(SessionInfo.getInstance().getRemoteDNS(),
 				SessionInfo.getInstance().getPortNum());
 		cmd = new ClientMetaData();
+		thisThread = Thread.currentThread();
 		start();
 	}
 
@@ -134,7 +137,7 @@ public class SyncWithRemote implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while (true) {
+		while (syncer == thisThread) {
 			try {
 				pollSharedFileInit();
 				pollSharedFileModify();
@@ -148,7 +151,12 @@ public class SyncWithRemote implements Runnable {
 
 	public void start() {
 		System.out.println("Polling thread start...");
-		Thread t = new Thread(this);
-		t.start();
+		syncer = new Thread(this);
+		syncer.start();
+	}
+	
+	public static void stop() {
+		System.out.println("Stop syncer...");
+		syncer = null;
 	}
 }

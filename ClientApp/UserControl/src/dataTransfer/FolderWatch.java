@@ -115,6 +115,7 @@ public class FolderWatch implements Runnable {
 							// user
 							// if not exists, means deletion is operated by
 							// other shared user and sync her, discard
+							SyncWithRemote.stop();
 							HashMap<String, String> localFileAndVersion = cmd
 									.readHashCode(SessionInfo.getInstance()
 											.getWorkFolder());

@@ -197,6 +197,7 @@ public class UserOperate {
 						myTip.setToolTip(new ImageIcon(
 								ConfigurationData.WARN_IMG), "File " + filename
 								+ " is deleted secessfully!");
+						new SyncWithRemote();
 						return;
 					}
 				}
