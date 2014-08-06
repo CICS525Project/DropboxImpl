@@ -39,6 +39,7 @@ public class DownloadFile implements Runnable {
 		Thread thisThread = Thread.currentThread();
 		try {
 			while (downloader == thisThread) {
+				Thread.sleep(2000);
 				if (opt.peekDown() != null) {
 					// get first download object from download queue
 					downLoadFile(opt.peekDown());
@@ -50,6 +51,9 @@ public class DownloadFile implements Runnable {
 				}
 			}
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

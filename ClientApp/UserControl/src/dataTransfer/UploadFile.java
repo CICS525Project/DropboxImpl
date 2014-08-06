@@ -39,6 +39,12 @@ public class UploadFile implements Runnable {
 	public void uploadImpl() throws IOException {
 		Thread thisThread = Thread.currentThread();
 		while (uploader == thisThread) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (optQ.peekUp() != null) {
 				uploadFile(optQ.peekUp());
 				System.out.println("upload queue size is " + OperationQueue.getInstance().getUploadQueue().size());
