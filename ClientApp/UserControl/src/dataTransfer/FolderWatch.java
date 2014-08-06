@@ -94,7 +94,7 @@ public class FolderWatch implements Runnable {
 						}
 						if (kind.name().equals("ENTRY_MODIFY")) {
 							// add into upload queue
-							/** modify local version number here **/
+							//modify local version number here
 							String oldVersion = cmd.readVersionForOne(fn);
 							String checkSum = fopt.getHashCode(fopt
 									.hashFile(SessionInfo.getInstance()
@@ -127,6 +127,8 @@ public class FolderWatch implements Runnable {
 							if (localFileAndVersion.containsKey(fn)) {
 								cmd.removeOneRecord(SessionInfo.getInstance().getWorkFolder(), fn);
 								uopt.deleteRemoteFile(fn);
+							}else{
+								new SyncWithRemote();
 							}
 						}
 					}
@@ -140,7 +142,6 @@ public class FolderWatch implements Runnable {
 			}
 		}
 	}
-
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub

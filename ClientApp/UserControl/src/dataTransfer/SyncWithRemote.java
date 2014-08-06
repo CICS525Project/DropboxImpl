@@ -159,12 +159,10 @@ public class SyncWithRemote implements Runnable {
 			}
 		}
 	}
-
 	public void start() {
 		System.out.println("Polling thread start...");
 		syncer.start();
 	}
-
 	public static void stop() {
 		System.out.println("Stop syncer...");
 		syncer = null;

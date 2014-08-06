@@ -1,11 +1,12 @@
 package dataTransfer;
 
-
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -19,13 +20,16 @@ import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
 import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
 import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
+import com.microsoft.windowsazure.services.core.storage.StorageException;
 
 import RMIInterface.ServiceServerInterface;
+
 public class UserOperate {
 
 	private ServiceServerInterface serviceProvider;
 	private static FileOptHelper helper;
 	private ToolTip myTip;
+
 	/**
 	 * constrctor
 	 * 
@@ -72,14 +76,16 @@ public class UserOperate {
 			return false;
 		}
 	}
+
 	/**
 	 * user sign up in the system
+	 * 
 	 * @param uname
 	 * @param upass
 	 * @return
 	 * @throws RemoteException
 	 */
-	public boolean signUp(String uname, String upass) throws RemoteException{
+	public boolean signUp(String uname, String upass) throws RemoteException {
 		boolean res = false;
 		try {
 			res = serviceProvider.signIn(uname, upass);
@@ -90,18 +96,21 @@ public class UserOperate {
 		}
 		return res;
 	}
+
 	/**
 	 * 
 	 * @param files
 	 * @return
 	 */
-	public HashMap<String, String> getFileInFolderAddress(){
+	public HashMap<String, String> getFileInFolderAddress() {
 		HashMap<String, String> res = new HashMap<String, String>();
 		helper = new FileOptHelper();
-		ArrayList<String> files = helper.getFileInFolder(SessionInfo.getInstance().getWorkFolder());
+		ArrayList<String> files = helper.getFileInFolder(SessionInfo
+				.getInstance().getWorkFolder());
 		try {
-			res = serviceProvider.getAddress(files, SessionInfo.getInstance().getUsername());
-			for (int i = 0; i < files.size() ; i++) {
+			res = serviceProvider.getAddress(files, SessionInfo.getInstance()
+					.getUsername());
+			for (int i = 0; i < files.size(); i++) {
 				System.out.println(res.get(files.get(i)));
 			}
 		} catch (RemoteException e) {
@@ -110,19 +119,20 @@ public class UserOperate {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * 
 	 * @param filename
 	 * @return
 	 */
-	public String getOneFileAddress(String filename){
+	public String getOneFileAddress(String filename) {
 		HashMap<String, String> res = new HashMap<String, String>();
 		ArrayList<String> file = new ArrayList<String>();
 		String address = "";
 		file.add(filename);
 		try {
-			res = serviceProvider.getAddress(file, SessionInfo.getInstance().getUsername());
+			res = serviceProvider.getAddress(file, SessionInfo.getInstance()
+					.getUsername());
 			address = res.get(filename);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -130,38 +140,40 @@ public class UserOperate {
 		}
 		return address;
 	}
-	
+
 	/**
 	 * get all files visible to a user <file, version>
+	 * 
 	 * @param uname
 	 * @return
 	 */
-	public HashMap<String, Integer> getServerVersion(String uname){
+	public HashMap<String, Integer> getServerVersion(String uname) {
 		HashMap<String, Integer> res = new HashMap<String, Integer>();
 		try {
-			res = serviceProvider.getCurrentFiles(uname); 
+			res = serviceProvider.getCurrentFiles(uname);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Get remote version, the remote VM is failed.");
 		}
 		return res;
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	public String fileContainer(){
+	public String fileContainer() {
 		String containerKey = null;
 		try {
 			containerKey = serviceProvider.getContainer();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Get remote container, the remote VM is failed.");
+			System.out
+					.println("Get remote container, the remote VM is failed.");
 		}
 		return containerKey;
 	}
-	
+
 	/**
 	 * 
 	 * @param filename
@@ -174,7 +186,8 @@ public class UserOperate {
 		System.out.println("Delete file DNS is ************* " + 2);
 		String fileRemoteDNS = uopt.getOneFileAddress(filename);
 		System.out.println("Delete file DNS is ************* " + fileRemoteDNS);
-		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, SessionInfo.getInstance().getPortNum());
+		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, SessionInfo
+				.getInstance().getPortNum());
 		String fileContainerString = fileDNSOPT.fileContainer();
 		String[] part = fileContainerString.split(",");
 		CloudStorageAccount storageAccount;
@@ -191,10 +204,12 @@ public class UserOperate {
 						blob.downloadAttributes();
 						HashMap<String, String> res = blob.getMetadata();
 						String originUserName = res.get("name");
-						System.out.println("Deleting file: " + filename + " origin user name is " + originUserName);
-						//delete remote blob
+						System.out.println("Deleting file: " + filename
+								+ " origin user name is " + originUserName);
+						// delete remote blob
 						blob.deleteIfExists();
-						//need to call remote function to change version number to -1 in RT table
+						// need to call remote function to change version number
+						// to -1 in RT table
 						serviceProvider.deleteFile(originUserName, filename);
 						myTip = new ToolTip();
 						myTip.setToolTip(new ImageIcon(
@@ -211,22 +226,60 @@ public class UserOperate {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * 
 	 * @param files
 	 * @param shareUser
 	 */
-	public void shareFile(String[] files, String shareUser){
-		HashMap<String, String> shareList = new HashMap<String,String>();
-		String username = SessionInfo.getInstance().getUsername();
-		for(String fname:files){
+	public void shareFile(String[] files, String shareUser) {
+
+		for (String fname : files) {
+			HashMap<String, String> shareList = new HashMap<String, String>();
 			shareList.put(fname, shareUser);
-		}
-		try {
-			serviceProvider.shareFile(shareList, username);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Shared files, the remote VM is failed.");
+			try {
+				String fileAddress = getOneFileAddress(fname);
+				Registry registry = LocateRegistry.getRegistry(fileAddress,
+						12345);
+				ServiceServerInterface serviceProviderTMP = (ServiceServerInterface) registry
+						.lookup("cloudboxRMI");
+				String fileContainerString = serviceProviderTMP.getContainer();
+				String[] part = fileContainerString.split(",");
+				CloudStorageAccount storageAccount = CloudStorageAccount.parse(part[0]);
+				CloudBlobClient blobClient = storageAccount
+						.createCloudBlobClient();
+				String containerName = part[1];
+				CloudBlobContainer container = blobClient
+						.getContainerReference(containerName);
+				String originOwnerName = null;
+				for (ListBlobItem blobItem : container.listBlobs()) {
+					if (blobItem instanceof CloudBlob) {
+						CloudBlob blob = (CloudBlob) blobItem;
+						blob.downloadAttributes();
+						if (fname.equals(blob.getName())) {
+							blob.downloadAttributes();
+							HashMap<String, String> res = blob.getMetadata();
+							originOwnerName = res.get("name");
+						}
+					}
+				}
+				serviceProvider.shareFile(shareList, originOwnerName);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				System.out.println("Shared files, the remote VM is failed.");
+			} catch (NotBoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidKeyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (StorageException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
