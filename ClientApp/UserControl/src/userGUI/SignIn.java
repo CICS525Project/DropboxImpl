@@ -106,7 +106,6 @@ public class SignIn extends JFrame {
 							e.printStackTrace();
 						}
 					} else {
-						/** Check if is the same user login to the application **/
 						// if not, delete all the files in folder
 						if (!cmd.checkXMLOwner(username, workpath)) {
 							System.out.println("user changed.");
@@ -137,23 +136,10 @@ public class SignIn extends JFrame {
 										.getWorkFolder());
 								// initializae download queueu
 								fopt.initialDownloadQueue();
-								/******** create initial upload queue ********/
 								fopt.initilizeUploadQueue();
-								System.out.println("Upload queue size is: "
-										+ OperationQueue.getInstance()
-												.getUploadQueue().size());
-								System.out.println("download queue size is: "
-										+ OperationQueue.getInstance()
-												.getDownloadQueue().size());
-								/******** start upload thread ********/
 								new UploadFile();
-								/******** start download thread ********/
 								new DownloadFile();
-								
-								
-								/** start polling information from server side **/
 								new SyncWithRemote();
-								/** close login window **/
 								Container frame = btnSignin.getParent();
 								do {
 									frame = frame.getParent();

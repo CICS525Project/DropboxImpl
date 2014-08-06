@@ -85,7 +85,7 @@ public class FileOptHelper {
 
 	/**
 	 * 
-	 * @param dir
+	 * @param dir path to the xml file
 	 */
 	public void checkFileAndXML(String dir) {
 		File folder = new File(dir);
@@ -101,13 +101,12 @@ public class FileOptHelper {
 	/**
 	 * Delete a file in a folder
 	 * 
-	 * @param dir
+	 * @param dir path to the xml file
 	 */
 	public void deleteFileInFoler(String dir) {
 		Path path = Paths.get(dir);
 		try {
 			Files.deleteIfExists(path);
-			System.out.println("delete file: " + dir);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -132,13 +131,11 @@ public class FileOptHelper {
 				remoteFileAndVersion.keySet());
 		for (int i = 0; i < remoteFileList.size(); i++) {
 			String fname = remoteFileList.get(i);
-			System.out.println("remote file: " + fname + " version " + remoteFileAndVersion.get(fname) + " local version " + localFileAndVersion.get(fname));
 			// if file exists on both local and remote
 			if (localFileAndVersion.containsKey(fname)) {
 				// if local version is not same as remote version
 				if (!localFileAndVersion.get(fname).equals(
 						remoteFileAndVersion.get(fname).toString())) {
-					/******* Simply add the download request into the download queue *******/
 					if (remoteFileAndVersion.get(fname).equals(-1)) {
 						// file is deleted in the remote folder
 						// client will also deleted it.
@@ -152,7 +149,6 @@ public class FileOptHelper {
 						int localVersion = Integer.parseInt(localFileAndVersion
 								.get(fname));
 						if (remoteFileAndVersion.get(fname) > localVersion) {
-							System.out.println("detect file " + fname + "has higher version.");
 							downLoadFileControl(fname);
 						}
 					}
@@ -185,10 +181,8 @@ public class FileOptHelper {
 		// compare with local files and checksum and update version numbers
 		for (String fname : filesInfolder) {
 			try {
-				System.out.println("checksum comp in folder.");
 				String checks = fopt.getHashCode(fopt.hashFile(dir
 						+ File.separator + fname));
-				System.out.println("file: " + fname + "check sum: " + checks);
 				String originVersion = localFileAndVersion.get(fname);
 				if (localFileAndCheckSum.containsKey(fname)) {
 					// if two check sum are not same need to update
@@ -200,7 +194,6 @@ public class FileOptHelper {
 								.getInstance().getWorkFolder());
 						localFileAndVersion.put(fname,
 								Integer.toString(newVersion));
-						System.out.println("initial upload: " + fname);
 					}
 				}
 			} catch (Exception e) {
@@ -222,15 +215,11 @@ public class FileOptHelper {
 					// or upload
 					int localVersion = Integer.parseInt(localFileAndVersion
 							.get(fname));
-					System.out.println("file name : " + fname + " version: "
-							+ localVersion);
 					// only if local version is greater than the remote version
 					// add file in upload queue
 					// else do nothing
 					if (remoteFileAndVersion.get(fname) < localVersion) {
 						uploadFileControl(fname);
-//						OperationQueue.getInstance().add(fname,
-//								OperationQueue.getInstance().getUploadQueue());
 					}
 				}
 			} else {
@@ -259,7 +248,6 @@ public class FileOptHelper {
 				// operation exists in upload queue
 				DownloadFile.stop();
 				UploadFile.stop();
-				System.out.println("download conflict with upload ***********");
 				new ConflictPopUp("Conflict detected. File " + fn
 						+ " is current in the Upload queue.", 1, fn);
 			} else {
@@ -285,7 +273,6 @@ public class FileOptHelper {
 		if (OperationQueue.getInstance().containsObj(fn) != 0) {
 			SyncWithRemote.stop();
 			if (OperationQueue.getInstance().containsObj(fn) == 1) {
-				System.out.println("upload conflict with download*********");
 				UploadFile.stop();
 				DownloadFile.stop();
 				// operation exists in download queue

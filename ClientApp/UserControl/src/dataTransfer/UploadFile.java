@@ -54,21 +54,25 @@ public class UploadFile implements Runnable {
 		}
 	}
 
-	// start thread
+	/**
+	 *  start thread
+	 */
 	public void start() {
 		System.out.println("Uploader  running....");
 		uploader.start();
 	}
 
-	// Stop the thread
+	/**
+	 *  Stop the thread
+	 */
 	public static void stop() {
 		System.out.println("upload thread stopping ... ");
 		uploader = null;
 	}
 
 	/**
-	 * 
-	 * @param fileName
+	 * upload a file 
+	 * @param fileName file name need to be uploaded
 	 */
 	public void uploadFile(String fileName) {
 		boolean blobExistFlag = false;
@@ -127,8 +131,6 @@ public class UploadFile implements Runnable {
 					}
 				}
 			}
-			/** change remote version number as well **/
-
 			// if blob not already exist
 			if (!blobExistFlag) {
 				System.out.println("upload not remote exist file: " + fileName + " version " + localMeta.get(fileName));

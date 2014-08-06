@@ -89,7 +89,6 @@ public class UserOperate {
 		boolean res = false;
 		try {
 			res = serviceProvider.signIn(uname, upass);
-			System.out.println(res);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -110,9 +109,6 @@ public class UserOperate {
 		try {
 			res = serviceProvider.getAddress(files, SessionInfo.getInstance()
 					.getUsername());
-			for (int i = 0; i < files.size(); i++) {
-				System.out.println(res.get(files.get(i)));
-			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -180,12 +176,9 @@ public class UserOperate {
 	 */
 	public void deleteRemoteFile(String filename) {
 
-		System.out.println("Delete file DNS is ************* " + 1);
 		UserOperate uopt = new UserOperate(SessionInfo.getInstance()
 				.getRemoteDNS(), SessionInfo.getInstance().getPortNum());
-		System.out.println("Delete file DNS is ************* " + 2);
 		String fileRemoteDNS = uopt.getOneFileAddress(filename);
-		System.out.println("Delete file DNS is ************* " + fileRemoteDNS);
 		UserOperate fileDNSOPT = new UserOperate(fileRemoteDNS, SessionInfo
 				.getInstance().getPortNum());
 		String fileContainerString = fileDNSOPT.fileContainer();
@@ -204,8 +197,6 @@ public class UserOperate {
 						blob.downloadAttributes();
 						HashMap<String, String> res = blob.getMetadata();
 						String originUserName = res.get("name");
-						System.out.println("Deleting file: " + filename
-								+ " origin user name is " + originUserName);
 						// delete remote blob
 						blob.deleteIfExists();
 						// need to call remote function to change version number
@@ -220,7 +211,6 @@ public class UserOperate {
 					}
 				}
 			}
-			System.out.println("Cannot find|deleting the file you selected.");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

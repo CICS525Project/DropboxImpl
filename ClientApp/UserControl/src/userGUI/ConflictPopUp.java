@@ -21,6 +21,12 @@ public class ConflictPopUp extends JFrame {
 	private JLabel titleJLabel;
 	private String warnMsg;
 
+	/**
+	 * constructor 
+	 * @param warn warning message 
+	 * @param i control index
+	 * @param fn file name in conflict
+	 */
 	public ConflictPopUp(String warn, int i, String fn) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 100);
@@ -31,6 +37,11 @@ public class ConflictPopUp extends JFrame {
 		setupGUI(i, fn);
 	}
 
+	/**
+	 * GUI creator
+	 * @param i index controller 
+	 * @param fn file name 
+	 */
 	private void setupGUI(int i, String fn) {
 
 		final int choice = i;

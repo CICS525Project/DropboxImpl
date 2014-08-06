@@ -27,6 +27,9 @@ public class SyncWithRemote implements Runnable {
 		start();
 	}
 
+	/**
+	 * check if a file is shared with user
+	 */
 	private void pollSharedFileInit() {
 		// System.out.println("Function polling shared called");
 		try {
@@ -63,6 +66,9 @@ public class SyncWithRemote implements Runnable {
 		}
 	}
 
+	/**
+	 * check if a file that is accessable for user is modified by others
+	 */
 	private void pollSharedFileModify() {
 		// get shared file from remote
 		// get corresponding files in local
@@ -97,10 +103,6 @@ public class SyncWithRemote implements Runnable {
 							OperationQueue.getInstance().getUploadQueue()
 									.remove(fn);
 						}
-						/**
-						 * check if local has file, if yes , delete, if not
-						 * nothing
-						 **/
 						fopt.deleteFileInFoler(filePath);
 						// according remote, deleting local and remove local
 						// meta data
@@ -152,10 +154,16 @@ public class SyncWithRemote implements Runnable {
 			}
 		}
 	}
+	/**
+	 * thread starter
+	 */
 	public void start() {
 		System.out.println("Polling thread start...");
 		syncer.start();
 	}
+	/**
+	 * thread stopper
+	 */
 	public static void stop() {
 		System.out.println("Stop syncer...");
 		syncer = null;

@@ -102,11 +102,4 @@ public class OperationQueue {
 		remove(fn, optQueueUp);
 		add(fn, optQueueUp);
 	}
-	public static void main(String[] args) {
-//		OperationQueue opt = OperationQueue.getInstance();
-//		String file = opt.peekDown();
-//		if(file == null){
-//			System.out.println("returns null");
-//		}
-	}
 }

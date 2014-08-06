@@ -7,6 +7,9 @@ import dataTransfer.*;
 
 public class StartGUI {
 	
+	/**
+	 * work folder creater
+	 */
 	public static void setUpWorkFolder() {
 		String homePath = System.getProperty("user.home");
 		String workFolder = homePath + File.separator + "Cloudbox";
@@ -23,6 +26,10 @@ public class StartGUI {
 		}
 	}
 
+	/**
+	 * main entrance for the application 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ServerConnectionTest scTest = new ServerConnectionTest();

@@ -4,7 +4,6 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -13,9 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.ArrayList;
 import java.util.HashMap;
-
 import com.microsoft.windowsazure.services.blob.client.CloudBlob;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
@@ -30,6 +27,10 @@ public class FolderWatch implements Runnable {
 	private UserOperate uopt;
 	private FileOptHelper fopt;
 
+	/**
+	 * folder watcher constructor 
+	 * @param path
+	 */
 	public FolderWatch(String path) {
 		this.dir = Paths.get(path);
 		cmd = new ClientMetaData();
@@ -61,10 +62,8 @@ public class FolderWatch implements Runnable {
 					String fn = fileName.toString();
 					if (fn.startsWith(".DS") || fn.startsWith("~")
 							|| fn.endsWith("~")) {
-						System.out.println(".ds and ~ checked");
 						continue;
 					} else if (fn.equals("file.xml")) {
-						System.out.println("xml checked");
 						continue;
 					} else {
 						// add new operations here
@@ -75,9 +74,6 @@ public class FolderWatch implements Runnable {
 							HashMap<String, Integer> remoteFiles = uopt
 									.getServerVersion(SessionInfo.getInstance()
 											.getUsername());
-							if (remoteFiles == null) {
-								System.out.println("remote is null");
-							}
 							if (!remoteFiles.containsKey(fn)) {
 								System.out
 										.println("On create remote does not have file: "
@@ -138,8 +134,6 @@ public class FolderWatch implements Runnable {
 											.getWorkFolder()
 											+ File.separator
 											+ fn));
-							System.out.println("remote c " + remoteCheckSum);
-							System.out.println("new c " + checkSum);
 							// if file is just modified
 							// not just download and overlapped
 							if (remoteCheckSum != null) {
@@ -199,6 +193,9 @@ public class FolderWatch implements Runnable {
 		}
 	}
 
+	/**
+	 * folder watcher starter
+	 */
 	public void start() {
 		System.out.println("Starting folder watcher ...");
 		Thread t = new Thread(this);

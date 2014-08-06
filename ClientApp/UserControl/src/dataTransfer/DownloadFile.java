@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
-
 import com.microsoft.windowsazure.services.blob.client.CloudBlob;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
 import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
@@ -23,6 +22,9 @@ public class DownloadFile implements Runnable {
 	public volatile static Thread downloader;
 	private ToolTip myTip;
 
+	/**
+	 * download thread constructor
+	 */
 	public DownloadFile() {
 		opt = OperationQueue.getInstance();
 		myTip = new ToolTip();
@@ -101,11 +103,6 @@ public class DownloadFile implements Runnable {
 						HashMap<String, String> res = blob.getMetadata();
 						String latestVersion = res.get("version");
 						String latestCheckSum = res.get("checkSum");
-//						String checkSum = fopt.getHashCode(fopt
-//								.hashFile(SessionInfo.getInstance()
-//										.getWorkFolder()
-//										+ File.separator
-//										+ fileName));
 						if (originFileInfolder.contains(fileName)) {
 							cmd.modifyInfo(fileName, latestCheckSum, latestVersion,
 									SessionInfo.getInstance().getWorkFolder());
@@ -127,11 +124,17 @@ public class DownloadFile implements Runnable {
 		}
 	}
 
+	/**
+	 * start download thread
+	 */
 	public void start() {
 		System.out.println("Start downloading...");
 		downloader.start();
 	}
 
+	/**
+	 * stop download thread
+	 */
 	public static void stop() {
 		System.out.println("download stopping ...");
 		downloader = null;
