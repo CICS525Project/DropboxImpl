@@ -41,8 +41,6 @@ public class SyncWithRemote implements Runnable {
 			for (String key : remoteFileAccess.keySet()) {
 				if (!localFile.containsKey(key)) {
 					if (remoteFileAccess.get(key) != -1) {
-//						System.out.println("File: " + key
-//								+ " is accessable to me.");
 						if (!OperationQueue.getInstance().getDownloadQueue()
 								.contains(key)) {
 							fopt.downLoadFileControl(key);
@@ -69,7 +67,6 @@ public class SyncWithRemote implements Runnable {
 		// get shared file from remote
 		// get corresponding files in local
 		// check if the version number is different
-		// System.out.println("Function polling modify called");
 		try {
 			Registry registry = LocateRegistry.getRegistry(SessionInfo
 					.getInstance().getRemoteDNS(), SessionInfo.getInstance()
@@ -84,14 +81,12 @@ public class SyncWithRemote implements Runnable {
 				
 				// if the local file is a shared file
 				if (filesAndVersionShared.containsKey(fn)) {
-//					System.out.println("Detect in polling, shared file " + fn);
 					String localVersion = cmd.readVersionForOne(fn);
 					int localVersionInt = Integer.parseInt(localVersion);
 					int remoteVersion = filesAndVersionShared.get(fn);
 					String filePath = SessionInfo.getInstance().getWorkFolder()
 							+ File.separator + fn;
 					if (remoteVersion == -1) {
-//						System.out.println("Detect file deleted.");
 						if (OperationQueue.getInstance().getDownloadQueue()
 								.contains(fn)) {
 							OperationQueue.getInstance().getDownloadQueue()

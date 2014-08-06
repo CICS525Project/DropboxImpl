@@ -16,6 +16,12 @@ import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.microsoft.windowsazure.services.blob.client.CloudBlob;
+import com.microsoft.windowsazure.services.blob.client.CloudBlobClient;
+import com.microsoft.windowsazure.services.blob.client.CloudBlobContainer;
+import com.microsoft.windowsazure.services.blob.client.ListBlobItem;
+import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
+
 import userUtil.ClientMetaData;
 
 public class FolderWatch implements Runnable {
@@ -53,7 +59,8 @@ public class FolderWatch implements Runnable {
 					WatchEvent<Path> e = (WatchEvent<Path>) event;
 					Path fileName = e.context();
 					String fn = fileName.toString();
-					if (fn.startsWith(".DS") || fn.startsWith("~")|| fn.endsWith("~")) {
+					if (fn.startsWith(".DS") || fn.startsWith("~")
+							|| fn.endsWith("~")) {
 						System.out.println(".ds and ~ checked");
 						continue;
 					} else if (fn.equals("file.xml")) {
@@ -68,49 +75,83 @@ public class FolderWatch implements Runnable {
 							HashMap<String, Integer> remoteFiles = uopt
 									.getServerVersion(SessionInfo.getInstance()
 											.getUsername());
-							if(remoteFiles == null){
+							if (remoteFiles == null) {
 								System.out.println("remote is null");
 							}
 							if (!remoteFiles.containsKey(fn)) {
-								System.out.println("On create remote does not have file: " + fn);
-								cmd.addToXML(fn,"1",SessionInfo.getInstance()
+								System.out
+										.println("On create remote does not have file: "
+												+ fn);
+								cmd.addToXML(fn, "1", SessionInfo.getInstance()
 										.getWorkFolder());
 								fopt.uploadFileControl(fn);
 							} else {
 								// if file is deleted and user uploads it again,
 								// need to set version as 1
-								if(remoteFiles.get(fn) == -1){
-									cmd.addToXML(fn,"1",SessionInfo.getInstance()
-											.getWorkFolder());
+								if (remoteFiles.get(fn) == -1) {
+									cmd.addToXML(fn, "1", SessionInfo
+											.getInstance().getWorkFolder());
 									fopt.uploadFileControl(fn);
-								}
-								else if (cmd.compareLcalandRmtVersion(fn) == 1) {
-									System.out.println("On create remote have smaller version");
-									cmd.addToXML(fn,"1" ,SessionInfo.getInstance()
-											.getWorkFolder());
+								} else if (cmd.compareLcalandRmtVersion(fn) == 1) {
+									System.out
+											.println("On create remote have smaller version");
+									cmd.addToXML(fn, "1", SessionInfo
+											.getInstance().getWorkFolder());
 									fopt.uploadFileControl(fn);
 								}
 							}
 						}
 						if (kind.name().equals("ENTRY_MODIFY")) {
 							// add into upload queue
-							//modify local version number here
+							// modify local version number here
+							String remoteCheckSum = null;
+							String fileRemoteDNS = uopt.getOneFileAddress(fn);
+							UserOperate fileDNSOPT = new UserOperate(
+									fileRemoteDNS, SessionInfo.getInstance()
+											.getPortNum());
+							String fileContainerString = fileDNSOPT
+									.fileContainer();
+							String[] part = fileContainerString.split(",");
+							CloudStorageAccount storageAccount;
+							storageAccount = CloudStorageAccount.parse(part[0]);
+							CloudBlobClient blobClient = storageAccount
+									.createCloudBlobClient();
+							String containerName = part[1];
+							CloudBlobContainer container = blobClient
+									.getContainerReference(containerName);
+							for (ListBlobItem blobItem : container.listBlobs()) {
+								if (blobItem instanceof CloudBlob) {
+									CloudBlob blob = (CloudBlob) blobItem;
+									blob.downloadAttributes();
+									if (fileName.equals(blob.getName())) {
+										HashMap<String, String> res = blob
+												.getMetadata();
+										remoteCheckSum = res.get("checkSum");
+										break;
+									}
+								}
+							}
+
 							String oldVersion = cmd.readVersionForOne(fn);
 							String checkSum = fopt.getHashCode(fopt
 									.hashFile(SessionInfo.getInstance()
 											.getWorkFolder()
 											+ File.separator
 											+ fn));
-							HashMap<String, String> originChecks = cmd
-									.readHashCode(SessionInfo.getInstance()
-											.getWorkFolder());
-							//if file is just modified
-							//not just download and overlapped
-							if(!originChecks.get(fn).equals(checkSum)){
-								int newVersion = Integer.parseInt(oldVersion) + 1;
-								cmd.modifyInfo(fn, checkSum, String
-										.valueOf(newVersion), SessionInfo
-										.getInstance().getWorkFolder());
+							System.out.println("remote c " + remoteCheckSum);
+							System.out.println("new c " + checkSum);
+							// if file is just modified
+							// not just download and overlapped
+							if (remoteCheckSum != null) {
+								if (!remoteCheckSum.equals(checkSum)) {
+									int newVersion = Integer
+											.parseInt(oldVersion) + 1;
+									cmd.modifyInfo(fn, checkSum, String
+											.valueOf(newVersion), SessionInfo
+											.getInstance().getWorkFolder());
+									fopt.uploadFileControl(fn);
+								}
+							} else {
 								fopt.uploadFileControl(fn);
 							}
 						}
@@ -125,9 +166,10 @@ public class FolderWatch implements Runnable {
 									.readHashCode(SessionInfo.getInstance()
 											.getWorkFolder());
 							if (localFileAndVersion.containsKey(fn)) {
-								cmd.removeOneRecord(SessionInfo.getInstance().getWorkFolder(), fn);
+								cmd.removeOneRecord(SessionInfo.getInstance()
+										.getWorkFolder(), fn);
 								uopt.deleteRemoteFile(fn);
-							}else{
+							} else {
 								new SyncWithRemote();
 							}
 						}
@@ -142,6 +184,7 @@ public class FolderWatch implements Runnable {
 			}
 		}
 	}
+
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub

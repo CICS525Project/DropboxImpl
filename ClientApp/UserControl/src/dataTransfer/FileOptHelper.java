@@ -254,6 +254,7 @@ public class FileOptHelper {
 		// operation already exists
 		// first needs to stop current thread first
 		if (OperationQueue.getInstance().containsObj(fn) != 0) {
+			SyncWithRemote.stop();
 			if (OperationQueue.getInstance().containsObj(fn) == 2) {
 				// operation exists in upload queue
 				DownloadFile.stop();
@@ -282,7 +283,7 @@ public class FileOptHelper {
 		// operation already exists
 		// first needs to stop current thread first
 		if (OperationQueue.getInstance().containsObj(fn) != 0) {
-			
+			SyncWithRemote.stop();
 			if (OperationQueue.getInstance().containsObj(fn) == 1) {
 				System.out.println("upload conflict with download*********");
 				UploadFile.stop();

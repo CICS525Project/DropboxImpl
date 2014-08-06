@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import dataTransfer.DownloadFile;
 import dataTransfer.OperationQueue;
+import dataTransfer.SyncWithRemote;
 import dataTransfer.UploadFile;
 
 public class ConflictPopUp extends JFrame {
@@ -50,16 +51,15 @@ public class ConflictPopUp extends JFrame {
 					//discard download
 					OperationQueue.getInstance().removeDownAddUp(filen);
 					new DownloadFile();
-					new UploadFile();
 				}
 				//user wants to upload conflict with existing upload
 				//user choose download
 				if(choice == 3){
 					//discard upload 
 					OperationQueue.getInstance().remiveUploadAddUpload(filen);
-					new UploadFile();
 				}
 				new UploadFile();
+				new SyncWithRemote();
 				Container frame = upDate.getParent();
 				do {
 					frame = frame.getParent();
@@ -83,16 +83,15 @@ public class ConflictPopUp extends JFrame {
 				if(choice == 1){
 					//discard upload
 					OperationQueue.getInstance().removeUpAddDown(filen);
-					new DownloadFile();
 					new UploadFile();
 				}
 				//user wants to download conflict with existing download
 				//user choose download
 				if(choice == 2){
 					OperationQueue.getInstance().removeDownAddDown(filen);
-					new DownloadFile();
 				}
 				new DownloadFile();
+				new SyncWithRemote();
 				Container frame = downLoad.getParent();
 				do {
 					frame = frame.getParent();
@@ -116,6 +115,9 @@ public class ConflictPopUp extends JFrame {
 				}
 				if(DownloadFile.downloader == null){
 					new DownloadFile();
+				}
+				if(SyncWithRemote.syncer == null){
+					new SyncWithRemote();
 				}
 				Container frame = cancel.getParent();
 				do {

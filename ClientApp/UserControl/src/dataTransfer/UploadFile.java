@@ -90,8 +90,9 @@ public class UploadFile implements Runnable {
 			ClientMetaData cmd = new ClientMetaData();
 			HashMap<String, String> localMeta = cmd.readXML(workSpace,
 					fopt.getFileInFolder(workSpace));
+			HashMap<String, String> localCheck = cmd.readHashCode(workSpace);
+			
 			HashMap<String, String> meta = new HashMap<String, String>();
-
 			storageAccount = CloudStorageAccount.parse(part[0]);
 			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
 			String containerName = part[1];
@@ -109,6 +110,7 @@ public class UploadFile implements Runnable {
 						HashMap<String, String> res = blob.getMetadata();
 						meta.put("name", res.get("name"));
 						meta.put("version", localMeta.get(fileName));
+						meta.put("checkSum", localCheck.get(fileName));
 						blob1.setMetadata(meta);
 						File source = new File(upPath);
 						FileInputStream fin = new FileInputStream(source);
