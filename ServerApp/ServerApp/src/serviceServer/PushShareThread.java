@@ -5,7 +5,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
-import authentication.UserInfo;
 import RMIInterface.ServerServerComInterface;
 import routingTable.DBConnection;
 import utils.Constants;

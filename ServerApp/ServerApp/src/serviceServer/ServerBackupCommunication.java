@@ -3,8 +3,6 @@ package serviceServer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,14 +21,6 @@ import com.microsoft.windowsazure.services.core.storage.CloudStorageAccount;
  *
  */
 public class ServerBackupCommunication {
-
-	// ServiceContainer serviceContainer = new ServiceContainer();
-	// ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
-//	public static final String backup1StorageConnectionString = "DefaultEndpointsProtocol=http;"
-//			+ "AccountName=cics525group6;AccountKey=gAI6LQdhg/WnhMDPa46IYr66NLODOnMoP/LXJGsBtpYOCtO7ofKCL3YuOOsmLyUyHVf/63BNVI9H/ZI4OSgILg==";
-//	public static final String backup2StorageConnectionString = "DefaultEndpointsProtocol=http;"
-//			+ "AccountName=portalvhdsx4hlg0ss7c0mj;AccountKey=Jvwx3oWQ+vnJV+O88panubHMI72jgITFC2CqjSk1hCU32dvJeGvgEAEMTcicdgIbicqnn0aE7W9a5R7MWo0vgg==";
-
 	/**
 	 * method that download files from the service container to the local virtual machine in order to upload them later
 	 * @param files receives an arraylist of files to be downloaded based on the mismatches found between container and routing table
@@ -160,8 +150,13 @@ public class ServerBackupCommunication {
 		    	filePath = "C:\\cloudboxTemp\\" + file.getFileName();
 
 			    Path tar=Paths.get(filePath);
-			    Files.delete(tar);
-			    System.out.println(filePath + " deleted");
+			    if (Files.deleteIfExists(tar)) {
+			    	 System.out.println(filePath + " deleted");
+			    }
+			    else {
+			    	System.out.println(filePath + " deletion failed");
+			    }
+			   
 		    }
 			
 		} catch (Exception e) {

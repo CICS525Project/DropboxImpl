@@ -1,10 +1,6 @@
 package serviceServer;
 
-import java.awt.Container;
 import java.rmi.*;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -18,8 +14,6 @@ import utils.ServerConnection;
 import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 import authentication.Authentication;
-import authentication.UserInfo;
-import RMIInterface.ServerServerComInterface;
 import RMIInterface.ServiceServerInterface;
 
 /**
@@ -32,7 +26,6 @@ public class ServiceServer implements ServiceServerInterface {
 
 	
 	private ServerServerCommunication mySSCom;
-	private ServerClientCommunication mySCCom;
 	private ServerBackupCommunication mySBCom;
 
 	public boolean login(String username, String password)
@@ -76,34 +69,6 @@ public class ServiceServer implements ServiceServerInterface {
             	}
             	
             }
-//            System.out.println("servers request " + address);
-//            ServerServerComInterface server = null;
-//    		try {
-//    			Registry registry = LocateRegistry.getRegistry(address, Constants.SPORT);
-//    			server = (ServerServerComInterface) registry.lookup("serverServerRMI");
-//    			if (server == null){
-//    			//	System.out.println("null server");
-//    				throw new Exception();
-//    			}
-//			} catch (Exception e) {
-//				System.out.println("Server " + address + " is down. File "+ key +" available on backup server 1");
-//				// If service server is down, attempts to change value to backup 1
-//	            
-//				try {
-//					Registry secondRegistry = LocateRegistry.getRegistry(Constants.B1HOST, Constants.SPORT);
-//					server = (ServerServerComInterface) secondRegistry.lookup("serverServerRMI");
-//					if (server == null){
-//	    			//	System.out.println("null server");
-//	    				throw new Exception();
-//	    			}
-//					result.put(key,Constants.B1HOST);
-//				} catch (Exception backupex) {
-//					// If backup 1 server is down, connect to backup 2
-//					System.out.println("Server " + address + " is down. File "+ key +" available on backup server 2");
-//					result.put(key,Constants.B2HOST);
-//				}
-//				// e.printStackTrace();
-//			}
 			
         }		
 		// returns final value
@@ -147,10 +112,7 @@ public class ServiceServer implements ServiceServerInterface {
 
 		// create instances of communication classes
 		mySSCom = new ServerServerCommunication();
-		mySCCom = new ServerClientCommunication();
 		mySBCom = new ServerBackupCommunication();
-		
-
 	}
 
 	public String shareFile(HashMap<String,String> fileList,String userName) throws RemoteException {
@@ -166,9 +128,6 @@ public class ServiceServer implements ServiceServerInterface {
 				routingTable.setSharedUserName(fileList.get(key));
 				shared.add(routingTable);
 			}
-			/*for(RoutingTable r:shared){
-				System.out.println("Sharing the file by PUSHING ----"+r.getFileName());
-			}*/
 			mySSCom.pushST(shared);
 			
 		} catch (Exception e) {
@@ -215,10 +174,6 @@ public class ServiceServer implements ServiceServerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// sync local routing table values with values of other remote routing tables
-		// mySSCom.syncRT();
-		// mySCCom.sendNotification("jitin", "upload,file1"); // repeat this
-		// notification for every user related to file1
 		
 	}
 
@@ -272,7 +227,7 @@ public class ServiceServer implements ServiceServerInterface {
 			serviceContainer.updateVersionForDelete(user,file);
 			System.out.println("User " + user + " deleted file: " + file);
 			System.out.println("Done updating RT with version to -1 in file " + file + " ,user " + user);
-			// broadcasiting -1 version
+			// broadcasting -1 version
 			
 			ArrayList<RoutingTable> missMatch = new ArrayList<RoutingTable>();
 			RoutingTable routingTable = new RoutingTable();

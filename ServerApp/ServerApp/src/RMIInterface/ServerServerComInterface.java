@@ -42,14 +42,14 @@ public interface ServerServerComInterface extends Remote{
 	 */
 	ArrayList<RoutingTable> getRoutingDetails() throws RemoteException;
 	/**
-	 * 
-	 * @return
+	 * Method to obtain the Shared Details of the current machine
+	 * @return ArrayList of Routing Tables
 	 * @throws RemoteException
 	 */
 	ArrayList<RoutingTable> getSharedDetails() throws RemoteException;
 	/**
-	 * 
-	 * @return
+	 * Method to obtain the User Details of the current machine
+	 * @return ArrayList of Routing Tables
 	 * @throws RemoteException
 	 */
 	ArrayList<UserInfo> getUserInfo()throws RemoteException;

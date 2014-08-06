@@ -1,14 +1,9 @@
 package serviceServer;
 
 import java.rmi.*;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import authentication.UserInfo;
 import routingTable.DBConnection;
@@ -99,19 +94,10 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
-//				Registry registry = LocateRegistry.getRegistry(address, port);
-//				//System.out.println("aftre registry");
-//				ServerServerComInterface server = (ServerServerComInterface) registry
-//						.lookup("serverServerRMI");
-				// server.updateTable(missMatch);
 				bt.add(new BroadcastThread(address,missMatch));
-				
-				// bt.broadcast.join();
 			} catch (Exception e) {
 				System.out.println("Error Broadcasting Changes...");
 				System.out.println("Error connecting to server " + address);
-				// System.err.println(e);
-				// I/O Error or bad URL
 			}
 		}
 		try {
@@ -121,7 +107,6 @@ public class ServerServerCommunication implements ServerServerComInterface {
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -202,7 +187,7 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
-			pt.add(new PushThread(address, missMatch));
+				pt.add(new PushThread(address, missMatch));
 
 			} catch (Exception e) {
 				System.out.println("Error pushing RT to server " + address);
@@ -254,9 +239,6 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
-				/*for(RoutingTable r:sharedMatch){
-					System.out.println("Sharing the file by PUSHING INSIDE PUSH ST  ----"+r.getFileName());
-				}*/
 			st.add(new PushShareThread(address, sharedMatch));
 
 			} catch (Exception e) {

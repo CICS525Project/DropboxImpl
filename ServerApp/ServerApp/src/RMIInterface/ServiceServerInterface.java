@@ -1,17 +1,12 @@
 package RMIInterface;
 import java.rmi.*;
-import java.sql.SQLException;
 import java.util.*;
 /**
  * Interface to implement RMI between Client and Service Server
- * @author cics525
+ * @author ignacio
  *
  */
 public interface ServiceServerInterface extends Remote {
-	// Dummy testing methods
-//	Date getDate() throws RemoteException;
-//	int execute(int i) throws RemoteException;
-//	
 	/**
 	 * login method for local user authentication
 	 * @param username username provided by user in the GUI
@@ -54,7 +49,7 @@ public interface ServiceServerInterface extends Remote {
 	String getContainer() throws RemoteException;
 	
 	/**
-	 * 
+	 * Method to obtain the Shared Files of the User
 	 * @param fileList list containing the filename and the shared username
 	 * @param userName owner of the file
 	 * @return return a message indicating success or failure

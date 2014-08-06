@@ -5,7 +5,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
-import authentication.UserInfo;
 import RMIInterface.ServerServerComInterface;
 import routingTable.DBConnection;
 import utils.Constants;
@@ -49,14 +48,8 @@ public class PushThread implements Runnable {
 
 			System.out.println("Updating RT on server " + address);
 			server.updateTable(missMatch);
-
-//			System.out.println("Updating UT on server " + address);
-//			server.updateUserTable(userMissMatch);
-
 		} catch (Exception e) {
 			System.out.println("Error Updating tables on server " + address);
-			// System.err.println(e);
-			// I/O Error or bad URL
 		}
 	}
 

@@ -15,8 +15,8 @@ public class ServerConnection {
 		boolean flag = false;
 		try {
 			Socket telnetClient = new Socket();
-			telnetClient.setSoTimeout(200);
-			telnetClient.connect(new InetSocketAddress(dns, 9999), 200);
+			telnetClient.setSoTimeout(800);
+			telnetClient.connect(new InetSocketAddress(dns, 9999), 800);
 			BufferedReader input = new BufferedReader(new InputStreamReader(
 					System.in));
 			BufferedReader stdin = new BufferedReader(new InputStreamReader(
