@@ -44,7 +44,9 @@ public class DownloadFile implements Runnable {
 					downLoadFile(opt.peekDown());
 					// delete first download object from download quque after
 					// successfully downloading
+					System.out.println("download queue size is " + OperationQueue.getInstance().getDownloadQueue().size());
 					OperationQueue.getInstance().pollDown();
+					System.out.println("download queue size is " + OperationQueue.getInstance().getDownloadQueue().size());
 				}
 			}
 		} catch (IOException e) {

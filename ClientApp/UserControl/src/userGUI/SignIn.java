@@ -137,18 +137,20 @@ public class SignIn extends JFrame {
 										.getWorkFolder());
 								// initializae download queueu
 								fopt.initialDownloadQueue();
-								System.out.println("download queue size is: "
-										+ OperationQueue.getInstance()
-												.getDownloadQueue().size());
-								/******** start download thread ********/
-								new DownloadFile();
 								/******** create initial upload queue ********/
 								fopt.initilizeUploadQueue();
 								System.out.println("Upload queue size is: "
 										+ OperationQueue.getInstance()
 												.getUploadQueue().size());
+								System.out.println("download queue size is: "
+										+ OperationQueue.getInstance()
+												.getDownloadQueue().size());
 								/******** start upload thread ********/
 								new UploadFile();
+								/******** start download thread ********/
+								new DownloadFile();
+								
+								
 								/** start polling information from server side **/
 								new SyncWithRemote();
 								/** close login window **/

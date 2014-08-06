@@ -180,6 +180,10 @@ public class ClientMetaData {
 				.getServerVersion(SessionInfo.getInstance()
 						.getUsername());
 		String localVersion = readVersionForOne(fn);
+		//file just created
+		if(localVersion == null){
+			return 3;
+		}
 		int lv = Integer.parseInt(localVersion);
 		int rv = remoteFileAndVersion.get(fn);
 		if(lv == rv){

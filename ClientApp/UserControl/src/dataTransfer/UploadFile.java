@@ -41,7 +41,9 @@ public class UploadFile implements Runnable {
 		while (uploader == thisThread) {
 			if (optQ.peekUp() != null) {
 				uploadFile(optQ.peekUp());
+				System.out.println("upload queue size is " + OperationQueue.getInstance().getUploadQueue().size());
 				OperationQueue.getInstance().pollUp();
+				System.out.println("upload queue size is " + OperationQueue.getInstance().getUploadQueue().size());
 			}
 		}
 	}
