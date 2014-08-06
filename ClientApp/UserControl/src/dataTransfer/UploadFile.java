@@ -129,6 +129,7 @@ public class UploadFile implements Runnable {
 				CloudBlockBlob blob = container.getBlockBlobReference(fileName);
 				meta.put("name", SessionInfo.getInstance().getUsername());
 				meta.put("version", localMeta.get(fileName));
+				meta.put("checkSum", localCheck.get(fileName));
 				blob.setMetadata(meta);
 				File source = new File(upPath);
 				FileInputStream fin = new FileInputStream(source);

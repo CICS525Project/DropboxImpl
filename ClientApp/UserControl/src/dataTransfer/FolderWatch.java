@@ -123,7 +123,7 @@ public class FolderWatch implements Runnable {
 								if (blobItem instanceof CloudBlob) {
 									CloudBlob blob = (CloudBlob) blobItem;
 									blob.downloadAttributes();
-									if (fileName.equals(blob.getName())) {
+									if (fn.equals(blob.getName())) {
 										HashMap<String, String> res = blob
 												.getMetadata();
 										remoteCheckSum = res.get("checkSum");

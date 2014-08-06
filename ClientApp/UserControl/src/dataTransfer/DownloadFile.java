@@ -89,26 +89,26 @@ public class DownloadFile implements Runnable {
 						ArrayList<String> originFileInfolder = fopt
 								.getFileInFolder(SessionInfo.getInstance()
 										.getWorkFolder());
+						FileOutputStream fout = new FileOutputStream(downPath);
+						blob.download(fout);
+						fout.close();
 //						 need to change version number of the file download as
 //						 meta in container
 						HashMap<String, String> res = blob.getMetadata();
 						String latestVersion = res.get("version");
-						String checkSum = fopt.getHashCode(fopt
-								.hashFile(SessionInfo.getInstance()
-										.getWorkFolder()
-										+ File.separator
-										+ fileName));
+						String latestCheckSum = res.get("checkSum");
+//						String checkSum = fopt.getHashCode(fopt
+//								.hashFile(SessionInfo.getInstance()
+//										.getWorkFolder()
+//										+ File.separator
+//										+ fileName));
 						if (originFileInfolder.contains(fileName)) {
-							cmd.modifyInfo(fileName, checkSum, latestVersion,
+							cmd.modifyInfo(fileName, latestCheckSum, latestVersion,
 									SessionInfo.getInstance().getWorkFolder());
 						} else {
 							cmd.addToXML(fileName,latestVersion ,SessionInfo.getInstance()
 									.getWorkFolder());
 						}
-						
-						FileOutputStream fout = new FileOutputStream(downPath);
-						blob.download(fout);
-						fout.close();
 						myTip.setToolTip(new ImageIcon(
 								ConfigurationData.DOWN_IMG), "File " + fileName
 								+ " is download secessfully!");
