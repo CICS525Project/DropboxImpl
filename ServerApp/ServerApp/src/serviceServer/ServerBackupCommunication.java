@@ -99,15 +99,41 @@ public class ServerBackupCommunication {
 			// Define the path to a local file.
 			String filePath = null;
 			HashMap<String,String> metadata = new HashMap<String,String>();
+			
+			// Retrieve service storage account
+			CloudStorageAccount storageAccount = CloudStorageAccount.parse(Constants.STORAGECONNECTIONSTRING);
 
+			// *************************************************************** 
+			// code added to include checksum in backup metadata
+
+			// Create the blob client.
+			CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
+
+			// Get a reference to a container.
+			// The container name must be lower case
+			CloudBlobContainer container = blobClient.getContainerReference(Constants.CONTAINER);
+			// *************************************************************** 
+			// code added to include checksum in backup metadata
+
+			
 			for (RoutingTable file : files) {
 				filePath = "C:\\cloudboxTemp\\" + file.getFileName();
 				// Create or overwrite the "myimage.jpg" blob with contents from a local file.
 				CloudBlockBlob blob1 = container1.getBlockBlobReference(file.getFileName());
 				CloudBlockBlob blob2 = container2.getBlockBlobReference(file.getFileName());
+				
+				// *************************************************************** 
+				// code added to include checksum in backup metadata
+				CloudBlockBlob blob = container.getBlockBlobReference(file.getFileName());
+				blob.downloadAttributes();	
+				// *************************************************************** 
+				// code added to include checksum in backup metadata
+
+				
 				// setting metadata
 				metadata.put("name", file.getUserName());
 				metadata.put("version", Integer.toString(file.getVersion()));
+				metadata.put("checkSum", blob.getMetadata().get("checkSum"));
 				blob1.setMetadata(metadata);
 				blob2.setMetadata(metadata);
 				File source = new File(filePath);
