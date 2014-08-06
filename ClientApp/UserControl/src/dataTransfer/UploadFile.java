@@ -54,6 +54,7 @@ public class UploadFile implements Runnable {
 
 	// Stop the thread
 	public static void stop() {
+		System.out.println("upload thread stopping ... ");
 		uploader = null;
 	}
 

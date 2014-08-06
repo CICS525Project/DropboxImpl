@@ -49,12 +49,15 @@ public class ConflictPopUp extends JFrame {
 				if(choice == 1){
 					//discard download
 					OperationQueue.getInstance().removeDownAddUp(filen);
+					new DownloadFile();
+					new UploadFile();
 				}
 				//user wants to upload conflict with existing upload
 				//user choose download
 				if(choice == 3){
 					//discard upload 
 					OperationQueue.getInstance().remiveUploadAddUpload(filen);
+					new UploadFile();
 				}
 				new UploadFile();
 				Container frame = upDate.getParent();
@@ -80,11 +83,14 @@ public class ConflictPopUp extends JFrame {
 				if(choice == 1){
 					//discard upload
 					OperationQueue.getInstance().removeUpAddDown(filen);
+					new DownloadFile();
+					new UploadFile();
 				}
 				//user wants to download conflict with existing download
 				//user choose download
 				if(choice == 2){
 					OperationQueue.getInstance().removeDownAddDown(filen);
+					new DownloadFile();
 				}
 				new DownloadFile();
 				Container frame = downLoad.getParent();
@@ -139,7 +145,7 @@ public class ConflictPopUp extends JFrame {
 		}
 		warnTx = new JLabel();
 		warnTx.setLocation(42, 124);
-		warnTx.setSize(300, 50);
+		warnTx.setSize(500, 50);
 		warnTx.setText(warnMsg);
 		warnTx.setFont(new Font("STKaiti", Font.PLAIN, 15));
 		contentPane.add(warnTx);
@@ -158,7 +164,4 @@ public class ConflictPopUp extends JFrame {
 		setResizable(true);
 
 	}
-//	public static void main(String args[]) {
-//		new ConflictPopUp("Test",3, "1");
-//	}
 }

@@ -37,14 +37,12 @@ public class SyncWithRemote implements Runnable {
 					.lookup("cloudboxRMI");
 			HashMap<String, Integer> remoteFileAccess = serviceProvider
 					.getCurrentFiles(SessionInfo.getInstance().getUsername());
-//			ArrayList<String> localFile = fopt.getFileInFolder(SessionInfo
-//					.getInstance().getWorkFolder());
 			HashMap<String, String> localFile = cmd.readHashCode(SessionInfo.getInstance().getWorkFolder());
 			for (String key : remoteFileAccess.keySet()) {
 				if (!localFile.containsKey(key)) {
 					if (remoteFileAccess.get(key) != -1) {
-						System.out.println("File: " + key
-								+ " is accessable to me.");
+//						System.out.println("File: " + key
+//								+ " is accessable to me.");
 						if (!OperationQueue.getInstance().getDownloadQueue()
 								.contains(key)) {
 							fopt.downLoadFileControl(key);
@@ -86,14 +84,14 @@ public class SyncWithRemote implements Runnable {
 				
 				// if the local file is a shared file
 				if (filesAndVersionShared.containsKey(fn)) {
-					System.out.println("Detect in polling, shared file " + fn);
+//					System.out.println("Detect in polling, shared file " + fn);
 					String localVersion = cmd.readVersionForOne(fn);
 					int localVersionInt = Integer.parseInt(localVersion);
 					int remoteVersion = filesAndVersionShared.get(fn);
 					String filePath = SessionInfo.getInstance().getWorkFolder()
 							+ File.separator + fn;
 					if (remoteVersion == -1) {
-						System.out.println("Detect file deleted.");
+//						System.out.println("Detect file deleted.");
 						if (OperationQueue.getInstance().getDownloadQueue()
 								.contains(fn)) {
 							OperationQueue.getInstance().getDownloadQueue()
@@ -115,12 +113,12 @@ public class SyncWithRemote implements Runnable {
 								.getWorkFolder(), fn);
 					}
 					if (remoteVersion > localVersionInt) {
-						System.out
-								.println("Detect file with higher version in remote --- download it.");
 						// download if remote version is greater than the local
 						// version
 						if (!OperationQueue.getInstance().getDownloadQueue()
 								.contains(fn)) {
+							System.out
+							.println("Detect file with higher version in remote --- download it.");
 							fopt.downLoadFileControl(fn);
 						}
 					}

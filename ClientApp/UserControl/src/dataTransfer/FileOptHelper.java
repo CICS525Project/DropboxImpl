@@ -254,13 +254,16 @@ public class FileOptHelper {
 		// operation already exists
 		// first needs to stop current thread first
 		if (OperationQueue.getInstance().containsObj(fn) != 0) {
-			DownloadFile.stop();
 			if (OperationQueue.getInstance().containsObj(fn) == 2) {
 				// operation exists in upload queue
+				DownloadFile.stop();
+				UploadFile.stop();
+				System.out.println("download conflict with upload ***********");
 				new ConflictPopUp("Conflict detected. File " + fn
 						+ " is current in the Upload queue.", 1, fn);
 			} else {
 				// operation exists in download queue
+				DownloadFile.stop();
 				new ConflictPopUp("Conflict detected. File " + fn
 						+ " is already in the Download queue.", 2, fn);
 			}
@@ -279,12 +282,16 @@ public class FileOptHelper {
 		// operation already exists
 		// first needs to stop current thread first
 		if (OperationQueue.getInstance().containsObj(fn) != 0) {
-			UploadFile.stop();
+			
 			if (OperationQueue.getInstance().containsObj(fn) == 1) {
+				System.out.println("upload conflict with download*********");
+				UploadFile.stop();
+				DownloadFile.stop();
 				// operation exists in download queue
 				new ConflictPopUp("Conflict detected. File " + fn
 						+ " is current in the download queue.", 1, fn);
 			} else {
+				UploadFile.stop();
 				// operation exists already in the Upload queue
 				new ConflictPopUp("Conflict detected. File " + fn
 						+ " is already in the Upload queue.", 3, fn);

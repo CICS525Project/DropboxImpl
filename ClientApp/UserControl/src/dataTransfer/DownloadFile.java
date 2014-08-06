@@ -126,6 +126,7 @@ public class DownloadFile implements Runnable {
 	}
 
 	public static void stop() {
+		System.out.println("download stopping ...");
 		downloader = null;
 	}
 
