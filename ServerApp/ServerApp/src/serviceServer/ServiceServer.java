@@ -27,25 +27,33 @@ public class ServiceServer implements ServiceServerInterface {
 	
 	private ServerServerCommunication mySSCom;
 	private ServerBackupCommunication mySBCom;
-
+/**
+ * MethodName: login
+ * Used to login the user and checks the validity of the credentials
+ * @param username
+ * @param password
+ */
 	public boolean login(String username, String password)
 			throws RemoteException {
-		// TODO Auto-generated method stub
 		Authentication auth = new Authentication();
 		System.out.println("User "+ username + " attemping to log in");
 		return auth.validUser(username, password);
 	}
-
+	/**
+	 * MethodName: getAddress
+	 * Used to get the Address of the Files for the User
+	 * @param ArrayList<String> files
+	 * @param user
+	 * @return result
+	 */
 	public HashMap<String, String> getAddress(ArrayList<String> files,
 			String user) throws RemoteException {
-		// TODO Auto-generated method stub
 		DBConnection connection = new DBConnection();
 		HashMap<String, String> result = new HashMap<String, String>();
 		ServerConnection myTest = new ServerConnection();
 		try {
 			result = connection.searchForServerName(files, user);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -73,41 +81,55 @@ public class ServiceServer implements ServiceServerInterface {
         }		
 		// returns final value
 		return result;
-
 	}
-
+	/**
+	 * MethodName: signIn
+	 * Used to create an account for the User
+	 * @param username
+	 * @param password
+	 * @return boolean
+	 */
 	public boolean signIn(String username, String password)
 			throws RemoteException {
-		// TODO Auto-generated method stub
 		Authentication auth = new Authentication();
 		auth.createUser(username, password);
 		System.out.println("Account for user: "+ username + " created");
 		mySSCom.pushUT(username, password);
 		return true;
 	}
-
+	/**
+	 * MethodName: getCurrentFiles
+	 * Used to get the Current Files for the User
+	 * @param user
+	 * @return HashMap<String, Integer> result
+	 */
 	@Override
 	public HashMap<String, Integer> getCurrentFiles(String user)
 			throws RemoteException {
-		// TODO Auto-generated method stub
 		DBConnection connection = new DBConnection();
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		try {
 			result = connection.searchForFiles(user);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return result;
 	}
-
+	/**
+	 * MethodName: getContainer
+	 * Used to get the Container for the User
+	 * @return String
+	 */
 	@Override
 	public String getContainer() throws RemoteException {
-		// TODO Auto-generated method stub
 		return (Constants.STORAGECONNECTIONSTRING + "," + Constants.CONTAINER);
 	}
-
+	/**
+	 * MethodName: ServiceServer
+	 * Constructor for the Class
+	 * Initialize the objects
+	 */
 	public ServiceServer() throws RemoteException {
 
 		// create instances of communication classes
@@ -115,6 +137,13 @@ public class ServiceServer implements ServiceServerInterface {
 		mySBCom = new ServerBackupCommunication();
 	}
 
+	/**
+	 * MethodName: shareFile
+	 * Used to share the File with other Users
+	 * @param fileList
+	 * @param userName
+	 * @return String
+	 */
 	public String shareFile(HashMap<String,String> fileList,String userName) throws RemoteException {
 		DBConnection connection = new DBConnection();
 		String result=null;
@@ -131,7 +160,6 @@ public class ServiceServer implements ServiceServerInterface {
 			mySSCom.pushST(shared);
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
@@ -139,11 +167,13 @@ public class ServiceServer implements ServiceServerInterface {
 	}
 	
 	/**
+	 * Method Name:refreshRT 
 	 * This method is called from the ServiceServer instance to refresh the
 	 * content of the routing table based on the contents of the container. Once
 	 * the changes have been identified, it modifies the routing table and makes
 	 * changes on other service servers RT and finally notify user(s) of the
 	 * changes so the they can update their local copy of files
+	 * @param port
 	 */
 	public void refreshRT(int port) {
 		// Call Jitin's method to obtain information from the container
@@ -159,7 +189,7 @@ public class ServiceServer implements ServiceServerInterface {
 			if (!missMatch.isEmpty()) {
 				
 				for (RoutingTable r : missMatch) {
-					System.out.println("************Missmatch element " + r.getFileName() + "version " + r.getVersion() + "owner " + r.getUserName());
+					System.out.println("************Missmatch element*********** " + r.getFileName() + "version " + r.getVersion() + "owner " + r.getUserName());
 				}
 //				System.out.println("Miss Match "+missMatch.get(0).getVersion());
 				serviceContainer.updateRTComplete(missMatch);
@@ -171,21 +201,23 @@ public class ServiceServer implements ServiceServerInterface {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
-
+	/**
+	 * MethodName: deleteFile
+	 * Used to Delete the Files
+	 * @param user
+	 * @param file
+	 * @return String
+	 */
 	@Override
 	public void deleteFile(String user, String file) throws RemoteException {
 		
-		// TODO Auto-generated method stub
 		ServiceContainer serviceContainer = new ServiceContainer();
 		try {
-			
 			// delete file from backup containers
-
 			// Retrieve service storage account
 			CloudStorageAccount storageAccount1 = CloudStorageAccount
 					.parse(Constants.backup1StorageConnectionString);
@@ -222,8 +254,6 @@ public class ServiceServer implements ServiceServerInterface {
 				System.out.println("File " + toRemove.getName()
 						+ " deleted from " + container2.getName());
 			}
-			
-			
 			serviceContainer.updateVersionForDelete(user,file);
 			System.out.println("User " + user + " deleted file: " + file);
 			System.out.println("Done updating RT with version to -1 in file " + file + " ,user " + user);
@@ -236,31 +266,29 @@ public class ServiceServer implements ServiceServerInterface {
 			routingTable.setUserName(user);
 			routingTable.setVersion(-1);
 			missMatch.add(routingTable);
-			
 
 			mySSCom.pushRT(missMatch);
 			
-			
-			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.out.println("Error deleting entry. Failed to update version as -1");
 		}
 		
 	}
-
+	/**
+	 * MethodName: getAllSharedFilesForUser
+	 * Used to Share the Files
+	 * @param userName
+	 * @return HashMap<String, Integer>
+	 */
 	@Override
 	public HashMap<String, Integer> getAllSharedFilesForUser(String userName)
 			throws RemoteException {
-		// TODO Auto-generated method stu
 		ServiceContainer serviceContainer = new ServiceContainer();
 		try {
 			return serviceContainer.getAllSharedFilesForUser(userName);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 

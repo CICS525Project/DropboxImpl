@@ -18,13 +18,20 @@ import Decoder.BASE64Decoder;
 import Decoder.BASE64Encoder;
 
 /**
+ * Utility Class used for Encryption and Decryption using
+ * the AES Algorithm
  * @author Jitin
  *
  */
 public class PasswordUtility {
 	private static final String algorithm="AES";
 	private static final String keyStr="CICS525MSSGROUP6";
-
+	/**
+	 * MethodName: decrypt
+	 * Used to decrypt the Message using AES algorithm
+	 * @param message
+	 * @return
+	 */
 	public static String decrypt(String message){
 		String decryptedStr="";
 		Cipher cipher=null;
@@ -59,7 +66,12 @@ public class PasswordUtility {
 		}
 		return decryptedStr;
 	}
-	
+	/**
+	 * MethodName: encrypt
+	 * Used to encrypt the Message using AES algorithm
+	 * @param message
+	 * @return
+	 */
 	public static String encrypt(String message){
 		Cipher c=null;
 		String encryptString="";

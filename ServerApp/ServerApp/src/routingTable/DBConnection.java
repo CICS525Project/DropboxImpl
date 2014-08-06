@@ -13,12 +13,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import authentication.UserInfo;
-
-import com.microsoft.windowsazure.services.core.storage.Constants;
-
 import serviceServer.RoutingTable;
 import utils.ConnectionFactory;
+import authentication.UserInfo;
 
 /**
  * ClassName: DBConnection
@@ -386,11 +383,8 @@ public class DBConnection {
 		 */
 			public ArrayList<RoutingTable> getAllFromRoutingTable(String s)throws SQLException{
 				Connection con = null;
-				Connection con1 = null;
 				PreparedStatement ps=null;
-				PreparedStatement ps1=null;
 				ResultSet rs=null;
-				ResultSet rs1=null;
 				ArrayList<RoutingTable> result=new ArrayList<RoutingTable>();
 				try{
 					con=ConnectionFactory.getConnection();
@@ -428,11 +422,8 @@ public class DBConnection {
 			 */
 				public ArrayList<RoutingTable> getAllFromRoutingTable()throws SQLException{
 					Connection con = null;
-					Connection con1 = null;
 					PreparedStatement ps=null;
-					PreparedStatement ps1=null;
 					ResultSet rs=null;
-					ResultSet rs1=null;
 					ArrayList<RoutingTable> result=new ArrayList<RoutingTable>();
 					try{
 							con=ConnectionFactory.getConnection();

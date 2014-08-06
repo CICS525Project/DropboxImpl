@@ -66,7 +66,7 @@ public interface ServiceServerInterface extends Remote {
 	void deleteFile(String user, String file) throws RemoteException;
 	
 	/**
-	 * method to obtain shared filed of current user
+	 * method to obtain shared files of current user
 	 * @param userName caller login username
 	 * @return arraylist of files shared by that user
 	 * @throws RemoteException

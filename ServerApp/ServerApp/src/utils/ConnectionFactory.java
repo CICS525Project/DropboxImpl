@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * 
+ * ClassName: ConnectionFactory
+ * ManageConnection with the SQL DB in Azure
  * @author Jitin
  * @version 1.0, 19/July/2014
  */
@@ -19,7 +20,9 @@ public class ConnectionFactory {
 	
 	public static final String connectionUrl = Constants.URL +"databaseName="+Constants.DBNAME+";user="+Constants.USER+"@"+Constants.SQLSERVER+";"
 		      		+ "password="+Constants.PASSWORD+"";
-	//private constructor
+	/**
+	 * Private Constructor
+	 */
 	static {
 		try{
 			Class.forName(Constants.DRIVER);
@@ -28,9 +31,16 @@ public class ConnectionFactory {
 			classNotFoundException.printStackTrace();
 		}
 	}
-	
+	/**
+	 * Private Constructor
+	 */
 	private ConnectionFactory() {}
-	
+	/**
+	 * MethodName: createConnection
+	 * Create the Connection to the DB
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Connection createConnection() throws SQLException
 	{
 		Connection connection=null;
@@ -43,7 +53,12 @@ public class ConnectionFactory {
 			throw exception;
 		}
 	}
-	
+	/**
+	 * MethodName: getConnection
+	 * Calls the createConnection method
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Connection getConnection() throws SQLException
 	{
 			myConnection = createConnection();

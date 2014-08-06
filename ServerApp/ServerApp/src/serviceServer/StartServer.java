@@ -27,24 +27,28 @@ import RMIInterface.ServiceServerInterface;
  */
 public class StartServer {
 
-
+	/**
+	 * Method Name: Main Method
+	 * This is the first part of the Program that Executes.
+	 * It starts be refreshing the Files in all the tables
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
-//		Constants localConstants = new Constants();
-//		localConstants.setConstants();
-		
+		//		Constants localConstants = new Constants();
+		//		localConstants.setConstants();
+
 		// cleaning temp dir before running the server again
 		File file = new File("C:\\cloudboxTemp");        
-        String[] myFiles;      
-            if(file.isDirectory()){  
-                myFiles = file.list();  
-                for (int i=0; i<myFiles.length; i++) {  
-                    File myFile = new File(file, myFiles[i]);   
-                    myFile.delete();  
-                }  
-             }
-		
+		String[] myFiles;      
+		if(file.isDirectory()){  
+			myFiles = file.list();  
+			for (int i=0; i<myFiles.length; i++) {  
+				File myFile = new File(file, myFiles[i]);   
+				myFile.delete();  
+			}  
+		}
+
 		try {
 			// Starting the RMI interface to communicate with Client machine
 			Registry clientRegistry = LocateRegistry
@@ -72,22 +76,21 @@ public class StartServer {
 
 			ServiceServer updateInstance = new ServiceServer();
 			System.out.println("Entering infinite refresh loop... ");
-			
+
 			// initially synchronize tables
 			ServerServerCommunication mySSCom = new ServerServerCommunication();
 			mySSCom.syncAllTables();
-			
+
 			// monitor the container permanently
 			while (true) {
 				updateInstance.refreshRT(9999);
 			}
 
-            
+
 		} catch (java.io.IOException e) {
 			System.err.println(e);
 			// problem registering server
 		} catch (AlreadyBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

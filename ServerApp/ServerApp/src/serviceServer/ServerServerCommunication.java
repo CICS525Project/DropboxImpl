@@ -36,7 +36,12 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		ss.remove(myself);
 	}
 
-	// update RT 
+	/**
+	 * MethodName: updateTable
+	 * Used to call the updateRTComplete in the ServiceContainer
+	 * @param missMatch
+	 * @return boolean
+	 */
 	public boolean updateTable(ArrayList<RoutingTable> missMatch)
 			throws RemoteException {
 
@@ -45,30 +50,37 @@ public class ServerServerCommunication implements ServerServerComInterface {
 			serviceContainer.updateRTComplete(missMatch);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
-	// update  ST
+	/**
+	 * MethodName: updateShareTable
+	 * Used to call the updateSTComplete in the ServiceContainer
+	 * @param missMatch
+	 * @return boolean
+	 */
 	@Override
 	public boolean updateShareTable(ArrayList<RoutingTable> missMatch)
 			throws RemoteException {
 		ServiceContainer serviceContainer = new ServiceContainer();
-		
+
 		try {
 			serviceContainer.updateSTComplete(missMatch);
 			return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 
 	}
-	
-	
-	// update UT
+	/**
+	 * MethodName: updateUserTable
+	 * Used to call the updateUTComplete in the ServiceContainer
+	 * @param user
+	 * @param pass
+	 * @return boolean
+	 */
 	@Override
 	public boolean updateUserTable(String user, String pass)
 			throws RemoteException {
@@ -76,42 +88,13 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		try {
 			serviceContainer.updateUTComplete(user,pass);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
 
 	/**
-	 * This method is called from the ServerServerComunication instance to
-	 * notify all the service servers of changes in the routing table
-	 * 
-	 * @return returns true when successful or false otherwise
-	 */
-	public void broadcastChanges(ArrayList<RoutingTable> missMatch) {
-
-		ArrayList<BroadcastThread> bt = new ArrayList<BroadcastThread>();
-		for (String key : ss.keySet()) {
-			String address = ss.get(key);
-			try {
-				bt.add(new BroadcastThread(address,missMatch));
-			} catch (Exception e) {
-				System.out.println("Error Broadcasting Changes...");
-				System.out.println("Error connecting to server " + address);
-			}
-		}
-		try {
-			for (BroadcastThread t : bt) {
-				if (t != null) {
-					t.broadcast.join();
-				}
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
+	 * MethodName:syncAllTables 
 	 * sync local routing table values with values of other remote routing
 	 * tables
 	 */
@@ -121,7 +104,7 @@ public class ServerServerCommunication implements ServerServerComInterface {
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
-			st.add(new SyncThread(address));
+				st.add(new SyncThread(address));
 
 			} catch (Exception e) {
 				System.out.println("Error synchronizing RTs...");
@@ -137,52 +120,59 @@ public class ServerServerCommunication implements ServerServerComInterface {
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@Override
+	/**
+	 * MethodName: getRoutingDetails
+	 * Used to call the getAllFromRoutingTable from the DBConnection class
+	 */
 	public ArrayList<RoutingTable> getRoutingDetails() throws RemoteException {
 		DBConnection connect = new DBConnection();
 		try {
 			return connect.getAllFromRoutingTable();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
-		// TODO Auto-generated method stub
 
 	}
-
+	/**
+	 * MethodName: getSharedDetails
+	 * Used to call the getAllFromSharingTable from the DBConnection class
+	 */
 	public ArrayList<RoutingTable> getSharedDetails() throws RemoteException {
 		DBConnection connect = new DBConnection();
 		try {
 			return connect.getAllFromSharingTable();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
-		// TODO Auto-generated method stub
 	}
-
+	/**
+	 * MethodName: getUserInfo
+	 * Used to call the getUserInfo from the DBConnection class
+	 */
 	@Override
 	public ArrayList<UserInfo> getUserInfo() throws RemoteException {
 		DBConnection connect = new DBConnection();
 		try {
 			return connect.getUserInfo();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 
 	}
-
+	/**
+	 * MethodName: pushRT
+	 * Used to call the PushThread Class
+	 * @param missMatch
+	 */
 	public void pushRT(ArrayList<RoutingTable> missMatch) {
-		// TODO Auto-generated method stub
 		ArrayList<PushThread> pt = new ArrayList<PushThread>();
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
@@ -202,18 +192,21 @@ public class ServerServerCommunication implements ServerServerComInterface {
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
+	/**
+	 * MethodName: pushUT
+	 * Used to call the PushUserThread Class
+	 * @param user
+	 * @param pass
+	 */
 	public void pushUT(String user, String pass ) {
-		// TODO Auto-generated method stub
 		ArrayList<PushUserThread> put = new ArrayList<PushUserThread>();
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
-			put.add(new PushUserThread(address, user, pass));
+				put.add(new PushUserThread(address, user, pass));
 
 			} catch (Exception e) {
 				System.out.println("Error pushing UT to server " + address);
@@ -228,18 +221,20 @@ public class ServerServerCommunication implements ServerServerComInterface {
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * MethodName: pushST
+	 * Used to call the PushShareThread Class
+	 * @param sharedMatch
+	 */
 	public void pushST(ArrayList<RoutingTable> sharedMatch ) {
-		// TODO Auto-generated method stub
 		ArrayList<PushShareThread> st = new ArrayList<PushShareThread>();
 		for (String key : ss.keySet()) {
 			String address = ss.get(key);
 			try {
-			st.add(new PushShareThread(address, sharedMatch));
+				st.add(new PushShareThread(address, sharedMatch));
 
 			} catch (Exception e) {
 				System.out.println("Error pushing UT to server " + address);
@@ -254,12 +249,8 @@ public class ServerServerCommunication implements ServerServerComInterface {
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-	
-	
 
 }

@@ -11,7 +11,12 @@ import routingTable.DBConnection;
 import routingTable.ServiceContainer;
 import utils.Constants;
 import utils.ServerConnection;
-
+/**
+ * ClassName: SyncThread 
+ * Used to call the Threads to Sync all the details
+ * @author ignacio
+ *
+ */
 public class SyncThread implements Runnable {
 
 	ArrayList<RoutingTable> selfRT;
@@ -22,9 +27,12 @@ public class SyncThread implements Runnable {
 	Registry registry;
 	String address;
 	Thread sync ;
-	
+	/**
+	 * Method Name: SyncThread
+	 * Constructor to initialize the Thread
+	 * @param address
+	 */
 	public SyncThread(String address) {
-		// TODO Auto-generated constructor stub
 		this.selfRT = new ArrayList<RoutingTable>();
 		this.selfST = new ArrayList<RoutingTable>();
 		this.selfUT = new ArrayList<UserInfo>();
@@ -34,7 +42,10 @@ public class SyncThread implements Runnable {
 		sync.start();
 		//System.out.println("new sync thread created");
 	}
-	
+	/**
+	 * Method Name: run()
+	 * Implements the Thread functionality
+	 */
 	@Override
 	public void run() {
 		
@@ -83,8 +94,6 @@ public class SyncThread implements Runnable {
 				container.insertMissingInUserTable(userMissMatch);
 				System.out.println("UT updated with data from " + address);
 			}
-			
-			
 		}catch (Exception e) {
 			System.out.println("Error synchronizing RT/STs...");
 			System.out.println("Error connecting to server " + address);

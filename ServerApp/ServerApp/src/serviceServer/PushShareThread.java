@@ -9,7 +9,12 @@ import RMIInterface.ServerServerComInterface;
 import routingTable.DBConnection;
 import utils.Constants;
 import utils.ServerConnection;
-
+/**
+ * ClassName: PushShareThread
+ * Used to push the Changes in the SharedTable to other Servers
+ * @author ignacio
+ *
+ */
 public class PushShareThread implements Runnable {
 
 	ArrayList<RoutingTable> shareMissMatch;
@@ -18,7 +23,12 @@ public class PushShareThread implements Runnable {
 	Registry registry;
 	String address;
 	Thread sharedUser;
-	
+	/**
+	 * Method Name: PushShareThread
+	 * Constructor to  initialize the Address and the Files to be updated
+	 * @param address
+	 * @param shareMatch
+	 */
 	public PushShareThread(String address, ArrayList<RoutingTable> shareMatch) {
 		// TODO Auto-generated constructor stub
 		this.shareMissMatch = shareMatch;
@@ -28,7 +38,10 @@ public class PushShareThread implements Runnable {
 		sharedUser.start();
 		//System.out.println("new sync thread created");
 	}
-	
+	/**
+	 * Method Name: run() 
+	 * Thread Implementation Function
+	 */
 	@Override
 	public void run() {
 		// test connection to given dns address

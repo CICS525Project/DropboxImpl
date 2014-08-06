@@ -7,10 +7,21 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 
-
+/**
+ * ClassName: ServerConnection
+ * To check for Connection Status of each server
+ * @author harry
+ *
+ */
 public class ServerConnection {
 
 	@SuppressWarnings("finally")
+	/**
+	 * MethodName: testConnection
+	 * To check for the Test Connection of the Given DNS
+	 * @param dns
+	 * @return boolean
+	 */
 	public boolean testConnection(String dns) {
 		boolean flag = false;
 		try {
@@ -28,7 +39,6 @@ public class ServerConnection {
 			out.close();
 			telnetClient.close();
 		} catch (Exception e) {
-			// TODO: handle exception
 			flag = false;
 		} finally {
 			return flag;

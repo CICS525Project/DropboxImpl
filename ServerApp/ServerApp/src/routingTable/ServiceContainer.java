@@ -112,29 +112,9 @@ public class ServiceContainer {
 					routingTable.setVersion(version);
 				}
 				//System.out.println("File Details Service 3:"+filename+" "+userName+" "+version+" "+serverName);
-
 				containerList.add(routingTable);
 			}
 
-			/*
-			 * This is used to Compare the List in the Routing Table with the Container list
-			 * The FileNames which are not present in the Container and which is
-			 * present in the Routing Table are added to the missingInContainer List
-			 */
-			/*for(RoutingTable routingTable:completeListFromRoutingTable){
-				boolean flag=false;
-				for(RoutingTable routingTable2:containerList){
-					if(routingTable2.getFileName().equalsIgnoreCase(routingTable.getFileName()) && routingTable2.getServerName().equalsIgnoreCase(routingTable.getServerName()) 
-							&& routingTable2.getUserName().equalsIgnoreCase(routingTable.getUserName()) && routingTable2.getVersion()==routingTable.getVersion()){
-						flag=true;
-						break;
-					}
-
-				}
-				if(!flag){
-					missingInContainer.add(routingTable);
-				}
-			}*/
 			/*
 			 * This is used to Compare the Container list with the Routing Table List
 			 * The FileNames which are not present in the Routing Table and which is
@@ -153,6 +133,9 @@ public class ServiceContainer {
 					missingInRoutingTable.add(routingTable);
 				}
 			}
+		}
+		catch(StorageException e){
+			System.out.println("A Storage Exception has occured . The Blob Does not exist in the Container");
 		}
 		catch (Exception e)
 		{
@@ -322,7 +305,6 @@ public class ServiceContainer {
 					flag=true;
 					break;
 				}
-
 			}
 			if(!flag){
 				result.add(routingTable);
@@ -669,8 +651,7 @@ public class ServiceContainer {
 		Connection con = null;
 		PreparedStatement ps=null;
 		try{
-			if((user!=null && pass!=null  ) && 
-					!checkUserIfAlreadyExist(user,pass))	{
+			if((user!=null && pass!=null  ) && !checkUserIfAlreadyExist(user,pass))	{
 				con=ConnectionFactory.getConnection();
 				String query="INSERT INTO [user] VALUES(?,?)";
 				ps=con.prepareStatement(query);
