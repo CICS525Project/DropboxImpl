@@ -53,7 +53,7 @@ public class FolderWatch implements Runnable {
 					WatchEvent<Path> e = (WatchEvent<Path>) event;
 					Path fileName = e.context();
 					String fn = fileName.toString();
-					if (fn.startsWith(".DS") || fn.startsWith("~")) {
+					if (fn.startsWith(".DS") || fn.startsWith("~")|| fn.endsWith("~")) {
 						System.out.println(".ds and ~ checked");
 						continue;
 					} else if (fn.equals("file.xml")) {
@@ -73,20 +73,20 @@ public class FolderWatch implements Runnable {
 							}
 							if (!remoteFiles.containsKey(fn)) {
 								System.out.println("On create remote does not have file: " + fn);
-								cmd.addToXML(fn, SessionInfo.getInstance()
+								cmd.addToXML(fn,"1",SessionInfo.getInstance()
 										.getWorkFolder());
 								fopt.uploadFileControl(fn);
 							} else {
 								// if file is deleted and user uploads it again,
 								// need to set version as 1
 								if(remoteFiles.get(fn) == -1){
-									cmd.addToXML(fn, SessionInfo.getInstance()
+									cmd.addToXML(fn,"1",SessionInfo.getInstance()
 											.getWorkFolder());
 									fopt.uploadFileControl(fn);
 								}
 								else if (cmd.compareLcalandRmtVersion(fn) == 1) {
 									System.out.println("On create remote have smaller version");
-									cmd.addToXML(fn, SessionInfo.getInstance()
+									cmd.addToXML(fn,"1" ,SessionInfo.getInstance()
 											.getWorkFolder());
 									fopt.uploadFileControl(fn);
 								}
@@ -115,10 +115,6 @@ public class FolderWatch implements Runnable {
 							}
 						}
 						if (kind.name().equals("ENTRY_DELETE")) {
-							/**
-							 * change version number in the remote container to
-							 * -1, and delete file in the container
-							 **/
 							// check if local meta exists
 							// if exists, means deletion is initialized by this
 							// user

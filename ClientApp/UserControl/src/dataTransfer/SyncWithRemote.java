@@ -37,10 +37,11 @@ public class SyncWithRemote implements Runnable {
 					.lookup("cloudboxRMI");
 			HashMap<String, Integer> remoteFileAccess = serviceProvider
 					.getCurrentFiles(SessionInfo.getInstance().getUsername());
-			ArrayList<String> localFile = fopt.getFileInFolder(SessionInfo
-					.getInstance().getWorkFolder());
+//			ArrayList<String> localFile = fopt.getFileInFolder(SessionInfo
+//					.getInstance().getWorkFolder());
+			HashMap<String, String> localFile = cmd.readHashCode(SessionInfo.getInstance().getWorkFolder());
 			for (String key : remoteFileAccess.keySet()) {
-				if (!localFile.contains(key)) {
+				if (!localFile.containsKey(key)) {
 					if (remoteFileAccess.get(key) != -1) {
 						System.out.println("File: " + key
 								+ " is accessable to me.");
@@ -80,13 +81,10 @@ public class SyncWithRemote implements Runnable {
 			HashMap<String, Integer> filesAndVersionShared = serviceProvider
 					.getAllSharedFilesForUser(SessionInfo.getInstance()
 							.getUsername());
-			ArrayList<String> filesLocal = fopt.getFileInFolder(SessionInfo
-					.getInstance().getWorkFolder());
-			System.out.println("Size of shared Version hashmap is " + filesAndVersionShared.size());
-			for (String fn : filesLocal) {
+			HashMap<String, String> filesLocal = cmd.readHashCode(SessionInfo.getInstance().getWorkFolder());
+			for (String fn : filesLocal.keySet()) {
 				
 				// if the local file is a shared file
-				System.out.println("File " + fn + " have remote version " + filesAndVersionShared.get(fn));
 				if (filesAndVersionShared.containsKey(fn)) {
 					System.out.println("Detect in polling, shared file " + fn);
 					String localVersion = cmd.readVersionForOne(fn);
@@ -154,7 +152,7 @@ public class SyncWithRemote implements Runnable {
 			try {
 				pollSharedFileInit();
 				pollSharedFileModify();
-				Thread.sleep(1000);
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

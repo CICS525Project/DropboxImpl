@@ -90,10 +90,8 @@ public class DownloadFile implements Runnable {
 						FileOutputStream fout = new FileOutputStream(downPath);
 						blob.download(fout);
 						fout.close();
-						/*****
-						 * need to change version number of the file download as
-						 * meta in container
-						 ******/
+//						 need to change version number of the file download as
+//						 meta in container
 						HashMap<String, String> res = blob.getMetadata();
 						String latestVersion = res.get("version");
 						String checkSum = fopt.getHashCode(fopt
@@ -105,7 +103,7 @@ public class DownloadFile implements Runnable {
 							cmd.modifyInfo(fileName, checkSum, latestVersion,
 									SessionInfo.getInstance().getWorkFolder());
 						} else {
-							cmd.addToXML(fileName, SessionInfo.getInstance()
+							cmd.addToXML(fileName,latestVersion ,SessionInfo.getInstance()
 									.getWorkFolder());
 						}
 						myTip.setToolTip(new ImageIcon(

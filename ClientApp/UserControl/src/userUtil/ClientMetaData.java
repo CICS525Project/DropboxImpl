@@ -281,7 +281,7 @@ public class ClientMetaData {
 	 * @param filename
 	 * @param path
 	 */
-	public void addToXML(String filename, String path) {
+	public void addToXML(String filename, String versionnum,  String path) {
 		try {
 			String XMLpath = path + File.separator + "file.xml";
 			File xmlFile = new File(XMLpath);
@@ -301,7 +301,7 @@ public class ClientMetaData {
 					+ File.separator + filename)));
 			file.appendChild(checkSum);
 			Element version = document.createElement("Version");
-			version.setTextContent("1");
+			version.setTextContent(versionnum);
 			file.appendChild(version);
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();

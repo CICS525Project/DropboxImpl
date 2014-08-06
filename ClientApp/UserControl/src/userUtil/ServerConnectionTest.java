@@ -72,13 +72,4 @@ public class ServerConnectionTest {
 		}
 		return null;
 	}
-//	public static void main(String[] args) {
-//		ServerConnectionTest sct = new ServerConnectionTest();
-//		String res = sct.initialLink();
-//		if (res != null) {
-//			System.out.println("test server " + res + " is running.");
-//		} else {
-//			System.out.println("nothing is running..");
-//		}
-//	}
 }

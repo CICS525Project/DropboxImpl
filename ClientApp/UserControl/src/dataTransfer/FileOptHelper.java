@@ -236,11 +236,9 @@ public class FileOptHelper {
 			} else {
 				// just upload file
 				uploadFileControl(fname);
-//				OperationQueue.getInstance().add(fname,
-//						OperationQueue.getInstance().getUploadQueue());
 				// should be files add when client is off line
 				// create meta data in xml file
-				cmd.addToXML(fname, dir);
+				cmd.addToXML(fname,"1",dir);
 			}
 		}
 	}

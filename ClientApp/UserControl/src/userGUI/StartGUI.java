@@ -1,9 +1,7 @@
 package userGUI;
 
 import java.io.File;
-
 import javax.swing.JOptionPane;
-
 import userUtil.ServerConnectionTest;
 import dataTransfer.*;
 
